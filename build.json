@@ -2,12 +2,8 @@
   "files": {
     "dist/glider": {
       "src": [
-        "src/externals/when/when.js",
         "src/load.js",
         "src/game/main.js"
-      ],
-      "nohint": [
-        "src/externals/when/when.js"
       ],
       "prehint": true,
       "posthint": true,

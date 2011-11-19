@@ -30,7 +30,7 @@
       script.onload = function() {
         setTimeout(function() {
           if (script.promise) {
-            script.promise.then(deferred.resolve.bind(script));
+            script.promise.then(deferred.resolve.bind(deferred, script));
           } else {
             deferred.resolve(script);
           }
@@ -44,9 +44,40 @@
       return deferred.promise;
     },
     module: function(path, promise, callback) {
-      this.objects[path].promise = promise;
+      if (!this.objects[path]) {
+        this.objects[path] = Sizzle('script[src="'+this.fixPath('script',path)+'"]')[0];
+      }
+      if (promise) {
+        this.objects[path].promise = promise;
 
-      promise.then(callback);
+        promise.then(callback);
+      } else {
+        callback();
+      }
+    },
+    text: function(path) {
+      if (this.promises[path]) {
+        return this.promises[path];
+      }
+
+      var xhr = new XMLHttpRequest(),
+          deferred = when.defer();
+
+      this.promises[path] = deferred.promise;
+
+      xhr.onload = (function() {
+        this.objects[path] = xhr.responseText;
+        deferred.resolve(xhr.responseText);
+      }).bind(this);
+      xhr.onerror = function() {
+        deferred.reject();
+      };
+      
+      // xhr.responseType = 'text';
+      xhr.open('GET', this.fixPath('data', path));
+      xhr.send();
+      
+      return deferred.promise;
     }
   }).init();
   
