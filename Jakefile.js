@@ -221,7 +221,7 @@ task( "hint", function() {
 
 					config.jshint.devel = config.jshint.debug = files.debug;
 
-					if ( files.prehint ) {
+					if ( files.prehint && ( files.nohint && !path in files.nohint || !files.nohint ) ) {
 						hint( src, path );
 					}
 

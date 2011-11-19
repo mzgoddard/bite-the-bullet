@@ -1,21 +1,26 @@
 {
-	"files": {
-		"dist/glider": {
-			"src": [
-				"src/glider.js"
-			],
-			"prehint": true,
-			"posthint": true,
-			"debug": true,
+  "files": {
+    "dist/glider": {
+      "src": [
+        "src/externals/when/when.js",
+        "src/load.js",
+        "src/game/main.js"
+      ],
+      "nohint": [
+        "src/externals/when/when.js"
+      ],
+      "prehint": true,
+      "posthint": true,
+      "debug": true,
 
-			"meta": {
-				"label": "glider",
-				"author": "Michael \"Z\" Goddard",
-				"version": "0.0.0",
-				"homeurl": "",
-				"license": [],
-				"copyright": ""
-			}
-		}
-	}
+      "meta": {
+        "label": "glider",
+        "author": "Michael \"Z\" Goddard",
+        "version": "0.0.0",
+        "homeurl": "",
+        "license": [],
+        "copyright": ""
+      }
+    }
+  }
 }

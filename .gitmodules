@@ -1,0 +1,9 @@
+[submodule "src/externals/when"]
+	path = src/externals/when
+	url = https://github.com/briancavalier/when.js.git
+[submodule "src/externals/gl-matrix"]
+	path = src/externals/gl-matrix
+	url = https://github.com/toji/gl-matrix.git
+[submodule "test/qunit"]
+	path = test/qunit
+	url = https://github.com/jquery/qunit.git
