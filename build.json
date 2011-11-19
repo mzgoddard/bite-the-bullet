@@ -1,0 +1,21 @@
+{
+	"files": {
+		"dist/glider": {
+			"src": [
+				"src/glider.js"
+			],
+			"prehint": true,
+			"posthint": true,
+			"debug": true,
+
+			"meta": {
+				"label": "glider",
+				"author": "Michael \"Z\" Goddard",
+				"version": "0.0.0",
+				"homeurl": "",
+				"license": [],
+				"copyright": ""
+			}
+		}
+	}
+}
