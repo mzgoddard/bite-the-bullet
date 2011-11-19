@@ -7,7 +7,7 @@ var Game = aqua.type(aqua.type.Base,
       this.tasks = aqua.PriorityList.create();
       
       this.task(this.call.bind(this, 'update'));
-      this.task(this.call.bind(this, 'lateUpdate'));
+      this.task(this.call.bind(this, 'lateUpdate'), Game.Priorities.LATE_UPDATE);
     },
     add: function(object) {
       object.game = this;
@@ -39,7 +39,7 @@ var Game = aqua.type(aqua.type.Base,
       this.tasks.add(aqua.PriorityItem.create.apply(aqua.PriorityItem, arguments));
     },
     step: function() {
-      this.tasks.callAll(game);
+      this.tasks.callAll(this);
     }
   },
   {},

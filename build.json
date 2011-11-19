@@ -3,6 +3,10 @@
     "dist/glider": {
       "src": [
         "src/load.js",
+        "src/engine/init.js",
+        "src/engine/object.js",
+        "src/engine/graphics.js",
+        "src/engine/sound.js",
         "src/game/main.js"
       ],
       "prehint": true,

@@ -1,4 +1,7 @@
-(function(window, aqua) {
+(function(window, load, aqua) {
+  var setTimeout = window.setTimeout,
+      when = window.when;
+  
   var Graphics = aqua.type(aqua.type.Base,
     {
       init: function(canvas) {
@@ -82,7 +85,10 @@
 
   aqua.graphics = [];
   aqua.initGraphics = function() {
-    aqua.graphics.push(Graphics.create.apply(null, arguments);
+    var graphics = Graphics.create.apply(null, arguments);
+    aqua.graphics.push(graphics);
+    
+    return graphics;
   };
 
-})(this, this.aqua);
+})(this, this.load, this.aqua);

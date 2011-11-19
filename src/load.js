@@ -1,4 +1,10 @@
 (function(window) {
+  var document = window.document,
+      XMLHttpRequest = window.XMLHttpRequest,
+      setTimeout = window.setTimeout,
+      when = window.when,
+      Sizzle = window.Sizzle;
+  
   var load = Object.create({
     init: function() {
       this.objects = {};
@@ -30,8 +36,10 @@
       script.onload = function() {
         setTimeout(function() {
           if (script.promise) {
+            console.log('wait');
             script.promise.then(deferred.resolve.bind(deferred, script));
-          } else {
+          } else {  
+            console.log(path);
             deferred.resolve(script);
           }
         }, 0);
@@ -50,7 +58,7 @@
       if (promise) {
         this.objects[path].promise = promise;
 
-        promise.then(callback);
+        promise.then(function(){console.log(path)}).then(callback);
       } else {
         callback();
       }

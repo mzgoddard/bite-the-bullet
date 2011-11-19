@@ -1,9 +1,11 @@
-(function(window) {
+(function(window, load) {
+  
+  var when = window.when;
   
   var aqua = window.aqua = {};
   
   aqua.type = function(prototype, members, properties, objectMembers) {
-    properties = properties || {}, objectMembers = objectMembers || {};
+    properties = properties || {}; objectMembers = objectMembers || {};
     
     var exports = {}, key;
     exports.prototype = Object.create(prototype || {}, properties);
@@ -40,6 +42,18 @@
     return a;
   };
   
+  aqua.requestAnimFrame = (function(){
+    // thanks paul irish
+    return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function( callback, element ) {
+      window.setTimeout( callback, 1000 / 60 );
+    };
+  })();
+  
   aqua.PriorityItem = aqua.type(aqua.type.Base,
     {
       init: function(callback, priority, before, once) {
@@ -62,8 +76,8 @@
         var i = 0, added = false;
         
         for ( ; i < this.items.length; i++ ) {
-          if (item.before && this.items[i].priority >= priority || 
-            !item.before && this.items[i].priority > priority) 
+          if (item.before && this.items[i].priority >= item.priority || 
+            !item.before && this.items[i].priority > item.priority) 
           {
             this.items.splice(i, 0, item);
             added = true;
@@ -89,7 +103,7 @@
         
         for ( ; i < items.length; i++ ) {
           item = items[i];
-          item.apply(item, arguments);
+          item.call.apply(item, arguments);
           
           if (item.once) {
             items.splice(i, 1);
@@ -99,12 +113,13 @@
       }
     }
   );
-  
-})(this);
 
-load.module('engine/init.js', when.all([
-  load.script('engine/graphics.js'),
-  load.script('engine/sound.js')
-]), function() {
+  load.module('engine/init.js', when.all([
+    load.script('engine/object.js'),
+    load.script('engine/graphics.js'),
+    load.script('engine/sound.js')
+  ]), function() {
   
-});
+  });
+
+})(this, this.load);
