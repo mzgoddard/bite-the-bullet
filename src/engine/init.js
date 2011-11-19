@@ -33,7 +33,7 @@
     return exports;
   };
   
-  aqua.type.Base = {};
+  aqua.type.Base = aqua.type({}, {});
   
   aqua.extend = function(a, b) {
     for (var key in b) {
@@ -54,7 +54,7 @@
     };
   })();
   
-  aqua.PriorityItem = aqua.type(aqua.type.Base,
+  aqua.PriorityItem = aqua.type(aqua.type.Base.prototype,
     {
       init: function(callback, priority, before, once) {
         this.callback = callback;
@@ -67,7 +67,7 @@
       }
     }
   );
-  aqua.PriorityList = aqua.type(aqua.type.Base,
+  aqua.PriorityList = aqua.type(aqua.type.Base.prototype,
     {
       init: function() {
         this.items = [];

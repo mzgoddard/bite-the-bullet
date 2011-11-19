@@ -2,7 +2,7 @@
   var setTimeout = window.setTimeout,
       when = window.when;
   
-  var Graphics = aqua.type(aqua.type.Base,
+  var Graphics = aqua.type(aqua.type.Base.prototype,
     {
       init: function(canvas) {
         this.canvas = canvas;

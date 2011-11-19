@@ -1,4 +1,7 @@
 (function(window, load) {
+
+window.glider = {};
+
 load.module('game/main.js',
   load.script('engine/init.js'),
 function() {
@@ -7,8 +10,12 @@ var Sizzle = window.Sizzle,
     aqua = window.aqua;
 
 aqua.game = aqua.Game.create();
+
 aqua.game.graphics = aqua.initGraphics(Sizzle('canvas')[0]);
 aqua.game.graphics.addShader({name: 'basic', path:'shaders/basic'});
+aqua.game.task(aqua.game.call.bind(aqua.game, 'render'), aqua.Game.Priorities.RENDER);
+aqua.game.task(aqua.game.graphics.draw.bind(aqua.game.graphics), aqua.Game.Priorities.RENDER);
+
 aqua.game.task(function(){console.log('beep');});
 
 function loop() {

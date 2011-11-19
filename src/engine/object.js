@@ -1,6 +1,6 @@
 (function(window, aqua) {
 
-var Game = aqua.type(aqua.type.Base,
+var Game = aqua.type(aqua.type.Base.prototype,
   {
     init: function() {
       this.objects = [];
@@ -12,13 +12,18 @@ var Game = aqua.type(aqua.type.Base,
     add: function(object) {
       object.game = this;
       this.objects.push(object);
+      
+      object.call('ongameadd', object, this);
     },
     destroy: function(object) {
       this.task((function() {
         var index = this.objects.indexOf(object);
         
         if (index != -1) {
+          object.call('ongamedestroy', object, this);
+          
           object.game = null;
+          
           this.objects.splice(index, 1);
         }
       }).bind(this), Game.Priorities.GARBAGE, false, true);
@@ -53,7 +58,7 @@ var Game = aqua.type(aqua.type.Base,
   }
 );
 
-var GameObject = aqua.type(aqua.type.Base,
+var GameObject = aqua.type(aqua.type.Base.prototype,
   {
     init: function() {
       this.components = [];
@@ -61,13 +66,41 @@ var GameObject = aqua.type(aqua.type.Base,
     add: function(component) {
       component.gameObject = this;
       this.components.push(component);
+
+      component.onadd(this);
+      if (this.game) {
+        component.ongameadd(this, this.game);
+      }
+    },
+    get: function(typeObject) {
+      var components = this.components,
+          count = components.length,
+          prototype = typeObject.prototype,
+          component,
+          i;
+
+      for ( i = 0; i < count; i++ ) {
+        component = components[i];
+        if ( prototype.isPrototypeOf( component ) ) {
+          return component;
+        }
+      }
+      
+      // yay, explicit-ness-ness
+      return null;
     },
     destroy: function(component) {
       function remove() {
         var index = this.components.indexOf(component);
 
         if (index != -1) {
+          component.ondestroy(this);
+          if (this.game) {
+            component.ongamedestroy(this, this.game);
+          }
+          
           component.gameObject = null;
+          
           this.components.splice(index, 1);
         }
       }
@@ -95,9 +128,10 @@ var GameObject = aqua.type(aqua.type.Base,
   }
 );
 
-var Component = aqua.type(aqua.type.Base,
+var Component = aqua.type(aqua.type.Base.prototype,
   {
-    
+    // onadd: when added to object
+    // ongameadd: when added to object to a game object
   }
 );
 
