@@ -31,13 +31,13 @@ var Game = aqua.type(aqua.type.Base.prototype,
     call: function(method) {
       var args = Array.prototype.slice.call(arguments, 1),
           objects = this.objects,
-          count = objects.count,
+          count = objects.length,
           object,
           i;
 
       for ( i = 0; i < count; i++ ) {
         object = objects[i];
-        object.apply(object, args);
+        object.call.apply(object, arguments);
       }
     },
     task: function(callback, priority, before, once) {
@@ -114,10 +114,10 @@ var GameObject = aqua.type(aqua.type.Base.prototype,
     call: function(method) {
       var args = Array.prototype.slice.call(arguments, 1), 
           components = this.components,
-          count = components.count,
+          count = components.length,
           component,
           i;
-      
+
       for ( i = 0; i < count; i++ ) {
         component = components[i];
         if (component[method]) {

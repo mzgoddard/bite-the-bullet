@@ -11,13 +11,19 @@
         
         this.deferred = when.defer();
         
+        this.projection = mat4.identity(mat4.create());
+        this.modelview = mat4.identity(mat4.create());
+        this.matrix = mat4.create();
+        
         when(this.initContext(), this.deferred.resolve.bind(this.deferred));
       },
       initContext: function() {
         var deferred = when.defer();
         
         function initTestLoop() {
-          this.gl = this.canvas.getContext('experimental-webgl');
+          this.gl = this.canvas.getContext('experimental-webgl', {
+            antialias: true
+          });
           if (!this.gl) {
             setTimeout(initTestLoop.bind(this), 0);
           } else {
@@ -68,6 +74,8 @@
         gl.compileShader(shader);
         gl.attachShader(program, shader);
         console.log(options.name, 'fragment');
+        
+        gl.linkProgram(program);
       },
       useShader: function(name) {
         this.gl.useProgram(this.shaders[name].program);
