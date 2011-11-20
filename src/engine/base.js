@@ -56,11 +56,14 @@
   
   aqua.PriorityItem = aqua.type(aqua.type.Base,
     {
-      init: function(callback, priority, before, once) {
+      init: function(callback, priority, before, once, rate) {
         this.callback = callback;
         this.priority = priority || 0;
         this.before = before || false;
         this.once = once || false;
+        this.rate = rate || 1 / 60;
+        
+        this.sinceLast = 0;
       },
       call: function() {
         this.callback.apply(null, arguments);

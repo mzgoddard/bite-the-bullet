@@ -7,7 +7,10 @@ var when = window.when;
 load.module('game/main.js',
   load.chain(load.script('engine/init.js'),
     function() {
-      return load.script('game/glider.js');
+      return when.all([
+        load.script('game/glider.js'),
+        load.script('game/jet.js')
+      ]);
     }
   ),
 function() {
@@ -34,17 +37,27 @@ aqua.game.task(function() {
   aqua.game.timing.last = now;
 }, -10);
 
-aqua.game.world = aqua.World.create(aqua.Box.create(750, 1000, 0, 0));
+aqua.game.world = aqua.World.create(aqua.Box.create(480, 640, 0, 0));
 aqua.game.add(aqua.game.world);
+aqua.game.world.add(aqua.World.Renderer.create());
 
-var test = aqua.GameObject.create();
-test.add(aqua.type(aqua.Component, {fixedUpdate: function(){console.log('fixed');}}).create());
-aqua.game.add(test);
+for ( var idx = 0; idx < 500; idx++ )
+  aqua.game.world.addParticle(
+    aqua.Particle.create([
+        640 * (idx / 500),
+        Math.random()*480,
+        0],
+      15+Math.random()*3,
+      1));
+
+aqua.game.world.add(glider.Jet.create());
 
 aqua.game.graphics.addDrawCall(aqua.PriorityItem.create(function(graphics, gl) {
   // graphics setup (once)
   gl.clearColor(0, 22 / 255, 55 / 255, 255 / 255);
   graphics.useShader('basic');
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.DST_ALPHA);
 }, -1000, false, true));
 
 aqua.game.graphics.addDrawCall(aqua.PriorityItem.create(function(graphics, gl) {
@@ -56,7 +69,7 @@ aqua.game.graphics.addDrawCall(aqua.PriorityItem.create(function(graphics, gl) {
   
   gl.viewport(0, 0, width, height);
   mat4.ortho(
-    0, width, 0, height, 0, 1000,
+    aqua.game.world.box.left, 640 + aqua.game.world.box.left, 0, 480, 0, 1000,
     graphics.projection);
   
   // graphics setup

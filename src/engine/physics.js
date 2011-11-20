@@ -2,12 +2,16 @@
 load.module('engine/physics.js', 
   when.all([
     load.script('engine/object.js'),
+    load.script('engine/graphics.js'),
     load.script('engine/math.js')
   ]), function() {
 
+var posmul = 1.999, lastposmul = 0.999, friction = 0.001;
 var Particle = aqua.type(aqua.Emitter,
   {
     init: function(position, radius, density) {
+      Object.getPrototypeOf(Object.getPrototypeOf(this)).init.apply(this);
+      
       this.position = (position).slice();
       this.lastPosition = (position).slice();
       this.oldPosition = (position).slice();
@@ -24,22 +28,20 @@ var Particle = aqua.type(aqua.Emitter,
       this.friction = friction;
     },
     integrate: function(dt) {
-      if (this.isStatic) {
-        return;
-      }
-      
-      vec3.set(this.position, this.temporaryPosition);
-      vec3.add(
-        vec3.subtract(
-          vec3.scale(this.position, posmul, this.position),
-          vec3.scale(this.lastPosition, lastposmul, this.lastPosition),
+      if ( !this.isStatic && !this.isTrigger ) {
+        vec3.set(this.position, this.temporaryPosition);
+        vec3.add(
+          vec3.subtract(
+            vec3.scale(this.position, posmul, this.position),
+            vec3.scale(this.lastPosition, lastposmul, this.lastPosition),
+            this.position
+          ),
+          vec3.scale(this.acceleration, dt * dt, this.acceleration),
           this.position
-        ),
-        vec3.scale(this.acceleration, dt * dt, this.acceleration),
-        this.position
-      );
+        );
       
-      vec3.set(this.temporaryPosition, this.lastPosition);
+        vec3.set(this.temporaryPosition, this.lastPosition);
+      }
       
       this.x = this.position[0];
       this.y = this.position[1];
@@ -109,8 +111,13 @@ var Particle = aqua.type(aqua.Emitter,
         bvx = b.lx - b.x,
         bvy = b.ly - b.y,
         bvm = Math.mag(bvx, bvy),
-        fric = Math.abs(c.distance) * (avm + bvm > 10 ? 0.1 : a.friction * b.friction);
+        fric = Math.abs(c.distance) * (avm + bvm > 50 ? 0.1 : a.friction * b.friction);
         // fric = Math.abs(c.distance) * (avm + bvm > 10 ? 0.99 : a.friction * b.friction);
+
+      if (avm + bvm < 30) {
+        lambx *= 0.1;
+        lamby *= 0.1;
+      }
 
       avx = (avx / avm) * (avm - fric);
       avy = (avy / avm) * (avm - fric);
@@ -125,9 +132,9 @@ var Particle = aqua.type(aqua.Emitter,
         bm = 0;
       }
 
-      if (a.istrigger) {
+      if (a.isTrigger) {
         a.call('collision', b, c);
-      } else if (b.istrigger) {
+      } else if (b.isTrigger) {
         b.call('collision', a, c);
       } else {
         a.lastPosition[0] = a.lx = a.position[0] + avx;
@@ -190,6 +197,20 @@ var Particle = aqua.type(aqua.Emitter,
             Particle.Masks.STATIC;
         }
       }
+    },
+    isTrigger: {
+      get: function() {
+        return !!(this.mask & Particle.Masks.TRIGGER);
+      },
+      set: function(value) {
+        if (value) {
+          this.mask |= Particle.Masks.TRIGGER;
+        } else {
+          this.mask = 
+            (this.mask | Particle.Masks.TRIGGER) ^ 
+            Particle.Masks.TRIGGER;
+        }
+      }
     }
   },
   {
@@ -240,11 +261,11 @@ function hashId(hash, x, y) {
 
 var SpatialHash = aqua.type(aqua.type.Base,
   {
-    init: function(box,world) {
+    init: function(box, world /*box*/) {
       this.hash = {};
       this.arrayHash = [];
       this.box = box;
-      this.newBox = world;
+      this.newBox = world.copy();
       this.lastBox = world.copy();
       
       this.cellsWide = Math.ceil(world.width / box.width);
@@ -256,6 +277,11 @@ var SpatialHash = aqua.type(aqua.type.Base,
         if (this.arrayHash[i])
           f( this.arrayHash[i], Math.floor(i / this.cellsWide), i % this.cellsWide );
       }
+    },
+    cell: function(x, y) {
+      return this.arrayHash[hashId(this, 
+        parseInt((x - this.lastBox.left) / this.box.width),
+        parseInt((y - this.lastBox.bottom) / this.box.height))];
     },
     add: function(p) {
       var px = p.position[0],
@@ -310,7 +336,7 @@ var SpatialHash = aqua.type(aqua.type.Base,
       }
     },
     update: function(p) {
-      if (p.position[0] == p.oldPosition[0] && p.position[1] == p.oldPosition[1]) return;
+      // if (p.position[0] == p.oldPosition[0] && p.position[1] == p.oldPosition[1]) return;
       this.remove(p);
       this.add(p);
     }
@@ -411,11 +437,16 @@ var World = aqua.type(aqua.GameObject,
         }
       });
       
+      this.box.translate(1,0);
+      this.hash.newBox = this.box.copy();
+      
       for ( i = 0; i < count; i++ ) {
         p = particles[i];
         
-        if (p.position[0] - p.radius < box.left) {
-          p.position[0] = box.left + p.radius;
+        if (p.position[0] + p.radius < box.left) {
+          var vx = p.position[0] - p.lastPosition[0];
+          p.position[0] = box.right - p.radius;
+          // p.lastPosition[0] = p.position[0] - p.radius;
         }
         if (p.position[0] + p.radius > box.right) {
           p.position[0] = box.right - p.radius;
@@ -428,7 +459,14 @@ var World = aqua.type(aqua.GameObject,
         }
         
         this.hash.update(p);
+        
+        // if (p.position[0] == NaN || p.position[1] == NaN) {
+        //   vec3.set([this.box.right-p.radius,this.box.bottom+p.radius,0], p.position);
+        //   vec3.set(p.position, p.lastPosition);
+        // }
       }
+      
+      this.hash.lastBox = this.box.copy();
     },
     draw: function(ctx, gl) {
       var particles = this.particles,
@@ -512,8 +550,111 @@ var World = aqua.type(aqua.GameObject,
   }
 );
 
+var WorldRenderer = aqua.type(aqua.Renderer,
+  {
+    onadd: function(gameObject) {
+      this.world = gameObject;
+    },
+    draw: function(graphics, gl) {
+      if (!this.shader) {
+        graphics.addShader({
+          'name': 'a_color',
+          'path': 'shaders/a_color'
+        });
+        
+        this.shader = graphics.shaders['a_color'];
+      }
+
+      if (!this.shader.program) {
+        return;
+      }
+
+      if (!this.buffer) {
+        this.buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.world.particles.length * 6 * 16, gl.DYNAMIC_DRAW);
+      }
+
+      var arrayBuffer = new ArrayBuffer(this.world.particles.length * 6 * 16),
+          floatView = new Float32Array(arrayBuffer),
+          byteView = new Uint8Array(arrayBuffer),
+          particles = this.world.particles,
+          p,
+
+          shader = this.shader,
+
+          buffer = this.buffer,
+          count = particles.length,
+
+          i,
+          j,
+          offset = 0, // in bytes
+          particleArray,
+          x, y, r,
+          lx, ly;
+
+      if (!shader.matrixLocation) {
+        shader.matrixLocation = gl.getUniformLocation(shader.program, 'modelview_projection');
+
+        shader.positionLocation = gl.getAttribLocation(shader.program, 'a_position');
+        shader.colorLocation = gl.getAttribLocation(shader.program, 'a_color');
+
+        gl.enableVertexAttribArray(shader.positionLocation);
+        gl.enableVertexAttribArray(shader.colorLocation);
+      }
+      
+      for ( i = 0; i < count; i++ ) {
+        p = particles[i];
+        x = p.x, y = p.y, r = p.radius;
+        
+        if ( !p.isTrigger ) {
+        for ( j = 0; j < 24; j++ ) {
+          if (j % 4 == 0) {
+            floatView[offset + j] = x + (j % 8 > 3 ? 1 : -1) * r;
+          } else if (j % 4 == 1) {
+            floatView[offset + j] = y + (((j - 1) / 4 == 2 || (j - 1) / 4 == 4 || (j - 1) / 4 == 5) ? 1 : -1) * r;
+          }
+        }
+        }
+        
+        offset += 24;
+      }
+      
+      count *= 6 * 16;
+      for ( i = 0; i < count; i++ ) {
+        p = particles[Math.floor(i/96)];
+        if ( i % 16 > 11 && p.isTrigger ) {
+          byteView[i] = 0;
+          continue;
+        }
+        if ( i % 16 == 14 )
+          byteView[i] = 255;
+        else if (i % 16 > 11) {
+          x = p.x, y = p.y, lx = p.lx, ly = p.ly;
+          byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 50 * 255, 0, 255);
+        }
+      }
+      
+      gl.enable(gl.BLEND);
+      
+      graphics.useShader('a_color');
+      
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, arrayBuffer, gl.DYNAMIC_DRAW);
+      
+      gl.uniformMatrix4fv(shader.matrixLocation, false, graphics.projection);
+      
+      gl.vertexAttribPointer(shader.positionLocation, 2, gl.FLOAT, false, 4 * 4, 0);
+      gl.vertexAttribPointer(shader.colorLocation, 4, gl.UNSIGNED_BYTE, true, 4 * 4, 3 * 4);
+      
+      gl.drawArrays(gl.TRIANGLES, 0, arrayBuffer.byteLength / 16);
+    }
+  }
+);
+
 aqua.Particle = Particle;
 aqua.World = World;
+aqua.World.Renderer = WorldRenderer;
 aqua.Box = Box;
 
 });

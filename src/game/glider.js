@@ -33,8 +33,8 @@ var GliderInput = aqua.type(aqua.Component,
 var GliderMove = aqua.type(aqua.Component,
   {
     init: function() {
-      this.x = window.innerWidth / 2;
-      this.y = window.innerHeight / 2;
+      this.x = 640 / 2;
+      this.y = 480 / 2;
 
       this.vx = 0;
       this.vy = 0;
@@ -45,6 +45,10 @@ var GliderMove = aqua.type(aqua.Component,
       this.angle = 0;
 
       this.radius = 25;
+      
+      this.particle = aqua.Particle.create([this.x, this.y, 0], this.radius, 1);
+      this.particle.isTrigger = true;
+      this.particle.on('collision', this.oncollision.bind(this));
     },
     onadd: function(gameObject) {
       this.input = gameObject.get(GliderInput);
@@ -52,8 +56,42 @@ var GliderMove = aqua.type(aqua.Component,
     ondestroy: function() {
       this.input = null;
     },
-    update: function() {
-      var delta = aqua.game.timing.delta,
+    ongameadd: function(gameObject, game) {
+      console.log(game.world.particles.length);
+      game.world.addParticle(this.particle);
+      console.log(game.world.hash.cell(this.particle.position[0],this.particle.position[1]));
+    },
+    ongamedestroy: function(gameObject, game) {
+      game.world.removeParticle(this.particle);
+    },
+    oncollision: function(otherParticle, collision) {
+      var delta = aqua.game.timing.fixedDelta,
+          vx = otherParticle.lastPosition[0] - otherParticle.position[0],
+          vy = otherParticle.lastPosition[1] - otherParticle.position[1],
+          vl = Math.sqrt(vx*vx+vy*vy),
+          va = Math.atan2(vy, vx);
+      
+      if (isNaN(vx) || isNaN(vy)) {
+        return;
+      }
+
+      while (va > Math.PI)
+        va -= Math.PI * 2;
+      while (va < Math.PI)
+        va += Math.PI * 2;
+
+      var k = vl * 1,
+          n = k * Math.cos(va + Math.PI - this.angle - Math.PI / 2) * (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
+          nx = Math.cos(this.angle+Math.PI/2) * n,
+          ny = Math.sin(this.angle+Math.PI/2) * n;
+
+      console.log(otherParticle, vx, vy, nx, ny);
+
+      this.ax += nx;
+      this.ay += ny;
+    },
+    fixedUpdate: function() {
+      var delta = aqua.game.timing.fixedDelta,
           vl = Math.sqrt(this.vx*this.vx+this.vy*this.vy),
           va = Math.atan2(this.vy, this.vx);
 
@@ -64,7 +102,7 @@ var GliderMove = aqua.type(aqua.Component,
 
       this.ay -= 32;
 
-      var k = vl * 10,
+      var k = vl * 2,
           n = k * Math.cos(va + Math.PI - this.angle - Math.PI / 2) * (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
           nx = Math.cos(this.angle+Math.PI/2) * n,
           ny = Math.sin(this.angle+Math.PI/2) * n;
@@ -80,6 +118,8 @@ var GliderMove = aqua.type(aqua.Component,
       this.vy += this.ay / 2 * delta;
       this.y += this.vy * delta;
       this.vy += this.ay / 2 * delta;
+      
+      vec3.set([this.x, this.y, 0], this.particle.position);
 
       if (this.input.get('down')) {
         this.angle -= Math.PI * delta;
@@ -124,6 +164,10 @@ var GliderRender = aqua.type(aqua.Component,
           y = this.move.y,
           radius = this.move.radius,
           shader = graphics.shaders.basic;
+      
+      gl.disable(gl.BLEND);
+      
+      graphics.useShader('basic');
       
       if (!shader.matrixLocation) {
         shader.matrixLocation = gl.getUniformLocation(shader.program, 'modelview_projection');

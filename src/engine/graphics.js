@@ -19,6 +19,12 @@ function(){
         this.matrix = mat4.create();
         
         when(this.initContext(), this.deferred.resolve.bind(this.deferred));
+        
+        when(this.deferred, (function() {
+          this.last = Date.now();
+          this.sinceLast = 0;
+        }).bind(this));
+        
       },
       initContext: function() {
         var deferred = when.defer();
@@ -40,7 +46,17 @@ function(){
       draw: function() {
         if (!this.gl) return;
         
-        this.drawCalls.callAll(this, this.gl);
+        var now = Date.now();
+        this.sinceLast += (now - this.last) / 1000;
+        this.last = now;
+        
+        if (this.sinceLast >= 1 / 20) {
+          this.drawCalls.callAll(this, this.gl);
+        }
+        
+        while (this.sinceLast >= 1 / 20) {
+          this.sinceLast -= 1 / 20;
+        }
       },
       addDrawCall: function(drawCall) {
         this.drawCalls.add(drawCall);
