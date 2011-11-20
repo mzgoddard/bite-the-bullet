@@ -57,10 +57,15 @@ var GliderMove = aqua.type(aqua.Component.prototype,
           vl = Math.sqrt(this.vx*this.vx+this.vy*this.vy),
           va = Math.atan2(this.vy, this.vx);
 
+      while (va > Math.PI)
+        va -= Math.PI * 2;
+      while (va < Math.PI)
+        va += Math.PI * 2;
+
       this.ay -= 32;
       
       var k = vl * 10,
-          n = k * Math.cos(va + Math.PI - this.angle - Math.PI / 2),
+          n = k * Math.cos(va + Math.PI - this.angle - Math.PI / 2) * (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
           nx = Math.cos(this.angle+Math.PI/2) * n,
           ny = Math.sin(this.angle+Math.PI/2) * n;
 
@@ -78,11 +83,16 @@ var GliderMove = aqua.type(aqua.Component.prototype,
       this.vy += this.ay / 2 * delta;
 
       if (this.input.get('down')) {
-        this.angle -= Math.PI * 0.5 * delta;
+        this.angle -= Math.PI * delta;
       }
       if (this.input.get('up')) {
-        this.angle += Math.PI * 0.5 * delta;
+        this.angle += Math.PI * delta;
       }
+      
+      while (this.angle > Math.PI)
+        this.angle -= Math.PI * 2;
+      while (this.angle < Math.PI)
+        this.angle += Math.PI * 2;
 
       this.ax = 0;
       this.ay = 0;
