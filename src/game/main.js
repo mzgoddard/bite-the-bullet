@@ -5,16 +5,11 @@ window.glider = {};
 var when = window.when;
 
 load.module('game/main.js',
-  (function() {
-    var deferred = when.defer();
-    
-    when(load.script('engine/init.js'),
-      function() {
-        when.chain(load.script('game/glider.js'), deferred);
-      });
-    
-    return deferred;
-  })(),
+  load.chain(load.script('engine/init.js'),
+    function() {
+      return load.script('game/glider.js');
+    }
+  ),
 function() {
 
 var Sizzle = window.Sizzle,
@@ -38,6 +33,13 @@ aqua.game.task(function() {
   aqua.game.timing.delta = (now - aqua.game.timing.last) / 1000;
   aqua.game.timing.last = now;
 }, -10);
+
+aqua.game.world = aqua.World.create(aqua.Box.create(750, 1000, 0, 0));
+aqua.game.add(aqua.game.world);
+
+var test = aqua.GameObject.create();
+test.add(aqua.type(aqua.Component, {fixedUpdate: function(){console.log('fixed');}}).create());
+aqua.game.add(test);
 
 aqua.game.graphics.addDrawCall(aqua.PriorityItem.create(function(graphics, gl) {
   // graphics setup (once)

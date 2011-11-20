@@ -322,6 +322,8 @@ var SpatialHash = aqua.type(aqua.type.Base,
 var World = aqua.type(aqua.GameObject,
   {
     init: function(box) {
+      Object.getPrototypeOf(Object.getPrototypeOf(this)).init.call(this);
+      
       this.particles = [];
       this.collision = {};
       this.box = box;
@@ -332,7 +334,7 @@ var World = aqua.type(aqua.GameObject,
       
       this.hash = SpatialHash.create(Box.create(20, 20, 0, 0), box);
       
-      this.buffer = ctx.buffer();
+      // this.buffer = ctx.buffer();
     },
     ongameadd: function(game) {
       this.task = game.task(this.update.bind(this), aqua.Game.Priorities.LATE_UPDATE);

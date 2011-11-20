@@ -146,7 +146,12 @@ var GameObject = aqua.type(aqua.type.Base,
 var Component = aqua.type(aqua.type.Base,
   {
     // onadd: when added to object
+    onadd: function(gameObject){},
     // ongameadd: when added to object to a game object
+    ongameadd: function(gameObject, game){},
+    
+    ondestroy: function(gameObject){},
+    ongamedestroy: function(gameObject, game){}
   }
 );
 
