@@ -13,6 +13,8 @@ var Game = aqua.type(aqua.type.Base,
       object.game = this;
       this.objects.push(object);
       
+      if (object.ongameadd)
+        object.ongameadd(this);
       object.call('ongameadd', object, this);
     },
     destroy: function(object) {
@@ -20,6 +22,8 @@ var Game = aqua.type(aqua.type.Base,
         var index = this.objects.indexOf(object);
         
         if (index != -1) {
+          if (object.ongamedestroy)
+            object.ongamedestroy(this);
           object.call('ongamedestroy', object, this);
           
           object.game = null;
@@ -41,10 +45,21 @@ var Game = aqua.type(aqua.type.Base,
       }
     },
     task: function(callback, priority, before, once) {
-      this.tasks.add(aqua.PriorityItem.create.apply(aqua.PriorityItem, arguments));
+      var item = aqua.PriorityItem.create.apply(aqua.PriorityItem, arguments);
+      this.tasks.add(item);
+      return item;
     },
     step: function() {
       this.tasks.callAll(this);
+    },
+    main: function() {
+      // put common timing and rAF loop logic in here
+    },
+    pause: function() {
+      
+    },
+    resume: function() {
+      
     }
   },
   {},

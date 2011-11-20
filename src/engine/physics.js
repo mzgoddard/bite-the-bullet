@@ -1,5 +1,9 @@
 (function(window, load) {
-load.module('engine/physics.js', load.script('engine/math.js'), function() {
+load.module('engine/physics.js', 
+  when.all([
+    load.script('engine/object.js'),
+    load.script('engine/math.js')
+  ]), function() {
 
 var Particle = aqua.type(aqua.Emitter,
   {
@@ -219,6 +223,13 @@ var Box = aqua.type(aqua.type.Base,
     },
     copy: function() {
       return Box.create(this.top, this.right, this.bottom, this.left);
+    },
+    translate: function(x, y) {
+      this.top += y;
+      this.bottom += y;
+      
+      this.left += x;
+      this.right += x;
     }
   }
 );
@@ -308,7 +319,7 @@ var SpatialHash = aqua.type(aqua.type.Base,
   {}
 );
 
-var World = aqua.type(aqua.type.Base,
+var World = aqua.type(aqua.GameObject,
   {
     init: function(box) {
       this.particles = [];
@@ -316,16 +327,45 @@ var World = aqua.type(aqua.type.Base,
       this.box = box;
       this.gravity = [0, 0, 0];
       
+      this.fixedDelta = 1 / 20;
+      this.timeToPlay = 0;
+      
       this.hash = SpatialHash.create(Box.create(20, 20, 0, 0), box);
       
       this.buffer = ctx.buffer();
+    },
+    ongameadd: function(game) {
+      this.task = game.task(this.update.bind(this), aqua.Game.Priorities.LATE_UPDATE);
+    },
+    ongamedestroy: function(game) {
+      game.tasks.remove(this.task);
     },
     addParticle: function(particle) {
       this.particles.push(particle);
       this.hash.add(particle);
     },
     removeParticle: function(particle) {
+      this.game.task((function(){
+        var index = this.particles.indexOf(particle);
+        if (index) {
+          this.particles.splice(index, 1);
+          this.hash.remove(particle);
+        }
+      }).bind(this), aqua.Game.Priorities.GARBAGE, false, true);
+    },
+    update: function() {
+      var fixedDelta = this.fixedDelta;
       
+      this.game.timing.fixedDelta = fixedDelta;
+      this.timeToPlay += this.game.timing.delta;
+      
+      if (this.timeToPlay > fixedDelta) {
+        this.timeToPlay -= this.game.timing.delta;
+        
+        this.game.call('fixedUpdate', this);
+        
+        this.step(fixedDelta);
+      }
     },
     step: function(dt) {
       var particles = this.particles,
@@ -472,6 +512,7 @@ var World = aqua.type(aqua.type.Base,
 
 aqua.Particle = Particle;
 aqua.World = World;
+aqua.Box = Box;
 
 });
 })(this, this.load);

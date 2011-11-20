@@ -35,15 +35,15 @@ var GliderMove = aqua.type(aqua.Component,
     init: function() {
       this.x = window.innerWidth / 2;
       this.y = window.innerHeight / 2;
-      
+
       this.vx = 0;
       this.vy = 0;
-      
+
       this.ax = 0;
       this.ay = 0;
-      
+
       this.angle = 0;
-      
+
       this.radius = 25;
     },
     onadd: function(gameObject) {
@@ -63,13 +63,12 @@ var GliderMove = aqua.type(aqua.Component,
         va += Math.PI * 2;
 
       this.ay -= 32;
-      
+
       var k = vl * 10,
           n = k * Math.cos(va + Math.PI - this.angle - Math.PI / 2) * (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
           nx = Math.cos(this.angle+Math.PI/2) * n,
           ny = Math.sin(this.angle+Math.PI/2) * n;
 
-      // this.ax += Math.sin(this.angle) * this.vx;
       this.ax += nx;
       this.ay += ny;
 

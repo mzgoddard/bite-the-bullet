@@ -22,9 +22,33 @@
     fixPath: function(type, path) {
       return this.paths[type] + path;
     },
+    chain: function(promise, callback) {
+      var deferred = when.defer();
+
+      when(promise,
+        function() {
+          when.chain(callback(), deferred);
+        });
+
+      return deferred;
+    },
     script: function(path) {
       if (this.promises[path]) {
         return this.promises[path];
+      }
+      
+      // use old script if it was loaded old school
+      if (!this.objects[path]) {
+        var script = Sizzle('script[src="'+this.fixPath('script',path)+'"]')[0];
+        if (script) {
+          var deferred = when.defer();
+          deferred.resolve();
+          
+          this.objects[path] = script;
+          this.promises[path] = deferred.promise;
+          
+          return this.promises[path];
+        }
       }
       
       var script = window.document.createElement('script'),

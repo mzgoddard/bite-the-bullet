@@ -1,5 +1,7 @@
 (function(window) {
 
+module('load');
+
 test('load exists and has methods', 4, function() {
   ok(load);
   ok(load.get);
@@ -29,5 +31,13 @@ asyncTest('load text', 1, function() {
     start();
   });
 });
+
+asyncTest('load.chain', 2, function() {
+  load.paths.script = 'data/load/';
+  
+  aqua.tests = {};
+  
+  load.chain(load.script('a.js'), function(){return load.script('b.js');});
+})
 
 })(window);

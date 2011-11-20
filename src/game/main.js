@@ -37,7 +37,7 @@ aqua.game.task(function() {
   var now = Date.now();
   aqua.game.timing.delta = (now - aqua.game.timing.last) / 1000;
   aqua.game.timing.last = now;
-})
+}, -10);
 
 aqua.game.graphics.addDrawCall(aqua.PriorityItem.create(function(graphics, gl) {
   // graphics setup (once)

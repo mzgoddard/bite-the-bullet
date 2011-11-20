@@ -5,9 +5,22 @@
   <title>Glider Unit Tests</title>
   
   <script src="../src/externals/when/when.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../src/externals/sizzle/sizzle.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../src/externals/gl-matrix/gl-matrix.js" type="text/javascript" charset="utf-8"></script>
   
-  <!-- Glider -->
+  <!-- Aqua -->
   <script src="../src/load.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8">
+    this.load.paths = {
+      script: '../src/',
+      data: '../data/'
+    };
+  </script>
+  <script src="../src/engine/base.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../src/engine/math.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../src/engine/graphics.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../src/engine/physics.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../src/engine/init.js" type="text/javascript" charset="utf-8"></script>
   
   <!-- qunit js and css -->
   <script src="qunit/qunit/qunit.js"></script>
@@ -15,6 +28,7 @@
   
   <!-- tests -->
   <script src="tests/load.js" type="text/javascript" charset="utf-8"></script>
+  <script src="tests/physics.js" type="text/javascript" charset="utf-8"></script>
   
 </head>
 <body>
