@@ -33,7 +33,7 @@ aqua.game.timing = {
 };
 aqua.game.task(function() {
   var now = Date.now();
-  aqua.game.timing.delta = (now - aqua.game.timing.last) / 1000;
+  aqua.game.timing.delta = Math.clamp((now - aqua.game.timing.last) / 1000, 0, 0.3);
   aqua.game.timing.last = now;
 }, -10);
 
@@ -76,6 +76,8 @@ aqua.game.graphics.addDrawCall(aqua.PriorityItem.create(function(graphics, gl) {
   gl.clear(gl.COLOR_BUFFER_BIT);
   graphics.useShader('basic');
 }, -1000));
+
+aqua.game.sound = aqua.SoundContext.create();
 
 // aqua.game.task(function(){console.log('beep');});
 

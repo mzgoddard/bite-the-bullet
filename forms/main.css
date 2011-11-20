@@ -1,3 +1,27 @@
 body {
   margin: 0;
 }
+
+#credits {
+  color: white;
+  
+  position: fixed;
+  
+  left: 20px;
+  bottom: 20px;
+}
+
+#credits p {
+  margin: 0;
+}
+
+#score {
+  color: white;
+  font-size: 2em;
+  
+  position: fixed;
+  top: 10px;
+  width: 100%;
+  
+  text-align: center;
+}

@@ -627,10 +627,19 @@ var WorldRenderer = aqua.type(aqua.Renderer,
           byteView[i] = 0;
           continue;
         }
-        if ( i % 16 == 14 )
-          byteView[i] = 255;
-        else if (i % 16 > 11) {
-          x = p.x, y = p.y, lx = p.lx, ly = p.ly;
+        if ( i % 16 > 11 ) {
+            x = p.x, y = p.y, lx = p.lx, ly = p.ly;
+        }
+        if (i % 16 == 12) {
+          byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 50 * 255, 0, 218);
+        }
+        if (i % 16 == 13) {
+          byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 50 * 255, 0, 43);
+        }
+        if (i % 16 == 14) {
+          byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 50 * 255, 0, 58);
+        }
+        if (i % 16 == 15) {
           byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 50 * 255, 0, 255);
         }
       }

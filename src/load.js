@@ -110,6 +110,30 @@
       xhr.send();
       
       return deferred.promise;
+    },
+    data: function(path) {
+      if (this.promises[path]) {
+        return this.promises[path];
+      }
+
+      var xhr = new XMLHttpRequest(),
+          deferred = when.defer();
+
+      this.promises[path] = deferred.promise;
+
+      xhr.onload = (function() {
+        this.objects[path] = xhr.response;
+        deferred.resolve(xhr.response);
+      }).bind(this);
+      xhr.onerror = function() {
+        deferred.reject();
+      };
+      
+      xhr.open('GET', this.fixPath('data', path));
+      xhr.responseType = 'arraybuffer';
+      xhr.send();
+      
+      return deferred.promise;
     }
   }).init();
   

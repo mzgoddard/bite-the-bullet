@@ -33,7 +33,7 @@ var GliderInput = aqua.type(aqua.Component,
 var GliderMove = aqua.type(aqua.Component,
   {
     init: function() {
-      this.x = 640 / 2;
+      this.x = 640 / 8 * 5;
       this.y = 480 / 2;
 
       this.vx = 0;
@@ -45,6 +45,8 @@ var GliderMove = aqua.type(aqua.Component,
       this.angle = 0;
 
       this.radius = 25;
+      
+      this.score = 0;
       
       this.particle = aqua.Particle.create([this.x, this.y, 0], this.radius, 1);
       this.particle.isTrigger = true;
@@ -60,6 +62,9 @@ var GliderMove = aqua.type(aqua.Component,
       console.log(game.world.particles.length);
       game.world.addParticle(this.particle);
       console.log(game.world.hash.cell(this.particle.position[0],this.particle.position[1]));
+      
+      this.world = game.world;
+      this.sound = game.sound;
     },
     ongamedestroy: function(gameObject, game) {
       game.world.removeParticle(this.particle);
@@ -81,11 +86,11 @@ var GliderMove = aqua.type(aqua.Component,
         va += Math.PI * 2;
 
       var k = vl * 1,
-          n = k * Math.cos(va + Math.PI - this.angle - Math.PI / 2) * (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
+          n = k * 
+            Math.cos(va + Math.PI - this.angle - Math.PI / 2) * 
+            (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
           nx = Math.cos(this.angle+Math.PI/2) * n,
           ny = Math.sin(this.angle+Math.PI/2) * n;
-
-      console.log(otherParticle, vx, vy, nx, ny);
 
       this.ax += nx;
       this.ay += ny;
@@ -135,6 +140,27 @@ var GliderMove = aqua.type(aqua.Component,
 
       this.ax = 0;
       this.ay = 0;
+      
+      var fadeHappy = Math.clamp((this.x - this.world.box.left - this.world.box.width / 2) / 40, 0, 1);
+      var fadeApproach = Math.clamp((this.x - 240 + this.y / 8 - this.world.box.left) / (this.world.box.width / 6), 0, 1);
+      
+      if (this.sound.nodes.happy)
+        this.sound.nodes.happy.source.gain.value = Math.clamp(Math.lerp(0, 1, fadeHappy), 0, 1);
+      if (this.sound.nodes.zone) {
+        this.sound.nodes.zone.source.gain.value = Math.clamp(Math.lerp(1, 0, fadeHappy), 0, 1);
+      }
+      if (this.sound.nodes.approach) {
+        this.sound.nodes.approach.source.gain.value = Math.clamp(Math.lerp(1, 0, fadeApproach), 0, 1);
+      }
+      
+      if (this.world.box.contains([this.x, this.y])) {
+        if (fadeApproach > 0) {
+          this.score += fadeHappy * this.gameObject.game.timing.delta * 1000;
+          this.score += (1 - fadeHappy) * this.gameObject.game.timing.delta * 10000;
+        }
+      }
+      
+      window.Sizzle('#score')[0].innerText = parseInt(this.score);
     }
   }
 );
