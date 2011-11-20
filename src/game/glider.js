@@ -4,7 +4,7 @@ load.module('game/glider.js', null, function() {
 var aqua = window.aqua,
     glider = window.glider;
 
-var GliderInput = aqua.type(aqua.Component.prototype,
+var GliderInput = aqua.type(aqua.Component,
   {
     init: function(input) {
       this.input = input;
@@ -30,7 +30,7 @@ var GliderInput = aqua.type(aqua.Component.prototype,
   }
 );
 
-var GliderMove = aqua.type(aqua.Component.prototype,
+var GliderMove = aqua.type(aqua.Component,
   {
     init: function() {
       this.x = window.innerWidth / 2;
@@ -100,7 +100,7 @@ var GliderMove = aqua.type(aqua.Component.prototype,
   }
 );
 
-var GliderRender = aqua.type(aqua.Component.prototype,
+var GliderRender = aqua.type(aqua.Component,
   {
     onadd: function(gameObject) {
       this.move = gameObject.get(GliderMove);

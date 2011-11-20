@@ -1,6 +1,6 @@
 (function(window, aqua) {
 
-var Game = aqua.type(aqua.type.Base.prototype,
+var Game = aqua.type(aqua.type.Base,
   {
     init: function() {
       this.objects = [];
@@ -58,7 +58,7 @@ var Game = aqua.type(aqua.type.Base.prototype,
   }
 );
 
-var GameObject = aqua.type(aqua.type.Base.prototype,
+var GameObject = aqua.type(aqua.type.Base,
   {
     init: function() {
       this.components = [];
@@ -128,7 +128,7 @@ var GameObject = aqua.type(aqua.type.Base.prototype,
   }
 );
 
-var Component = aqua.type(aqua.type.Base.prototype,
+var Component = aqua.type(aqua.type.Base,
   {
     // onadd: when added to object
     // ongameadd: when added to object to a game object

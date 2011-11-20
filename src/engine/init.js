@@ -4,11 +4,11 @@
   
   var aqua = window.aqua = {};
   
-  aqua.type = function(prototype, members, properties, objectMembers) {
+  aqua.type = function(supertype, members, properties, objectMembers) {
     properties = properties || {}; objectMembers = objectMembers || {};
     
     var exports = {}, key;
-    exports.prototype = Object.create(prototype || {}, properties);
+    exports.prototype = Object.create(supertype.prototype || {}, properties);
     
     for ( key in members ) {
       exports.prototype[key] = members[key];
@@ -54,7 +54,7 @@
     };
   })();
   
-  aqua.PriorityItem = aqua.type(aqua.type.Base.prototype,
+  aqua.PriorityItem = aqua.type(aqua.type.Base,
     {
       init: function(callback, priority, before, once) {
         this.callback = callback;
@@ -67,7 +67,7 @@
       }
     }
   );
-  aqua.PriorityList = aqua.type(aqua.type.Base.prototype,
+  aqua.PriorityList = aqua.type(aqua.type.Base,
     {
       init: function() {
         this.items = [];
@@ -108,6 +108,41 @@
           if (item.once) {
             items.splice(i, 1);
             i--;
+          }
+        }
+      }
+    }
+  );
+
+  aqua.Emitter = aqua.type(aqua.type.Base,
+    {
+      init: function() {
+        this._events = {};
+      },
+      on: function(name, f) {
+        if (!this._events[name])
+          this._events[name] = [];
+        
+        if (this._events[name].indexOf(f) == -1)
+          this._events[name].push(f);
+      },
+      off: function(name, f) {
+        var index = -1;
+        if (this._events[name]) {
+          if ((index = this._events[name].indexOf(f))) {
+            this._events[name].splice(index, 1);
+          }
+        }
+      },
+      call: function(name) {
+        if (this._events[name]) {
+          var args = [], i, events = this._events[name];
+          for ( i = 1; i < arguments.length; i++ ) {
+            args.push(arguments[i]);
+          }
+          
+          for ( i = 0; i < events.length; i++ ) {
+            events[i].apply(this, args);
           }
         }
       }
