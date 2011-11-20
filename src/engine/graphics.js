@@ -1,4 +1,7 @@
 (function(window, load, aqua) {
+load.module('engine/graphics.js',
+  load.script('engine/object.js'),
+function(){
   var setTimeout = window.setTimeout,
       when = window.when;
   
@@ -48,13 +51,20 @@
         return this;
       },
       addShader: function(options) {
-        this.shaders[options.name] = options;
+        if (this.shaders[options.name])
+          return this.shaders[options.name].promise;
         
-        when.all([
+        var deferred = when.defer();
+        this.shaders[options.name] = options;
+        options.promise = deferred.promise;
+        
+        when.chain(when.all([
           this.deferred.promise, 
           load.text(options.path + '.vs'),
           load.text(options.path + '.fs')
-        ], this._buildProgram.bind(this, options));
+        ], this._buildProgram.bind(this, options)), deferred);
+        
+        return options.promise;
       },
       _buildProgram: function(options) {
         var gl = this.gl,
@@ -91,6 +101,19 @@
     }
   );
 
+  var Renderer = aqua.type(aqua.Component,
+    {
+      ongameadd: function(gameObject, game) {
+        this.drawCall = aqua.PriorityItem.create(this.draw.bind(this));
+        game.graphics.addDrawCall(this.drawCall);
+      },
+      ongamedestroy: function(gameObject, game) {
+        game.graphics.removeDrawCall(this.drawCall);
+      },
+      draw: function(graphics, gl) {}
+    }
+  );
+
   aqua.graphics = [];
   aqua.initGraphics = function() {
     var graphics = Graphics.create.apply(null, arguments);
@@ -98,5 +121,7 @@
     
     return graphics;
   };
+  aqua.Renderer = Renderer;
 
+});
 })(this, this.load, this.aqua);
