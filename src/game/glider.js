@@ -316,13 +316,11 @@ var GliderReset = aqua.type(aqua.Component, {
   ongameadd: function(gameObject, game) {
     this._keydown = window.addEventListener('keydown', this.keydown.bind(this));
   },
-  ongamedestroy: function(gameObject, game) {
-    window.removeEventListener(this._keydown);
-  },
   keydown: function(e) {
     if (this.inputMap[e.keyCode] == 'up') {
       this.gameObject.game.add(glider.makeGlider());
       this.gameObject.game.destroy(this.gameObject);
+      window.removeEventListener(this._keydown);
     }
   }
 });
