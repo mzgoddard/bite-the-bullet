@@ -103,7 +103,7 @@ var GliderMove = aqua.type(aqua.Component,
 
       while (va > Math.PI)
         va -= Math.PI * 2;
-      while (va < Math.PI)
+      while (va < -Math.PI)
         va += Math.PI * 2;
 
       var k = vl * 1,
@@ -112,7 +112,7 @@ var GliderMove = aqua.type(aqua.Component,
             (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
           nx = Math.cos(this.angle+Math.PI/2) * n,
           ny = Math.sin(this.angle+Math.PI/2) * n;
-
+          // console.log(nx, ny);
       this.ax += nx;
       this.ay += ny;
     },
