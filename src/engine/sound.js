@@ -29,8 +29,8 @@ var SoundContext = aqua.type(aqua.type.Base,
         
         console.log(this.context);
         
-        window.document.addEventListener('webkitvisibilitychange', (function() {
-          this.nodes.main.gain.value = window.document.webkitVisibilityState == 'visible' ? 1 : 0;
+        document.addEventListener('webkitvisibilitychange', (function() {
+          this.nodes.main.gain.value = document.webkitVisibilityState == 'visible' ? 1 : 0;
         }).bind(this));
       }
     },
