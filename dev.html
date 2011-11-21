@@ -10,12 +10,19 @@
   </head>
   <body>
     <canvas></canvas>
-    <div id="score">
-      0
-    </div>
-    <div id="credits">
-      <p>Z Goddard &lt;z@gradientstudios.com&gt;</p>
-      <p>Kevin Notar &lt;knotar@berklee.edu&gt;</p>
+    <div id="game">
+      <div id="score">
+        0
+      </div>
+      <div id="credits" class="load">
+        <p>Z Goddard &lt;z@gradientstudios.com&gt;</p>
+        <p>Kevin Notar &lt;knotar@berklee.edu&gt;</p>
+        <script>
+          window.addEventListener('load', function() {
+            Sizzle('#game #credits')[0].classList.remove('load');
+          });
+        </script>
+      </div>
     </div>
     <!-- // <script src="src/engine/loadforms.js" type="text/javascript" charset="utf-8"></script> -->
   </body>

@@ -3,12 +3,22 @@ body {
 }
 
 #credits {
-  color: white;
+  -webkit-transition: color 2s ease-out;
+  color: rgba(255, 255, 255, 0.1);
   
   position: fixed;
   
   left: 20px;
   bottom: 20px;
+}
+
+#credits:hover {
+  -webkit-transition: color 250ms ease-out;
+  color: white;
+}
+
+#credits.load {
+  color: white;
 }
 
 #credits p {

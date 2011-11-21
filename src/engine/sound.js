@@ -27,7 +27,11 @@ var SoundContext = aqua.type(aqua.type.Base,
         
         this.nodes.main.connect(this.context.destination);
         
-          console.log(this.context);
+        console.log(this.context);
+        
+        window.document.addEventListener('webkitvisibilitychange', (function() {
+          this.nodes.main.gain.value = window.document.webkitVisibilityState == 'visible' ? 1 : 0;
+        }).bind(this));
       }
     },
     _loadClip: function(name, clip) {
