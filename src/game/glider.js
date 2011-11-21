@@ -70,17 +70,23 @@ var GliderMove = aqua.type(aqua.Component,
       this.input = null;
     },
     ongameadd: function(gameObject, game) {
-      console.log(game.world.particles.length);
       game.world.addParticle(this.particle);
-      console.log(game.world.hash.cell(this.particle.position[0],this.particle.position[1]));
       
       this.world = game.world;
       this.sound = game.sound;
       
       this.x += game.world.box.left;
+      
+      if (game.score) {
+        game.score.setMove(this);
+      }
     },
     ongamedestroy: function(gameObject, game) {
       game.world.removeParticle(this.particle);
+      
+      if (game.score) {
+        game.score.setMove(null);
+      }
     },
     oncollision: function(otherParticle, collision) {
       if (!this.playing) return;
@@ -124,7 +130,7 @@ var GliderMove = aqua.type(aqua.Component,
 
       while (va > Math.PI)
         va -= Math.PI * 2;
-      while (va < Math.PI)
+      while (va < -Math.PI)
         va += Math.PI * 2;
 
       this.ay -= 32;
@@ -155,12 +161,21 @@ var GliderMove = aqua.type(aqua.Component,
         this.angle += Math.PI * delta;
       }
       
+      this.angle -= Math.PI * 0.2 * delta;
+      
+      if (this.angle > Math.PI) {
+        this.canScoreBackflip = true;
+      }
+      
       while (this.angle > Math.PI)
         this.angle -= Math.PI * 2;
-      while (this.angle < Math.PI)
+      while (this.angle < -Math.PI)
         this.angle += Math.PI * 2;
-      
-      this.angle -= Math.PI * 0.2 * delta;
+
+      if (this.angle > 0 && this.canScoreBackflip && aqua.game.score) {
+        this.canScoreBackflip = false;
+        aqua.game.score.addTrick('Backflip', 200000);
+      }
 
       this.ax = 0;
       this.ay = 0;
@@ -186,7 +201,7 @@ var GliderMove = aqua.type(aqua.Component,
         }
       }
       
-      window.Sizzle('#score')[0].innerText = parseInt(this.score);
+      // window.Sizzle('#score')[0].innerText = parseInt(this.score);
       
       if (!(
         this.world.box.contains([this.x+this.radius,this.y+this.radius]) ||
@@ -208,37 +223,157 @@ var GliderScore = aqua.type(aqua.Component,
   {
     init: function() {
       this.score = 0;
+
       this.zoneTime = 0;
+      this.zoneDiv = null;
+
+      this.tricks = [];
     },
-    onadd: function(gameObject) {
-      this.move = gameObject.get(GliderMove);
+    setMove: function(move) {
+      this.move = move;
+      
+      if (move)
+        this._clear();
+    },
+    _clear: function() {
+      var tricks = this.tricks,
+          count = tricks.length,
+          i;
+      
+      for ( i = 0; i < count; i++ ) {
+        this.removeTrick(tricks[i]);
+      }
+
+      this.score = 0;
+      this.zoneTime = 0;
+      this.zoneTimeAwarded = 0;
+      this.zoneDiv = null;
+    },
+    addTrick: function(name, points, time) {
+      if (time == null) time = 2;
+      
+      this.score += points;
+      
+      name = name.replace(/ /g, '&nbsp;');
+      
+      var trick = $(
+        '<div class="trick"><div class="value">'+
+          points+
+        '</div><div class="name">'+
+          name+
+        '</div></div>').appendTo(this.stuntDiv),
+          name = trick.find('.name');
+      trick.time = time;
+      trick.points = points;
+      
+      name.css('right', -name.width() - 5);
+
+      this.tricks.push(trick);
+    },
+    removeTrick: function(trickDiv) {
+      if (!trickDiv.removing) {
+        trickDiv.removing = true;
+        
+        trickDiv.css('opacity', 0);
+        setTimeout((function(trickDiv) {
+          trickDiv.remove();
+
+          var index = this.tricks.indexOf(trickDiv);
+          if (index != -1) {
+            this.tricks.splice(index, 1);
+          }
+        }).bind(this, trickDiv), 500);
+      }
     },
     ongameadd: function(gameObject, game) {
       this.world = game.world;
     },
+    ongamedestroy: function() {
+      delete this.tricks;
+    },
     fixedUpdate: function() {
-      var delta = this.gameObject.game.timing.delta;
-      var stuntDiv = $('#stunts'),
+      var delta = this.gameObject.game.timing.fixedDelta;
+      var stuntDiv = this.stuntDiv,
           scoreDiv = $('#score'),
-          zoneDiv = stuntDiv.find('.zone');
+          zoneDiv = this.zoneDiv;
       
-      if (this.world.box.contains([this.move.x, this.move.y])) {
+      if (!stuntDiv) {
+        stuntDiv = this.stuntDiv = $('#stunts');
+      }
+      
+      if (this.move && this.world.box.contains([this.move.x, this.move.y])) {
         if (this.move.fadeApproach > 0) {
           this.score += this.move.fadeHappy * delta * 1000;
           this.score += (1 - this.move.fadeHappy) * delta * 10000;
-          
+        
           // in the zone
           if (this.move.fadeHappy == 0) {
             this.zoneTime += delta;
+            
+            if (this.zoneTime - this.zoneTimeAwarded > 5) {
+              this.zoneTimeAwarded += 5;
+              
+              this.addTrick(this.zoneTimeAwarded + 's in the Zone', this.zoneTimeAwarded * 10000);
+            }
+          } else {
+            if (this.zoneTime) {
+              this.zoneTime = parseInt(this.zoneTime * 10) / 10;
+              this.addTrick(this.zoneTime + 's in the Zone', this.zoneTime * 10000);
+            }
+            
+            this.zoneTime = 0;
+            this.zoneTimeAwarded = 0;
           }
+        } else {
+          if (this.zoneTime) {
+            this.zoneTime = parseInt(this.zoneTime * 10) / 10;
+            this.addTrick(this.zoneTime + 's in the Zone', this.zoneTime * 10000);
+          }
+          
+          this.zoneTime = 0;
+          this.zoneTimeAwarded = 0;
+        }
+      
+        if (this.zoneTime > 0 && !this.zoneDiv) {
+          zoneDiv = this.zoneDiv = $('<div class="trick zone">0s</div>').appendTo(stuntDiv);
+
+          this.tricks.splice(0, 0, zoneDiv);
+        }
+        if (this.zoneTime == 0 && this.zoneDiv) {
+          delete this.zoneDiv;
+
+          zoneDiv.time = 2;
+          
+          zoneDiv = null;
+        }
+      } else {
+        if (this.zoneDiv) {
+          delete this.zoneDiv;
+          
+          zoneDiv.time = 0;
+          
+          zoneDiv = null;
         }
       }
       
-      stuntDiv.css('left', (window.innerWidth - scoreDiv.width()) / 2);
+      if (zoneDiv) {
+        zoneDiv.text(parseInt(this.zoneTime * 10) / 10 + 's');
+      }
       
-      zoneDiv.text(parseInt(this.zoneTime * 10) / 10 + 's');
-      
+      for ( var i = 0; i < this.tricks.length; i++ ) {
+        var trickDiv = this.tricks[i];
+        trickDiv.css('top', 32 + i * 14);
+
+        if (trickDiv.time != null) {
+          trickDiv.time -= delta;
+          if (trickDiv.time <= 0) {
+            this.removeTrick(trickDiv);
+          }
+        }
+      }
+
       scoreDiv.text(parseInt(this.score));
+      stuntDiv.css('left', (window.innerWidth - scoreDiv.width()) / 2);
     }
   }
 );
@@ -314,13 +449,15 @@ var GliderReset = aqua.type(aqua.Component, {
     this.inputMap = map.inputMap || map;
   },
   ongameadd: function(gameObject, game) {
-    this._keydown = window.addEventListener('keydown', this.keydown.bind(this));
+    this._keydown = this.keydown.bind(this);
+    window.addEventListener('keydown', this._keydown);
+    this.game = game;
   },
   keydown: function(e) {
     if (this.inputMap[e.keyCode] == 'up') {
-      this.gameObject.game.add(glider.makeGlider());
-      this.gameObject.game.destroy(this.gameObject);
-      window.removeEventListener(this._keydown);
+      window.removeEventListener('keydown', this._keydown);
+      this.game.add(glider.makeGlider());
+      this.game.destroy(this.gameObject);
     }
   }
 });
@@ -341,7 +478,6 @@ glider.makeGlider = function(gameObject) {
     32: 'up' // space
   }));
   gameObject.add(GliderMove.create());
-  gameObject.add(GliderScore.create());
   gameObject.add(GliderRender.create());
 
   return gameObject;

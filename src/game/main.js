@@ -81,6 +81,15 @@ aqua.game.sound = aqua.SoundContext.create();
 
 // aqua.game.task(function(){console.log('beep');});
 
+aqua.game.score = glider.GliderScore.create();
+aqua.game.add((function(){
+  var scoreObject = aqua.GameObject.create();
+
+  scoreObject.add(aqua.game.score);
+
+  return scoreObject;
+})());
+
 aqua.game.player = glider.makeGlider();
 aqua.game.add(aqua.game.player);
 

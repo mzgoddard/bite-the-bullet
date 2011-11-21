@@ -39,7 +39,23 @@ body {
 /*  text-align: center;*/
 }
 
-.zone {
+.trick {
+  -webkit-transition: top 500ms ease-out, opacity 250ms ease-in-out;
+  opacity: 1;
+  
   position: absolute;
+  right: 0;
+}
+
+.trick .value {
+  
+}
+
+.trick .name {
+  position: absolute;
+  margin-top: -18px;
+}
+
+.zone {
   right: -6px;
 }
