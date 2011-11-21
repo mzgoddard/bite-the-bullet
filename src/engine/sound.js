@@ -26,6 +26,7 @@ var SoundContext = aqua.type(aqua.type.Base,
         };
         
         this.nodes.main.connect(this.context.destination);
+        this.nodes.main.gain.value = 0.1;
         
         console.log(this.context);
         

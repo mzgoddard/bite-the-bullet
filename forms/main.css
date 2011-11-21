@@ -26,12 +26,20 @@ body {
 }
 
 #score {
-  color: white;
   font-size: 2em;
+}
+
+#stunts {
+  color: white;
   
   position: fixed;
   top: 10px;
-  width: 100%;
+/*  width: 100%;*/
   
-  text-align: center;
+/*  text-align: center;*/
+}
+
+.zone {
+  position: absolute;
+  right: -6px;
 }

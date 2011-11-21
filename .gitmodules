@@ -11,3 +11,6 @@
 	path = src/externals/sizzle
 	url = https://github.com/jquery/sizzle.git
 
+[submodule "src/externals/jquery"]
+	path = src/externals/jquery
+	url = https://github.com/jquery/jquery.git

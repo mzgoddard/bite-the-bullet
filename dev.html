@@ -4,6 +4,8 @@
     <link rel="stylesheet" href="forms/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
     <script src="src/externals/when/when.js" type="text/javascript" charset="utf-8"></script>
     <script src="src/externals/sizzle/sizzle.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/externals/jquery/dist/jquery.js" type="text/javascript" charset="utf-8"></script>
+    
     <script src="src/externals/gl-matrix/gl-matrix.js" type="text/javascript" charset="utf-8"></script>
     <script src="src/load.js" type="text/javascript" charset="utf-8"></script>
     <script src="src/game/main.js" type="text/javascript" charset="utf-8"></script>
@@ -11,9 +13,13 @@
   <body>
     <canvas></canvas>
     <div id="game">
-      <div id="score">
-        0
+      <div id="stunts">
+        <div id="score">0</div>
+        <div class="zone">
+          <div class="timer">1.2s</div>
+        </div>
       </div>
+      
       <div id="credits" class="load">
         <p>Z Goddard &lt;z@gradientstudios.com&gt;</p>
         <p>Kevin Notar &lt;knotar@berklee.edu&gt;</p>

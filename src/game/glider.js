@@ -4,10 +4,19 @@ load.module('game/glider.js', null, function() {
 var aqua = window.aqua,
     glider = window.glider;
 
+function normalizeAngle(angle) {
+  while (angle > Math.PI)
+    angle -= Math.PI * 2;
+  while (angle < Math.PI)
+    angle += Math.PI * 2;
+
+  return angle;
+}
+
 var GliderInput = aqua.type(aqua.Component,
   {
-    init: function(input) {
-      this.input = input;
+    init: function(inputMap) {
+      this.inputMap = inputMap;
       this.state = {};
     },
     onadd: function() {
@@ -22,10 +31,10 @@ var GliderInput = aqua.type(aqua.Component,
       return this.state[name];
     },
     keydown: function(e) {
-      this.state[this.input[e.keyCode]] = true;
+      this.state[this.inputMap[e.keyCode]] = true;
     },
     keyup: function(e) {
-      this.state[this.input[e.keyCode]] = false;
+      this.state[this.inputMap[e.keyCode]] = false;
     }
   }
 );
@@ -51,6 +60,8 @@ var GliderMove = aqua.type(aqua.Component,
       this.particle = aqua.Particle.create([this.x, this.y, 0], this.radius, 1);
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
+      
+      this.playing = false;
     },
     onadd: function(gameObject) {
       this.input = gameObject.get(GliderInput);
@@ -65,11 +76,15 @@ var GliderMove = aqua.type(aqua.Component,
       
       this.world = game.world;
       this.sound = game.sound;
+      
+      this.x += game.world.box.left;
     },
     ongamedestroy: function(gameObject, game) {
       game.world.removeParticle(this.particle);
     },
     oncollision: function(otherParticle, collision) {
+      if (!this.playing) return;
+      
       var delta = aqua.game.timing.fixedDelta,
           vx = otherParticle.lastPosition[0] - otherParticle.position[0],
           vy = otherParticle.lastPosition[1] - otherParticle.position[1],
@@ -96,6 +111,13 @@ var GliderMove = aqua.type(aqua.Component,
       this.ay += ny;
     },
     fixedUpdate: function() {
+      if (!this.playing && this.input.get('up')) {
+        this.playing = true;
+      } else if (!this.playing) {
+        this.x = this.world.box.left + this.world.box.width / 8 * 5;
+        return;
+      }
+      
       var delta = aqua.game.timing.fixedDelta,
           vl = Math.sqrt(this.vx*this.vx+this.vy*this.vy),
           va = Math.atan2(this.vy, this.vx);
@@ -131,18 +153,6 @@ var GliderMove = aqua.type(aqua.Component,
       // }
       if (this.input.get('up')) {
         this.angle += Math.PI * delta;
-        
-        if (!this.world.box.contains([this.x, this.y])) {
-          this.x = 640 / 8 * 5 + this.world.box.left;
-          this.y = 480 / 2;
-          
-          this.vx = 0;
-          this.vy = 0;
-          
-          this.angle = 0;
-          
-          this.score = 0;
-        }
       }
       
       while (this.angle > Math.PI)
@@ -155,8 +165,8 @@ var GliderMove = aqua.type(aqua.Component,
       this.ax = 0;
       this.ay = 0;
       
-      var fadeHappy = Math.clamp((this.x - this.world.box.left - this.world.box.width / 2) / 40, 0, 1);
-      var fadeApproach = Math.clamp((this.x - 240 + this.y / 8 - this.world.box.left) / (this.world.box.width / 6), 0, 1);
+      var fadeHappy = this.fadeHappy = Math.clamp((this.x - this.world.box.left - this.world.box.width / 2) / 40, 0, 1);
+      var fadeApproach = this.fadeApproach = Math.clamp((this.x - 240 + this.y / 8 - this.world.box.left) / (this.world.box.width / 6), 0, 1);
       
       if (this.sound.nodes) {
         if (this.sound.nodes.happy)
@@ -177,6 +187,58 @@ var GliderMove = aqua.type(aqua.Component,
       }
       
       window.Sizzle('#score')[0].innerText = parseInt(this.score);
+      
+      if (!(
+        this.world.box.contains([this.x+this.radius,this.y+this.radius]) ||
+        this.world.box.contains([this.x+this.radius,this.y-this.radius]) ||
+        this.world.box.contains([this.x-this.radius,this.y+this.radius]) ||
+        this.world.box.contains([this.x-this.radius,this.y-this.radius]))) {
+        
+        this.gameObject.game.destroy(this.gameObject);
+        
+        var resetObject = aqua.GameObject.create();
+        resetObject.add(GliderReset.create(this.gameObject.get(GliderInput)));
+        this.gameObject.game.add(resetObject);
+      }
+    }
+  }
+);
+
+var GliderScore = aqua.type(aqua.Component,
+  {
+    init: function() {
+      this.score = 0;
+      this.zoneTime = 0;
+    },
+    onadd: function(gameObject) {
+      this.move = gameObject.get(GliderMove);
+    },
+    ongameadd: function(gameObject, game) {
+      this.world = game.world;
+    },
+    fixedUpdate: function() {
+      var delta = this.gameObject.game.timing.delta;
+      var stuntDiv = $('#stunts'),
+          scoreDiv = $('#score'),
+          zoneDiv = stuntDiv.find('.zone');
+      
+      if (this.world.box.contains([this.move.x, this.move.y])) {
+        if (this.move.fadeApproach > 0) {
+          this.score += this.move.fadeHappy * delta * 1000;
+          this.score += (1 - this.move.fadeHappy) * delta * 10000;
+          
+          // in the zone
+          if (this.move.fadeHappy == 0) {
+            this.zoneTime += delta;
+          }
+        }
+      }
+      
+      stuntDiv.css('left', (window.innerWidth - scoreDiv.width()) / 2);
+      
+      zoneDiv.text(parseInt(this.zoneTime * 10) / 10 + 's');
+      
+      scoreDiv.text(parseInt(this.score));
     }
   }
 );
@@ -247,6 +309,27 @@ var GliderRender = aqua.type(aqua.Component,
   }
 );
 
+var GliderReset = aqua.type(aqua.Component, {
+  init: function(map) {
+    this.inputMap = map.inputMap || map;
+  },
+  ongameadd: function(gameObject, game) {
+    this._keydown = window.addEventListener('keydown', this.keydown.bind(this));
+  },
+  ongamedestroy: function(gameObject, game) {
+    window.removeEventListener(this._keydown);
+  },
+  keydown: function(e) {
+    if (this.inputMap[e.keyCode] == 'up') {
+      this.gameObject.game.add(glider.makeGlider());
+      this.gameObject.game.destroy(this.gameObject);
+    }
+  }
+});
+
+glider.GliderScore = GliderScore;
+glider.GliderReset = GliderReset;
+
 glider.GliderInput = GliderInput;
 glider.GliderMove = GliderMove;
 glider.GliderRender = GliderRender;
@@ -255,12 +338,12 @@ glider.makeGlider = function(gameObject) {
   gameObject = gameObject || aqua.GameObject.create();
 
   gameObject.add(GliderInput.create({
-    37: 'left',
-    38: 'up',
-    39: 'right',
-    40: 'down'
+    87: 'up', // w
+    38: 'up', // up arrow
+    32: 'up' // space
   }));
   gameObject.add(GliderMove.create());
+  gameObject.add(GliderScore.create());
   gameObject.add(GliderRender.create());
 
   return gameObject;
