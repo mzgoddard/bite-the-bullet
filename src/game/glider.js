@@ -126,9 +126,9 @@ var GliderMove = aqua.type(aqua.Component,
       
       vec3.set([this.x, this.y, 0], this.particle.position);
 
-      if (this.input.get('down')) {
-        this.angle -= Math.PI * delta;
-      }
+      // if (this.input.get('down')) {
+      //   this.angle -= Math.PI * delta;
+      // }
       if (this.input.get('up')) {
         this.angle += Math.PI * delta;
       }
@@ -137,6 +137,8 @@ var GliderMove = aqua.type(aqua.Component,
         this.angle -= Math.PI * 2;
       while (this.angle < Math.PI)
         this.angle += Math.PI * 2;
+      
+      this.angle -= Math.PI * 0.2 * delta;
 
       this.ax = 0;
       this.ay = 0;
@@ -213,8 +215,8 @@ var GliderRender = aqua.type(aqua.Component,
       floatView[4] = x + Math.cos(angle + Math.PI) * radius;
       floatView[5] = y + Math.sin(angle + Math.PI) * radius;
       
-      floatView[8] = x + Math.cos(angle + Math.PI / 4 * 5) * radius;
-      floatView[9] = y + Math.sin(angle + Math.PI / 4 * 5) * radius;
+      floatView[8] = floatView[4] + Math.cos(angle - Math.PI / 4 * 3) * radius / 3 * 2 * Math.lerp(0.7, 1, Math.random());
+      floatView[9] = floatView[5] + Math.sin(angle - Math.PI / 4 * 3) * radius / 3 * 2 * Math.lerp(0.7, 1, Math.random());
       
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
       gl.bufferData(gl.ARRAY_BUFFER, floatView, gl.DYNAMIC_DRAW);

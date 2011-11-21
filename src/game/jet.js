@@ -6,9 +6,14 @@ var Jet = aqua.type(aqua.Component,
   {
     onadd: function(gameObject) {
       this.world = gameObject;
+      this.x = this.world.box.left + this.world.box.width / 4 * 3;
     },
     fixedUpdate: function() {
-      var cell = this.world.hash.cell(this.world.box.left + 320, 10),
+      if (this.x < this.world.box.left) {
+        this.x = this.world.box.right;
+      }
+      
+      var cell = this.world.hash.cell(this.world.box.left + 320, 0),
           count = cell && cell.length,
           i,
           p;

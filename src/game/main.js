@@ -37,7 +37,7 @@ aqua.game.task(function() {
   aqua.game.timing.last = now;
 }, -10);
 
-aqua.game.world = aqua.World.create(aqua.Box.create(480, 640, 0, 0));
+aqua.game.world = aqua.World.create(aqua.Box.create(400, 640, 0, 0));
 aqua.game.add(aqua.game.world);
 aqua.game.world.add(aqua.World.Renderer.create());
 
@@ -69,7 +69,7 @@ aqua.game.graphics.addDrawCall(aqua.PriorityItem.create(function(graphics, gl) {
   
   gl.viewport(0, 0, width, height);
   mat4.ortho(
-    aqua.game.world.box.left, 640 + aqua.game.world.box.left, 0, 480, 0, 1000,
+    aqua.game.world.box.left, aqua.game.world.box.width + aqua.game.world.box.left, 0, aqua.game.world.box.height, 0, 1000,
     graphics.projection);
   
   // graphics setup
@@ -81,7 +81,8 @@ aqua.game.sound = aqua.SoundContext.create();
 
 // aqua.game.task(function(){console.log('beep');});
 
-aqua.game.add(glider.makeGlider());
+aqua.game.player = glider.makeGlider();
+aqua.game.add(aqua.game.player);
 
 function loop() {
   aqua.requestAnimFrame.call(null, loop);

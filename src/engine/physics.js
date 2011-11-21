@@ -444,8 +444,16 @@ var World = aqua.type(aqua.GameObject,
         p = particles[i];
         
         if (p.position[0] + p.radius < box.left) {
-          var vx = p.position[0] - p.lastPosition[0];
-          p.position[0] = box.right - p.radius;
+          if (true) {
+            var vx = p.position[0] - p.lastPosition[0];
+            p.position[0] = box.right - p.radius;
+            p.position[1] = box.height * Math.random();
+
+            // p.lastPosition[0] = p.position[0] - p.radius;
+            p.lastPosition[1] = p.position[1];
+          } else {
+            // p.
+          }
           // p.lastPosition[0] = p.position[0] - p.radius;
         }
         if (p.position[0] + p.radius > box.right) {
