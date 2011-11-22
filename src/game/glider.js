@@ -28,13 +28,29 @@ var GliderInput = aqua.type(aqua.Component,
       window.removeEventListener('keyup', this._keyup);
     },
     get: function(name) {
-      return this.state[name];
+      return this.state[name].pressed;
+    },
+    getPressTime: function(name) {
+      return this.state[name].pressed && Date.now() - this.state[name].start;
     },
     keydown: function(e) {
-      this.state[this.inputMap[e.keyCode]] = true;
+      var state = this.state[this.inputMap[e.keyCode]];
+      if (!state) {
+        state = this.state[this.inputMap[e.keyCode]] = {};
+      }
+      
+      state.pressed = true;
+      if (!state.start)
+        state.start = Date.now();
     },
     keyup: function(e) {
-      this.state[this.inputMap[e.keyCode]] = false;
+      var state = this.state[this.inputMap[e.keyCode]];
+      if (!state) {
+        state = this.state[this.inputMap[e.keyCode]] = {};
+      }
+      
+      state.pressed = false;
+      delete state.start;
     }
   }
 );
@@ -43,7 +59,7 @@ var GliderMove = aqua.type(aqua.Component,
   {
     init: function() {
       this.x = 640 / 8 * 5;
-      this.y = 480 / 2;
+      this.y = 480 / 8 * 3;
 
       this.vx = 0;
       this.vy = 0;
@@ -102,14 +118,14 @@ var GliderMove = aqua.type(aqua.Component,
       while (va < -Math.PI)
         va += Math.PI * 2;
 
-      var k = vl * 1,
+      var k = vl,
           n = k * 
             Math.cos(va + Math.PI - this.angle - Math.PI / 2) * 
             (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
           nx = Math.cos(this.angle+Math.PI/2) * n,
-          ny = Math.sin(this.angle+Math.PI/2) * n;
+          ny = Math.sin(this.angle+Math.PI/2) * n * 2;
           // console.log(nx, ny);
-      this.ax += nx;
+      this.ax += Math.clamp(nx, -10, 1000);
       this.ay += ny;
     },
     fixedUpdate: function() {
@@ -134,7 +150,7 @@ var GliderMove = aqua.type(aqua.Component,
       while (va < -Math.PI)
         va += Math.PI * 2;
 
-      this.ay -= 32;
+      this.ay -= 16;
 
       var k = vl * 2,
           n = k * Math.cos(va + Math.PI - this.angle - Math.PI / 2) * (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),

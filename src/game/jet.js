@@ -6,24 +6,23 @@ var Jet = aqua.type(aqua.Component,
   {
     onadd: function(gameObject) {
       this.world = gameObject;
+      
+      this.particle = aqua.Particle.create([0,0,0], 20, 1);
+      this.particle.isTrigger = true;
+      this.particle.on('collision', this.oncollision.bind(this));
+      
+      this.world.addParticle(this.particle);
       this.x = this.world.box.left + this.world.box.width / 4 * 3;
+    },
+    oncollision: function(p, collision) {
+      p.acceleration[1] += 4000;
     },
     fixedUpdate: function() {
       if (this.x < this.world.box.left) {
         this.x = this.world.box.right;
       }
       
-      var cell = this.world.hash.cell(this.world.box.left + 320, 0),
-          count = cell && cell.length,
-          i,
-          p;
-      
-      if (cell && cell.length) {
-        for ( i = 0; i < count; i++ ) {
-          p = cell[i];
-          p.acceleration[1] += 10000;
-        }
-      }
+      this.particle.position[0] = this.world.box.left + 320;
     }
   }
 );

@@ -80,7 +80,7 @@ var Particle = aqua.type(aqua.Emitter,
 
         var lx = ax - bx,
             ly = ay - by, 
-            al = Math.mag(lx, ly),
+            al = ingress,
             pt = (al - ar) / al,
             qt = br / al;
         c.px = bx + Math.lerp(0, lx, pt);
@@ -100,8 +100,8 @@ var Particle = aqua.type(aqua.Emitter,
         c = collision,
         lambx = (c.qx - c.px) * 0.5,
         lamby = (c.qy - c.py) * 0.5,
-        amsq = Math.pow(a.mass, 1),
-        bmsq = Math.pow(b.mass, 1),
+        amsq = a.mass,
+        bmsq = b.mass,
         mass = amsq + bmsq,
         am = bmsq / mass,
         bm = amsq / mass,
@@ -387,8 +387,8 @@ var World = aqua.type(aqua.GameObject,
       this.game.timing.fixedDelta = fixedDelta;
       this.timeToPlay += this.game.timing.delta;
       
-      if (this.timeToPlay > fixedDelta) {
-        this.timeToPlay -= this.game.timing.delta;
+      if (this.timeToPlay > 1 / 20) {
+        this.timeToPlay -= 1 / 20;
         
         this.game.call('fixedUpdate', this);
         
@@ -444,17 +444,11 @@ var World = aqua.type(aqua.GameObject,
         p = particles[i];
         
         if (p.position[0] + p.radius < box.left) {
-          if (true) {
-            var vx = p.position[0] - p.lastPosition[0];
-            p.position[0] = box.right - p.radius;
-            p.position[1] = box.height * Math.random();
+          var vx = p.position[0] - p.lastPosition[0];
+          p.position[0] = box.right - p.radius;
+          p.position[1] = box.height * Math.random();
 
-            // p.lastPosition[0] = p.position[0] - p.radius;
-            p.lastPosition[1] = p.position[1];
-          } else {
-            // p.
-          }
-          // p.lastPosition[0] = p.position[0] - p.radius;
+          p.lastPosition[1] = p.position[1];
         }
         if (p.position[0] + p.radius > box.right) {
           p.position[0] = box.right - p.radius;
@@ -588,6 +582,8 @@ var WorldRenderer = aqua.type(aqua.Renderer,
           byteView = new Uint8Array(arrayBuffer),
           particles = this.world.particles,
           p,
+          
+          delta = this.world.fixedDelta,
 
           shader = this.shader,
 
@@ -635,7 +631,7 @@ var WorldRenderer = aqua.type(aqua.Renderer,
         if (p.isTrigger) continue;
 
         x = p.x, y = p.y, lx = p.lx, ly = p.ly;
-        d = Math.mag(x-lx,y-ly,2);
+        d = Math.mag(x-lx,y-ly) * 2;
 
         red = Math.clamp(d / 50 * 255, 0, 218);
         green = Math.clamp(d / 50 * 255, 0, 43);
