@@ -172,7 +172,7 @@ var GliderMove = aqua.type(aqua.Component,
       while (this.angle < -Math.PI)
         this.angle += Math.PI * 2;
 
-      if (this.angle > 0 && this.canScoreBackflip && aqua.game.score) {
+      if (this.angle > -Math.PI / 4 && this.canScoreBackflip && aqua.game.score) {
         this.canScoreBackflip = false;
         aqua.game.score.addTrick('Backflip', 200000);
       }
@@ -182,6 +182,18 @@ var GliderMove = aqua.type(aqua.Component,
       
       var fadeHappy = this.fadeHappy = Math.clamp((this.x - this.world.box.left - this.world.box.width / 2) / 40, 0, 1);
       var fadeApproach = this.fadeApproach = Math.clamp((this.x - 240 + this.y / 8 - this.world.box.left) / (this.world.box.width / 6), 0, 1);
+      
+      if (this.fadeApproach == 0) {
+        this.inDanger = true;
+      }
+      
+      if (this.fadeApproach == 1 && this.inDanger) {
+        this.inDanger = false;
+        
+        if (aqua.game.score) {
+          aqua.game.score.addTrick('Back for More', 500000);
+        }
+      }
       
       if (this.sound.nodes) {
         if (this.sound.nodes.happy)
@@ -209,6 +221,18 @@ var GliderMove = aqua.type(aqua.Component,
         this.world.box.contains([this.x-this.radius,this.y+this.radius]) ||
         this.world.box.contains([this.x-this.radius,this.y-this.radius]))) {
         
+        if (aqua.game.score) {
+          if (this.world.box.bottom > this.y) {
+            aqua.game.score.addTrick('The World is Flat', 10000);
+          } else if (this.world.box.top < this.y) {
+            aqua.game.score.addTrick('To The Sky', 200000);
+          } else if (this.world.box.right < this.x) {
+            aqua.game.score.addTrick('Exit Stage Right', 1000000);
+          } else if (this.world.box.left > this.x) {
+            aqua.game.score.addTrick('Exit Stage Left', 100000);
+          }
+        }
+        
         this.gameObject.game.destroy(this.gameObject);
         
         var resetObject = aqua.GameObject.create();
@@ -228,6 +252,10 @@ var GliderScore = aqua.type(aqua.Component,
       this.zoneDiv = null;
 
       this.tricks = [];
+      
+      when(load.text('locale/en/tricks.json'), (function(text) {
+        this.titles = JSON.parse(text);
+      }).bind(this));
     },
     setMove: function(move) {
       this.move = move;
@@ -249,15 +277,25 @@ var GliderScore = aqua.type(aqua.Component,
       this.zoneTimeAwarded = 0;
       this.zoneDiv = null;
     },
+    getLocale: function(name) {
+      if (this.titles && this.titles[name]) {
+        name = this.titles[name][parseInt(Math.random() * this.titles[name].length - 1)];
+      }
+      return name;
+    },
     addTrick: function(name, points, time) {
       if (time == null) time = 2;
       
       this.score += points;
       
+      if (this.titles && this.titles[name]) {
+        name = this.titles[name][parseInt(Math.random() * this.titles[name].length - 1)];
+      }
+      
       name = name.replace(/ /g, '&nbsp;');
       
       var trick = $(
-        '<div class="trick"><div class="value">'+
+        '<div class="trick" style="top:' + (32 + this.tricks.length * 14) + 'px;"><div class="value">'+
           points+
         '</div><div class="name">'+
           name+
@@ -313,12 +351,12 @@ var GliderScore = aqua.type(aqua.Component,
             if (this.zoneTime - this.zoneTimeAwarded > 5) {
               this.zoneTimeAwarded += 5;
               
-              this.addTrick(this.zoneTimeAwarded + 's in the Zone', this.zoneTimeAwarded * 10000);
+              this.addTrick(this.zoneTimeAwarded + 's ' + this.getLocale('in the Zone'), this.zoneTimeAwarded * 10000);
             }
           } else {
             if (this.zoneTime) {
               this.zoneTime = parseInt(this.zoneTime * 10) / 10;
-              this.addTrick(this.zoneTime + 's in the Zone', this.zoneTime * 10000);
+              this.addTrick(this.zoneTime + 's ' + this.getLocale('in the Zone'), this.zoneTime * 10000);
             }
             
             this.zoneTime = 0;
@@ -327,7 +365,7 @@ var GliderScore = aqua.type(aqua.Component,
         } else {
           if (this.zoneTime) {
             this.zoneTime = parseInt(this.zoneTime * 10) / 10;
-            this.addTrick(this.zoneTime + 's in the Zone', this.zoneTime * 10000);
+            this.addTrick(this.zoneTime + 's ' + this.getLocale('in the Zone'), this.zoneTime * 10000);
           }
           
           this.zoneTime = 0;
