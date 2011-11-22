@@ -248,19 +248,71 @@ var GliderScore = aqua.type(aqua.Component,
   {
     init: function() {
       this.score = 0;
+      this.bestScore = localStorage ? parseInt(localStorage['best']) || 0 : 0;
 
       this.zoneTime = 0;
       this.zoneDiv = null;
 
       this.tricks = [];
-      
+
       when(load.text('locale/en/tricks.json'), (function(text) {
         this.titles = JSON.parse(text);
       }).bind(this));
+      
+      $((function() {
+        this.bestDiv = $('#scoremode div.best');
+        this.currentDiv = $('#scoremode div.current');
+
+        this.bestDiv.click(this.onmodeclick.bind(
+          this,this.bestDiv,this.currentDiv,
+          function(div) {
+            div.text(parseInt(this.bestScore));
+          }));
+        this.currentDiv.click(this.onmodeclick.bind(
+          this,this.currentDiv,this.bestDiv,
+          function(div) {
+            div.text(parseInt(this.score));
+          }));
+        
+        this.currentDiv.click();
+      }).bind(this));
+    },
+    onmodeclick: function(div,other,scoreSetter) {
+      if (!div.hasClass('off')) return;
+
+      div.removeClass('off');
+      other.addClass('off');
+
+      var scoreDiv = $('#score'), newScoreDiv;
+
+      if (scoreDiv.length == 0) {
+        newScoreDiv = $('<div id="score">0</div>').insertAfter('#scoremode');
+      } else {
+        newScoreDiv = $('<div id="score" class="start">0</div>').insertAfter('#score');
+        setTimeout(function(){
+          newScoreDiv.removeClass('start');
+        }, 0);
+      }
+      
+      scoreDiv.addClass('off');
+      if (scoreDiv[0] && scoreDiv[0].interval) {
+        clearInterval(scoreDiv[0].interval);
+        setTimeout(function(){
+          scoreDiv.remove();
+        }, 500);
+      }
+      
+      newScoreDiv[0].interval = setInterval(
+        scoreSetter.bind(this,newScoreDiv), 50);
     },
     setMove: function(move) {
       this.move = move;
-      
+
+      if (this.score > this.bestScore && localStorage) {
+        this.bestScore = this.score;
+        localStorage['best'] = this.bestScore;
+      }
+
       if (move)
         this._clear();
     },
@@ -268,7 +320,7 @@ var GliderScore = aqua.type(aqua.Component,
       var tricks = this.tricks,
           count = tricks.length,
           i;
-      
+
       for ( i = 0; i < count; i++ ) {
         this.removeTrick(tricks[i]);
       }
@@ -286,15 +338,15 @@ var GliderScore = aqua.type(aqua.Component,
     },
     addTrick: function(name, points, time) {
       if (time == null) time = 2;
-      
+
       this.score += points;
-      
+
       if (this.titles && this.titles[name]) {
         name = this.titles[name][parseInt(Math.random() * this.titles[name].length - 1)];
       }
-      
+
       name = name.replace(/ /g, '&nbsp;');
-      
+
       var trick = $(
         '<div class="trick" style="top:' + (32 + this.tricks.length * 14) + 'px;"><div class="value">'+
           points+
@@ -304,7 +356,7 @@ var GliderScore = aqua.type(aqua.Component,
           name = trick.find('.name');
       trick.time = time;
       trick.points = points;
-      
+
       name.css('right', -name.width() - 5);
 
       this.tricks.push(trick);
@@ -334,6 +386,7 @@ var GliderScore = aqua.type(aqua.Component,
       var delta = this.gameObject.game.timing.fixedDelta;
       var stuntDiv = this.stuntDiv,
           scoreDiv = $('#score'),
+          scoremodeDiv = $('#scoremode'),
           zoneDiv = this.zoneDiv;
       
       if (!stuntDiv) {
@@ -411,8 +464,13 @@ var GliderScore = aqua.type(aqua.Component,
         }
       }
 
-      scoreDiv.text(parseInt(this.score));
-      stuntDiv.css('left', (window.innerWidth - scoreDiv.width()) / 2);
+      if (scoreDiv) {
+        // scoreDiv.text(parseInt(this.score));
+        stuntDiv.css('left', (window.innerWidth - scoreDiv.width()) / 2);
+      }
+      
+      scoremodeDiv.find('div:first').css('right', (window.innerWidth / 2) + 6);
+      scoremodeDiv.find('div:last').css('left', (window.innerWidth / 2) + 3);
     }
   }
 );
@@ -493,6 +551,7 @@ var GliderReset = aqua.type(aqua.Component, {
     this.game = game;
   },
   keydown: function(e) {
+    console.log(e);
     if (this.inputMap[e.keyCode] == 'up') {
       window.removeEventListener('keydown', this._keydown);
       this.game.add(glider.makeGlider());

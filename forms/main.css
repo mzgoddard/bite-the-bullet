@@ -26,7 +26,38 @@ body {
 }
 
 #score {
+  -webkit-transition: left 1s, opacity 500ms;
+  position: relative;
+  left: 0;
+  opacity: 1;
   font-size: 2em;
+}
+
+#score.start {
+  opacity: 0;
+  left: -50px;
+}
+
+#score.off {
+  opacity: 0;
+  left: 50px;
+  height: 0;
+}
+
+#scoremode div {
+  cursor: hand;
+  position: fixed;
+  top: 0;
+  -webkit-transition: opacity 250ms;
+  opacity: 1;
+}
+
+#scoremode div.off {
+  opacity: 0.1;
+}
+
+#scoremode div.off:hover {
+  opacity: 0.5;
 }
 
 #stunts {
