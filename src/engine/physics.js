@@ -358,7 +358,7 @@ var World = aqua.type(aqua.GameObject,
       this.fixedDelta = 1 / 20;
       this.timeToPlay = 0;
       
-      this.hash = SpatialHash.create(Box.create(20, 20, 0, 0), box);
+      this.hash = SpatialHash.create(Box.create(50, 50, 0, 0), box);
       
       // this.buffer = ctx.buffer();
     },
@@ -599,7 +599,8 @@ var WorldRenderer = aqua.type(aqua.Renderer,
           offset = 0, // in bytes
           particleArray,
           x, y, r,
-          lx, ly;
+          lx, ly, d,
+          red,green,blue,alpha;
 
       if (!shader.matrixLocation) {
         shader.matrixLocation = gl.getUniformLocation(shader.program, 'modelview_projection');
@@ -628,28 +629,34 @@ var WorldRenderer = aqua.type(aqua.Renderer,
         offset += 24;
       }
       
-      count *= 6 * 16;
+      offset = 0;
       for ( i = 0; i < count; i++ ) {
-        p = particles[Math.floor(i/96)];
-        if ( i % 16 > 11 && p.isTrigger ) {
-          byteView[i] = 0;
-          continue;
+        p = particles[i];
+        if (p.isTrigger) continue;
+
+        x = p.x, y = p.y, lx = p.lx, ly = p.ly;
+        d = Math.mag(x-lx,y-ly,2);
+
+        red = Math.clamp(d / 50 * 255, 0, 218);
+        green = Math.clamp(d / 50 * 255, 0, 43);
+        blue = Math.clamp(d / 50 * 255, 0, 58);
+        alpha = Math.clamp(d / 50 * 255, 0, 255);
+
+        // if ( i % 16 > 11 && p.isTrigger ) {
+        //   byteView[i] = 0;
+        //   continue;
+        // }
+        // if ( i % 16 > 11 ) {
+        //     x = p.x, y = p.y, lx = p.lx, ly = p.ly;
+        // }
+        for ( j = 0; j < 96; j += 16 ) {
+          byteView[offset + j + 12] = red;
+          byteView[offset + j + 13] = green;
+          byteView[offset + j + 14] = blue;
+          byteView[offset + j + 15] = alpha;
         }
-        if ( i % 16 > 11 ) {
-            x = p.x, y = p.y, lx = p.lx, ly = p.ly;
-        }
-        if (i % 16 == 12) {
-          byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 50 * 255, 0, 218);
-        }
-        if (i % 16 == 13) {
-          byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 50 * 255, 0, 43);
-        }
-        if (i % 16 == 14) {
-          byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 50 * 255, 0, 58);
-        }
-        if (i % 16 == 15) {
-          byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 50 * 255, 0, 255);
-        }
+        
+        offset += 96;
       }
       
       gl.enable(gl.BLEND);

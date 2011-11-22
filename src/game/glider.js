@@ -214,7 +214,7 @@ var GliderMove = aqua.type(aqua.Component,
         }
       }
       
-      // window.Sizzle('#score')[0].innerText = parseInt(this.score);
+      // window.Sizzle('.score')[0].innerText = parseInt(this.score);
       
       if (!(
         this.world.box.contains([this.x+this.radius,this.y+this.radius]) ||
@@ -248,7 +248,8 @@ var GliderScore = aqua.type(aqua.Component,
   {
     init: function() {
       this.score = 0;
-      this.bestScore = localStorage ? parseInt(localStorage['best']) || 0 : 0;
+      this.playerName = localStorage && localStorage.playerName || 'Player';
+      this.bestScore = localStorage && localStorage.best && parseInt(JSON.parse(localStorage.best || '{}')[this.playerName]) || 0;
 
       this.zoneTime = 0;
       this.zoneDiv = null;
@@ -260,38 +261,81 @@ var GliderScore = aqua.type(aqua.Component,
       }).bind(this));
       
       $((function() {
-        this.bestDiv = $('#scoremode div.best');
-        this.currentDiv = $('#scoremode div.current');
-
-        this.bestDiv.click(this.onmodeclick.bind(
-          this,this.bestDiv,this.currentDiv,
+        this.modes = {
+          all: $('#scoremode div'),
+          nameDiv: $('#scoremode div.name'),
+          bestDiv: $('#scoremode div.best'),
+          currentDiv: $('#scoremode div.current'),
+          worldBestDiv: $('#scoremode div.world')
+        };
+        
+        this.modes.nameDiv.click(this.onmodeclick.bind(
+          this,this.modes.nameDiv,
+          function(div) {
+            
+          },
+          function(div) {
+            div.text(this.playerName);
+            div.attr('contenteditable', true);
+            div.attr('spellcheck', false);
+            
+            if (div.text() == 'Player') {
+              div.focus();
+              document.execCommand('selectAll');
+            }
+            
+            div.on('keydown', function(e){
+              if (e.keyCode == 91 || e.keyCode == 13) {
+                e.preventDefault();
+                div.blur();
+              }
+            });
+            
+            div.blur((function() {
+              if (div.text().trim() == '') {
+                div.text('Player');
+              }
+              localStorage.playerName = div.text();
+              
+              // if stored name and current name are different load best
+              if (localStorage.playerName != this.playerName) {
+                this.playerName = localStorage.playerName;
+                this.bestScore = JSON.parse(localStorage.best || '{}')[this.playerName] || 0;
+              }
+            }).bind(this));
+          }));
+        this.modes.bestDiv.click(this.onmodeclick.bind(
+          this,this.modes.bestDiv,
           function(div) {
             div.text(parseInt(this.bestScore));
           }));
-        this.currentDiv.click(this.onmodeclick.bind(
-          this,this.currentDiv,this.bestDiv,
+        this.modes.currentDiv.click(this.onmodeclick.bind(
+          this,this.modes.currentDiv,
           function(div) {
             div.text(parseInt(this.score));
           }));
         
-        this.currentDiv.click();
+        this.modes.currentDiv.click();
       }).bind(this));
     },
-    onmodeclick: function(div,other,scoreSetter) {
+    onmodeclick: function(div,scoreSetter,scoreStart) {
       if (!div.hasClass('off')) return;
 
+      this.modes.all.addClass('off');
       div.removeClass('off');
-      other.addClass('off');
 
-      var scoreDiv = $('#score'), newScoreDiv;
+      var scoreDiv = $('.score'), newScoreDiv;
 
       if (scoreDiv.length == 0) {
-        newScoreDiv = $('<div id="score">0</div>').insertAfter('#scoremode');
+        newScoreDiv = $('<div class="score">0</div>').insertAfter('#scoremode');
       } else {
-        newScoreDiv = $('<div id="score" class="start">0</div>').insertAfter('#score');
+        newScoreDiv = $('<div class="score start">0</div>').insertAfter('.score');
         setTimeout(function(){
           newScoreDiv.removeClass('start');
         }, 0);
+        if (typeof scoreStart == 'function') {
+          scoreStart.call(this, newScoreDiv);
+        }
       }
       
       scoreDiv.addClass('off');
@@ -304,13 +348,18 @@ var GliderScore = aqua.type(aqua.Component,
       
       newScoreDiv[0].interval = setInterval(
         scoreSetter.bind(this,newScoreDiv), 50);
+      scoreSetter.call(this,newScoreDiv);
     },
     setMove: function(move) {
       this.move = move;
 
-      if (this.score > this.bestScore && localStorage) {
+      if (move == null && this.score > this.bestScore && localStorage) {
         this.bestScore = this.score;
-        localStorage['best'] = this.bestScore;
+        
+        var best = JSON.parse(localStorage.best || '{}') || {};
+        best[this.playerName] = this.bestScore;
+        
+        localStorage.best = JSON.stringify(best);
       }
 
       if (move)
@@ -385,7 +434,7 @@ var GliderScore = aqua.type(aqua.Component,
     fixedUpdate: function() {
       var delta = this.gameObject.game.timing.fixedDelta;
       var stuntDiv = this.stuntDiv,
-          scoreDiv = $('#score'),
+          scoreDiv = $('.score:last'),
           scoremodeDiv = $('#scoremode'),
           zoneDiv = this.zoneDiv;
       
@@ -465,12 +514,13 @@ var GliderScore = aqua.type(aqua.Component,
       }
 
       if (scoreDiv) {
-        // scoreDiv.text(parseInt(this.score));
         stuntDiv.css('left', (window.innerWidth - scoreDiv.width()) / 2);
       }
       
-      scoremodeDiv.find('div:first').css('right', (window.innerWidth / 2) + 6);
-      scoremodeDiv.find('div:last').css('left', (window.innerWidth / 2) + 3);
+      var lastmode = scoremodeDiv.find('div:eq(1)').css('right', (window.innerWidth / 2) + 6);
+      lastmode = scoremodeDiv.find('div:eq(0)').css('right', (window.innerWidth / 2) + 12 + lastmode.width());
+      lastmode = scoremodeDiv.find('div:eq(2)').css('left', (window.innerWidth / 2) + 3);
+      scoremodeDiv.find('div:eq(3)').css('left', (window.innerWidth / 2) + 9 + lastmode.width());
     }
   }
 );

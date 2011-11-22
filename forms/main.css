@@ -5,11 +5,12 @@ body {
 #credits {
   -webkit-transition: color 2s ease-out;
   color: rgba(255, 255, 255, 0.1);
+  font-size: 12px;
   
   position: fixed;
   
-  left: 20px;
-  bottom: 20px;
+  left: 5px;
+  bottom: 5px;
 }
 
 #credits:hover {
@@ -25,23 +26,26 @@ body {
   margin: 0;
 }
 
-#score {
-  -webkit-transition: left 1s, opacity 500ms;
+.score {
+  -webkit-transition: opacity 500ms ease 500ms;
   position: relative;
-  left: 0;
+  left: none;
   opacity: 1;
   font-size: 2em;
 }
 
-#score.start {
+.score.start {
   opacity: 0;
-  left: -50px;
 }
 
-#score.off {
+.score.off {
+  -webkit-transition: opacity 500ms;
   opacity: 0;
-  left: 50px;
   height: 0;
+}
+
+#scoremode {
+  z-index: 10;
 }
 
 #scoremode div {
@@ -50,6 +54,7 @@ body {
   top: 0;
   -webkit-transition: opacity 250ms;
   opacity: 1;
+  display: inline;
 }
 
 #scoremode div.off {
@@ -64,10 +69,9 @@ body {
   color: white;
   
   position: fixed;
-  top: 10px;
-/*  width: 100%;*/
+  top: 14px;
   
-/*  text-align: center;*/
+  text-align: center;
 }
 
 .trick {
