@@ -76,10 +76,6 @@ var GliderMove = aqua.type(aqua.Component,
       this.sound = game.sound;
       
       this.x += game.world.box.left;
-      
-      if (game.score) {
-        game.score.setMove(this);
-      }
     },
     ongamedestroy: function(gameObject, game) {
       game.world.removeParticle(this.particle);
@@ -119,6 +115,11 @@ var GliderMove = aqua.type(aqua.Component,
     fixedUpdate: function() {
       if (!this.playing && this.input.get('up')) {
         this.playing = true;
+
+        Playtomic.Log.Play();
+        if (this.gameObject.game.score) {
+          this.gameObject.game.score.setMove(this);
+        }
       } else if (!this.playing) {
         this.x = this.world.box.left + this.world.box.width / 8 * 5;
         return;

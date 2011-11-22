@@ -14,3 +14,6 @@
 [submodule "src/externals/jquery"]
 	path = src/externals/jquery
 	url = https://github.com/jquery/jquery.git
+[submodule "src/externals/playtomic"]
+	path = src/externals/playtomic
+	url = https://github.com/playtomic/gameapi-html5.git

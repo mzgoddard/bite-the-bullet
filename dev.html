@@ -5,6 +5,7 @@
     <script src="src/externals/when/when.js" type="text/javascript" charset="utf-8"></script>
     <script src="src/externals/sizzle/sizzle.js" type="text/javascript" charset="utf-8"></script>
     <script src="src/externals/jquery/dist/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/externals/playtomic/playtomic.v1.9.js" type="text/javascript" charset="utf-8"></script>
     
     <script src="src/externals/gl-matrix/gl-matrix.js" type="text/javascript" charset="utf-8"></script>
     <script src="src/load.js" type="text/javascript" charset="utf-8"></script>
@@ -22,11 +23,21 @@
         <p>Kevin Notar &lt;knotar@berklee.edu&gt;</p>
         <script>
           window.addEventListener('load', function() {
-            Sizzle('#game #credits')[0].classList.remove('load');
+            $('#game #credits').removeClass('load');
           });
         </script>
       </div>
     </div>
+    
+    <script type="text/javascript" charset="utf-8">
+      (function() {
+        var a = 'NDIyNjY2MDEyMTI2MDI0NjQ0MDAw',
+            b = 'NjEyNjI3MTM3MzAxNzM2NzIwMDA=',
+            c = 'NDIwMDU1NTY1NTAxMTMwNTUyMDA=';
+        
+        eval(atob('KGZ1bmN0aW9uKCkge3ZhciBkID0gZnVuY3Rpb24oYSl7cmV0dXJuIHBhcnNlSW50KGF0b2IoYSksOCkudG9TdHJpbmcoMTYpO307UGxheXRvbWljLkxvZy5WaWV3KDUxOTQsICc0NGI2YzBhMmIwNTM0NzBjJywgJ2M1NjVjYmVjMWVmNzQwMTg4MGI2ZWI0MTJjNWE2ZicsIGRvY3VtZW50LmxvY2F0aW9uKTt9KSgpOw=='));
+      })();
+    </script>
     <!-- // <script src="src/engine/loadforms.js" type="text/javascript" charset="utf-8"></script> -->
   </body>
 </html>
