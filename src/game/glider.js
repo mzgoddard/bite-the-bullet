@@ -159,6 +159,19 @@ var GliderMove = aqua.type(aqua.Component,
 
       this.ax += nx;
       this.ay += ny;
+      
+      if (this.input.get('up')) {
+        this.angle += Math.PI * delta;
+        
+        if (this.x < this.world.box.left + this.world.box.width / 3) {
+          this.ax += Math.cos(this.angle) * 50;
+          this.ay += Math.sin(this.angle) * 50;
+        }
+        if (this.y < this.world.box.bottom + this.world.box.height / 8) {
+          this.ax += Math.cos(this.angle) * 50;
+          this.ay += Math.sin(this.angle) * 200;
+        }
+      }
 
       // integrate
       this.vx += this.ax / 2 * delta;
@@ -171,13 +184,6 @@ var GliderMove = aqua.type(aqua.Component,
       
       vec3.set([this.x, this.y, 0], this.particle.position);
 
-      // if (this.input.get('down')) {
-      //   this.angle -= Math.PI * delta;
-      // }
-      if (this.input.get('up')) {
-        this.angle += Math.PI * delta;
-      }
-      
       this.angle -= Math.PI * 0.2 * delta;
       
       if (this.angle > Math.PI) {
@@ -216,7 +222,7 @@ var GliderMove = aqua.type(aqua.Component,
         if (this.sound.nodes.happy)
           this.sound.nodes.happy.source.gain.value = Math.clamp(Math.lerp(0, 1, fadeHappy), 0, 1);
         if (this.sound.nodes.zone) {
-          this.sound.nodes.zone.source.gain.value = Math.clamp(Math.lerp(1, 0, fadeHappy), 0, 1);
+          this.sound.nodes.zone.source.gain.value = Math.clamp(Math.lerp(1, 0, Math.lerp(fadeHappy, 0, fadeApproach)), 0, 1);
         }
         if (this.sound.nodes.approach) {
           this.sound.nodes.approach.source.gain.value = Math.clamp(Math.lerp(1, 0, fadeApproach), 0, 1);
