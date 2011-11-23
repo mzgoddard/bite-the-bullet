@@ -197,7 +197,7 @@ var GliderMove = aqua.type(aqua.Component,
 
       if (this.angle > -Math.PI / 4 && this.canScoreBackflip && aqua.game.score) {
         this.canScoreBackflip = false;
-        aqua.game.score.addTrick('Backflip', 200000);
+        aqua.game.score.addTrick('Backflip', 50000);
       }
 
       this.ax = 0;
@@ -214,7 +214,7 @@ var GliderMove = aqua.type(aqua.Component,
         this.inDanger = false;
         
         if (aqua.game.score) {
-          aqua.game.score.addTrick('Back for More', 500000);
+          aqua.game.score.addTrick('Back for More', 50000);
         }
       }
       
@@ -222,7 +222,7 @@ var GliderMove = aqua.type(aqua.Component,
         if (this.sound.nodes.happy)
           this.sound.nodes.happy.source.gain.value = Math.clamp(Math.lerp(0, 1, fadeHappy), 0, 1);
         if (this.sound.nodes.zone) {
-          this.sound.nodes.zone.source.gain.value = Math.clamp(Math.lerp(1, 0, Math.lerp(fadeHappy, 0, fadeApproach)), 0, 1);
+          this.sound.nodes.zone.source.gain.value = Math.clamp(Math.lerp(0, 1, Math.lerp((1-fadeHappy), 0, 1-Math.sqrt(fadeApproach))), 0, 1);
         }
         if (this.sound.nodes.approach) {
           this.sound.nodes.approach.source.gain.value = Math.clamp(Math.lerp(1, 0, fadeApproach), 0, 1);

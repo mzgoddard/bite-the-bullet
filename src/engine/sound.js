@@ -26,13 +26,33 @@ var SoundContext = aqua.type(aqua.type.Base,
         };
         
         this.nodes.main.connect(this.context.destination);
-        this.nodes.main.gain.value = 0.1;
         
-        console.log(this.context);
+        document.addEventListener(
+          'webkitvisibilitychange', 
+          this.onvisibilitychange.bind(this));
+        this.onvisibilitychange();
+      }
+    },
+    onvisibilitychange: function() {
+      if (document.webkitVisibilityState == 'visible') {
+        if (this.visibilityInterval) {
+          clearInterval(this.visibilityInterval);
+        }
         
-        document.addEventListener('webkitvisibilitychange', (function() {
-          this.nodes.main.gain.value = document.webkitVisibilityState == 'visible' ? 1 : 0;
-        }).bind(this));
+        var destination = 0,
+            interval = setInterval((function() {
+          this.nodes.main.gain.value = (destination += aqua.game.timing.delta);
+          if (destination > 0.5) {
+            this.nodes.main.gain.value = 0.5;
+            clearInterval(interval);
+          }
+        }).bind(this),50);
+        this.visibilityInterval = interval;
+      } else {
+        this.nodes.main.gain.value = 0;
+        
+        if (this.visibilityInterval)
+          clearInterval(this.visibilityInterval);
       }
     },
     _loadClip: function(name, clip) {

@@ -58,7 +58,7 @@ body {
 }
 
 #scoremode div.off {
-  opacity: 0.1;
+  opacity: 0.3;
 }
 
 #scoremode div.off:hover {
