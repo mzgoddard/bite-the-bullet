@@ -39,8 +39,24 @@ body {
 }
 
 .score.off {
-  -webkit-transition: opacity 500ms;
+  -webkit-transition: opacity 510ms;
   opacity: 0;
+  height: 0;
+}
+
+.score .rank {
+  position: absolute;
+  right: -5px;
+  width: 0;
+  height: 0;
+  text-align: left;
+  margin-top: -34px;
+  font-size: 20px;
+}
+
+.score .name {
+  position: absolute;
+  width: 0;
   height: 0;
 }
 

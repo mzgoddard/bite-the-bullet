@@ -16,8 +16,16 @@ function normalizeAngle(angle) {
 var GliderInput = aqua.type(aqua.Component,
   {
     init: function(inputMap) {
+      var key;
+      
       this.inputMap = inputMap;
       this.state = {};
+      
+      for ( key in inputMap ) {
+        this.state[inputMap[key]] = {
+          pressed: false
+        };
+      }
     },
     onadd: function() {
       window.addEventListener('keydown', this._keydown = this.keydown.bind(this));
@@ -35,9 +43,7 @@ var GliderInput = aqua.type(aqua.Component,
     },
     keydown: function(e) {
       var state = this.state[this.inputMap[e.keyCode]];
-      if (!state) {
-        state = this.state[this.inputMap[e.keyCode]] = {};
-      }
+      if (!state) return;
       
       state.pressed = true;
       if (!state.start)
@@ -45,9 +51,7 @@ var GliderInput = aqua.type(aqua.Component,
     },
     keyup: function(e) {
       var state = this.state[this.inputMap[e.keyCode]];
-      if (!state) {
-        state = this.state[this.inputMap[e.keyCode]] = {};
-      }
+      if (!state) return;
       
       state.pressed = false;
       delete state.start;
@@ -98,6 +102,12 @@ var GliderMove = aqua.type(aqua.Component,
       
       if (game.score) {
         game.score.setMove(null);
+      }
+      
+      if (aqua.game.sound) {
+        aqua.game.sound.nodes.happy.source.gain.value = 1;
+        aqua.game.sound.nodes.zone.source.gain.value = 0;
+        aqua.game.sound.nodes.approach.source.gain.value = 0;
       }
     },
     oncollision: function(otherParticle, collision) {
@@ -291,12 +301,11 @@ var GliderScore = aqua.type(aqua.Component,
           worldBestDiv: $('#scoremode div.world')
         };
         
-        this.modes.nameDiv.click(this.onmodeclick.bind(
-          this,this.modes.nameDiv,
-          function(div) {
-            
-          },
-          function(div) {
+        this.modes.nameDiv.click(this.onmodeclick.bind(this,{
+          div: this.modes.nameDiv,
+          setter: function(div) {},
+          init: function(div) {
+            console.log('poop');
             div.text(this.playerName);
             div.attr('contenteditable', true);
             div.attr('spellcheck', false);
@@ -325,22 +334,69 @@ var GliderScore = aqua.type(aqua.Component,
                 this.bestScore = JSON.parse(localStorage.best || '{}')[this.playerName] || 0;
               }
             }).bind(this));
-          }));
-        this.modes.bestDiv.click(this.onmodeclick.bind(
-          this,this.modes.bestDiv,
-          function(div) {
-            div.text(parseInt(this.bestScore));
-          }));
-        this.modes.currentDiv.click(this.onmodeclick.bind(
-          this,this.modes.currentDiv,
-          function(div) {
+          }
+        }));
+        this.modes.bestDiv.click(this.onmodeclick.bind(this,{
+          div: this.modes.bestDiv,
+          init: function(div) {
+            div.find('.value').text(parseInt(this.bestScore));
+            Playtomic.Leaderboards.SaveAndList(
+              {
+                Name: this.playerName,
+                Points: parseInt(this.bestScore)
+              },
+              'score',
+              this.showRank.bind(this, this.playerName, parseInt(this.bestScore)),
+              {
+                allowduplicates: false
+            });
+          }
+        }));
+        this.modes.currentDiv.click(this.onmodeclick.bind(this,{
+          div: this.modes.currentDiv,
+          setter: function(div) {
             div.text(parseInt(this.score));
-          }));
+          },
+          init: function(div) {
+            if (this.move) {
+              Playtomic.Leaderboards.SaveAndList(
+                {
+                  Name: this.playerName,
+                  Points: parseInt(this.score)
+                },
+                'score',
+                this.showRank.bind(this, this.playerName, parseInt(this.score)),
+                {
+                  allowduplicates: false
+              });
+            }
+          }
+        }));
+        this.modes.worldBestDiv.click(this.onmodeclick.bind(this,{
+          div: this.modes.worldBestDiv,
+          init: function(div) {
+            div.find('.value').text('loading');
+            
+            Playtomic.Leaderboards.List('score', (function(list){
+              div.find('.value').text(list[0].Points);
+              div.find('.rank').html('1st' + '&nbsp;' + list[0].Name);
+            }).bind(this));
+          },
+          setter: null,
+        }));
         
-        this.modes.currentDiv.click();
+        if (this.playerName == 'Player') {
+          this.modes.nameDiv.click();
+        } else {
+          this.modes.currentDiv.click();
+        }
       }).bind(this));
     },
-    onmodeclick: function(div,scoreSetter,scoreStart) {
+    onmodeclick: function(options) {
+      var div = options.div,
+          scoreSetter = options.setter || function() {},
+          scoreStart = options.init;
+      
       if (!div.hasClass('off')) return;
 
       this.modes.all.addClass('off');
@@ -349,17 +405,18 @@ var GliderScore = aqua.type(aqua.Component,
       var scoreDiv = $('.score'), newScoreDiv;
 
       if (scoreDiv.length == 0) {
-        newScoreDiv = $('<div class="score">0</div>').insertAfter('#scoremode');
+        newScoreDiv = $('<div class="score"><div class="value">0</div><div class="rank"></div></div>').insertAfter('#scoremode');
       } else {
-        newScoreDiv = $('<div class="score start">0</div>').insertAfter('.score');
+        newScoreDiv = $('<div class="score start"><div class="value">0</div><div class="rank"></div></div>').insertAfter('.score');
         setTimeout(function(){
           newScoreDiv.removeClass('start');
         }, 0);
-        if (typeof scoreStart == 'function') {
-          scoreStart.call(this, newScoreDiv);
-        }
       }
-      
+
+      if (typeof scoreStart == 'function') {
+        scoreStart.call(this, newScoreDiv);
+      }
+
       scoreDiv.addClass('off');
       if (scoreDiv[0] && scoreDiv[0].interval) {
         clearInterval(scoreDiv[0].interval);
@@ -369,11 +426,63 @@ var GliderScore = aqua.type(aqua.Component,
       }
       
       newScoreDiv[0].interval = setInterval(
-        scoreSetter.bind(this,newScoreDiv), 50);
-      scoreSetter.call(this,newScoreDiv);
+        scoreSetter.bind(this,newScoreDiv.find('.value')), 50);
+      scoreSetter.call(this,newScoreDiv.find('.value'));
+    },
+    showRank: function(name, score, list) {
+      console.log(arguments);
+      var rankDiv = $('.score:last .rank'),
+          suffixes = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'];
+      if (!list) {
+        Playtomic.Leaderboards.List('score', function(list) {
+          rankDiv.html(list[0].Rank + suffixes[list[0].Rank % 10] + '&nbsp;' + list[i].Name );
+        }, {
+          customfilters: {
+            'Name': name,
+            'Points': score
+          }
+        });
+      } else if ( typeof list.Success == 'undefined' ) {
+        for ( var i = 0; i < list.length; i++ ) {
+          if ( list[i].Name == name && list[i].Points == score ) {
+            rankDiv.html( list[i].Rank + suffixes[list[i].Rank % 10] + '&nbsp;' + list[i].Name );
+            break;
+          }
+        }
+      }
     },
     setMove: function(move) {
       this.move = move;
+
+      // submit score to leaderboard
+      if (move == null) {
+        var scoreObj = {
+          'Name': this.playerName,
+          'Points': parseInt(this.score),
+          'CustomData': {
+            'Name': this.playerName,
+            'Points': parseInt(this.score),
+            'StartTime': this.startTime,
+            'EndTime': Date.now()
+          }
+        },
+        callback = this.showRank.bind(this, this.playerName, parseInt(this.score));
+
+        if (this.modes.currentDiv.hasClass('off')) {
+          callback = function(){};
+        }
+
+        Playtomic.Leaderboards.SaveAndList.call(
+          eval(atob('UGxheXRvbWljLkxlYWRlcmJvYXJkcw==')),
+          scoreObj,
+          "score", 
+          callback,
+          {
+            allowduplicates: false
+          });
+      } else {
+        this.startTime = Date.now();
+      }
 
       if (move == null && this.score > this.bestScore && localStorage) {
         this.bestScore = this.score;
@@ -482,6 +591,11 @@ var GliderScore = aqua.type(aqua.Component,
             if (this.zoneTime) {
               this.zoneTime = parseInt(this.zoneTime * 10) / 10;
               this.addTrick(this.zoneTime + 's ' + this.getLocale('in the Zone'), this.zoneTime * 10000);
+              
+              Playtomic.Leaderboards.Save({
+                Name: this.playerName,
+                Points: this.zoneTime
+              }, "time");
             }
             
             this.zoneTime = 0;
@@ -491,6 +605,11 @@ var GliderScore = aqua.type(aqua.Component,
           if (this.zoneTime) {
             this.zoneTime = parseInt(this.zoneTime * 10) / 10;
             this.addTrick(this.zoneTime + 's ' + this.getLocale('in the Zone'), this.zoneTime * 10000);
+            
+            Playtomic.Leaderboards.Save({
+              Name: this.playerName,
+              Points: this.zoneTime
+            }, "time");
           }
           
           this.zoneTime = 0;

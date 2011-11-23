@@ -42,8 +42,8 @@ var SoundContext = aqua.type(aqua.type.Base,
         var destination = 0,
             interval = setInterval((function() {
           this.nodes.main.gain.value = (destination += aqua.game.timing.delta);
-          if (destination > 0.5) {
-            this.nodes.main.gain.value = 0.5;
+          if (destination > 0.1) {
+            this.nodes.main.gain.value = 0.1;
             clearInterval(interval);
           }
         }).bind(this),50);
