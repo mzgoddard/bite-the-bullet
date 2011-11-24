@@ -7,9 +7,6 @@
 [submodule "test/qunit"]
 	path = test/qunit
 	url = https://github.com/jquery/qunit.git
-[submodule "src/externals/sizzle"]
-	path = src/externals/sizzle
-	url = https://github.com/jquery/sizzle.git
 
 [submodule "src/externals/jquery"]
 	path = src/externals/jquery

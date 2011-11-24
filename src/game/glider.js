@@ -146,6 +146,8 @@ var GliderMove = aqua.type(aqua.Component,
         if (this.gameObject.game.score) {
           this.gameObject.game.score.setMove(this);
         }
+        
+        this.heatmapTime = Date.now();
       } else if (!this.playing) {
         this.x = this.world.box.left + this.world.box.width / 8 * 5;
         return;
@@ -246,7 +248,9 @@ var GliderMove = aqua.type(aqua.Component,
         }
       }
       
-      // window.Sizzle('.score')[0].innerText = parseInt(this.score);
+      if (Date.now() - this.heatmapTime > 10000) {
+        Playtomic.Log.Heatmap('Position', '0001', this.x - this.world.box.let, this.y);
+      };
       
       if (!(
         this.world.box.contains([this.x+this.radius,this.y+this.radius]) ||
@@ -265,6 +269,8 @@ var GliderMove = aqua.type(aqua.Component,
             aqua.game.score.addTrick('Exit Stage Left', 100000);
           }
         }
+        
+        Playtomic.Log.Heatmap('Death', '0001', this.x - this.world.box.left, this.y);
         
         this.gameObject.game.destroy(this.gameObject);
         
@@ -305,7 +311,6 @@ var GliderScore = aqua.type(aqua.Component,
           div: this.modes.nameDiv,
           setter: function(div) {},
           init: function(div) {
-            console.log('poop');
             div.text(this.playerName);
             div.attr('contenteditable', true);
             div.attr('spellcheck', false);
@@ -521,6 +526,8 @@ var GliderScore = aqua.type(aqua.Component,
 
       this.score += points;
 
+      Playtomic.Log.LevelCounterMetric(name, '0001');
+
       if (this.titles && this.titles[name]) {
         name = this.titles[name][parseInt(Math.random() * this.titles[name].length - 1)];
       }
@@ -562,6 +569,17 @@ var GliderScore = aqua.type(aqua.Component,
     ongamedestroy: function() {
       delete this.tricks;
     },
+    addZoneTrick: function() {
+      this.zoneTime = parseInt(this.zoneTime * 10) / 10;
+      this.addTrick(this.zoneTime + 's ' + this.getLocale('in the Zone'), this.zoneTime * 10000);
+      
+      Playtomic.Leaderboards.Save({
+        Name: this.playerName,
+        Points: this.zoneTime
+      }, "ZoneTime");
+      
+      Playtomic.Log.LevelAverageMetric('ZoneTime', '0001', this.zoneTime);
+    },
     fixedUpdate: function() {
       var delta = this.gameObject.game.timing.fixedDelta;
       var stuntDiv = this.stuntDiv,
@@ -589,13 +607,7 @@ var GliderScore = aqua.type(aqua.Component,
             }
           } else {
             if (this.zoneTime) {
-              this.zoneTime = parseInt(this.zoneTime * 10) / 10;
-              this.addTrick(this.zoneTime + 's ' + this.getLocale('in the Zone'), this.zoneTime * 10000);
-              
-              Playtomic.Leaderboards.Save({
-                Name: this.playerName,
-                Points: this.zoneTime
-              }, "time");
+              this.addZoneTrick();
             }
             
             this.zoneTime = 0;
@@ -603,13 +615,7 @@ var GliderScore = aqua.type(aqua.Component,
           }
         } else {
           if (this.zoneTime) {
-            this.zoneTime = parseInt(this.zoneTime * 10) / 10;
-            this.addTrick(this.zoneTime + 's ' + this.getLocale('in the Zone'), this.zoneTime * 10000);
-            
-            Playtomic.Leaderboards.Save({
-              Name: this.playerName,
-              Points: this.zoneTime
-            }, "time");
+            this.addZoneTrick();
           }
           
           this.zoneTime = 0;

@@ -3,7 +3,7 @@
       XMLHttpRequest = window.XMLHttpRequest,
       setTimeout = window.setTimeout,
       when = window.when,
-      Sizzle = window.Sizzle;
+      $ = window.$;
   
   var load = Object.create({
     init: function() {
@@ -39,7 +39,7 @@
       
       // use old script if it was loaded old school
       if (!this.objects[path]) {
-        var script = Sizzle('script[src="'+this.fixPath('script',path)+'"]')[0];
+        var script = $('script[src="'+this.fixPath('script',path)+'"]')[0];
         if (script) {
           var deferred = when.defer();
           deferred.resolve();
@@ -77,7 +77,7 @@
     },
     module: function(path, promise, callback) {
       if (!this.objects[path]) {
-        this.objects[path] = Sizzle('script[src="'+this.fixPath('script',path)+'"]')[0];
+        this.objects[path] = $('script[src="'+this.fixPath('script',path)+'"]')[0];
       }
       if (promise) {
         this.objects[path].promise = promise;
