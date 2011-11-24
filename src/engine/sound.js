@@ -1,6 +1,9 @@
 (function(window, load) {
 
-var when = window.when,
+var document = window.document,
+    setInterval = window.setInterval,
+    clearInterval = window.setInterval,
+    when = window.when,
     aqua = window.aqua;
 
 var SoundContext = aqua.type(aqua.type.Base,

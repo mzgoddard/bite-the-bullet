@@ -10,7 +10,7 @@
         "src/engine/sound.js",
         "src/engine/physics.js",
         "src/engine/init.js",
-        "src/game/gliders.js",
+        "src/game/glider.js",
         "src/game/jet.js",
         "src/game/main.js"
       ],

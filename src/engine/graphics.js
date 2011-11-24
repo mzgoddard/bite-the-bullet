@@ -3,7 +3,8 @@ load.module('engine/graphics.js',
   load.script('engine/object.js'),
 function(){
   var setTimeout = window.setTimeout,
-      when = window.when;
+      when = window.when,
+      mat4 = window.mat4;
   
   var Graphics = aqua.type(aqua.type.Base,
     {

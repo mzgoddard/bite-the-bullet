@@ -249,7 +249,8 @@ var GliderMove = aqua.type(aqua.Component,
       }
       
       if (Date.now() - this.heatmapTime > 10000) {
-        Playtomic.Log.Heatmap('Position', '0001', this.x - this.world.box.let, this.y);
+        Playtomic.Log.Heatmap('Position', '0001', this.x - this.world.box.left, this.y);
+        this.heatmapTime = Date.now();
       };
       
       if (!(
@@ -526,7 +527,9 @@ var GliderScore = aqua.type(aqua.Component,
 
       this.score += points;
 
-      Playtomic.Log.LevelCounterMetric(name, '0001');
+      Playtomic.Log.LevelCounterMetric(
+        name.match(/^\d+s/) ? 'in the Zone' : name, 
+        '0001');
 
       if (this.titles && this.titles[name]) {
         name = this.titles[name][parseInt(Math.random() * this.titles[name].length - 1)];
@@ -575,10 +578,10 @@ var GliderScore = aqua.type(aqua.Component,
       
       Playtomic.Leaderboards.Save({
         Name: this.playerName,
-        Points: this.zoneTime
+        Points: this.zoneTime * 10
       }, "ZoneTime");
       
-      Playtomic.Log.LevelAverageMetric('ZoneTime', '0001', this.zoneTime);
+      Playtomic.Log.LevelAverageMetric('ZoneTime', '0001', this.zoneTime * 10);
     },
     fixedUpdate: function() {
       var delta = this.gameObject.game.timing.fixedDelta;

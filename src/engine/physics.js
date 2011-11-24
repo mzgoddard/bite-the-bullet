@@ -1,4 +1,12 @@
 (function(window, load) {
+
+var ArrayBuffer = window.ArrayBuffer,
+    Float32Array = window.Float32Array,
+    Uint8Array = window.Uint8Array,
+    when = window.when, 
+    aqua = window.aqua,
+    vec3 = window.vec3;
+
 load.module('engine/physics.js', 
   when.all([
     load.script('engine/object.js'),
@@ -147,40 +155,6 @@ var Particle = aqua.type(aqua.Emitter,
         b.position[0] -= lambx * bm; b.x = b.position[0];
         b.position[1] -= lamby * bm; b.y = b.position[1];
       }
-    },
-    draw: function(ctx, gl, buffer) {
-      var x = this.position[0], y = this.position[1], r = this.radius;
-      
-      buffer.load(Graphics.array(
-        4,
-        
-        Graphics.ValueType.Vertex,
-        3,
-        [x-r, y-r, 0, x+r, y-r, 0, x-r, y+r, 0, x+r, y+r, 0],
-        Graphics.Type.Float32,
-        
-        Graphics.ValueType.Color,
-        4,
-        [0,0,255,255, 0,0,255,255, 0,0,255,255, 0,0,255,255],
-        Graphics.Type.UnsignedByte
-      )).bind().triangleStrip();
-    },
-    getDrawArray: function() {
-      var x = this.position[0], y = this.position[1], r = this.radius;
-      
-      return Graphics.array(
-        6,
-        
-        Graphics.ValueType.Vertex,
-        3,
-        [x-r, y-r, 0, x+r, y-r, 0, x-r, y+r, 0, x+r, y-r, 0, x-r, y+r, 0, x+r, y+r, 0],
-        Graphics.Type.Float32,
-        
-        Graphics.ValueType.Color,
-        4,
-        [0,0,255,255, 0,0,255,255, 0,0,255,255, 0,0,255,255, 0,0,255,255, 0,0,255,255],
-        Graphics.Type.UnsignedByte
-      );
     }
   },
   {
@@ -280,8 +254,8 @@ var SpatialHash = aqua.type(aqua.type.Base,
     },
     cell: function(x, y) {
       return this.arrayHash[hashId(this, 
-        parseInt((x - this.lastBox.left) / this.box.width),
-        parseInt((y - this.lastBox.bottom) / this.box.height))];
+        Math.floor((x - this.lastBox.left) / this.box.width),
+        Math.floor((y - this.lastBox.bottom) / this.box.height))];
     },
     add: function(p) {
       var px = p.position[0],
@@ -293,12 +267,12 @@ var SpatialHash = aqua.type(aqua.type.Base,
           cellsTall = this.cellsTall,
           newBox = this.newBox,
           i, j;
-      for (i = parseInt((px - pr - newBox.left) / cellWidth); 
-        i >= 0 && i < cellsWide && i < parseInt((px + pr - newBox.left) / cellWidth + 1); 
+      for (i = Math.floor((px - pr - newBox.left) / cellWidth); 
+        i >= 0 && i < cellsWide && i < Math.floor((px + pr - newBox.left) / cellWidth + 1); 
         i++
       ) {
-        for (j = parseInt((py - pr - newBox.bottom) / cellHeight);
-          j >= 0 && j < cellsTall && j < parseInt((py + pr - newBox.bottom) / cellHeight + 1);
+        for (j = Math.floor((py - pr - newBox.bottom) / cellHeight);
+          j >= 0 && j < cellsTall && j < Math.floor((py + pr - newBox.bottom) / cellHeight + 1);
           j++
         ) {
           var id = hashId(this, i, j),
@@ -320,12 +294,12 @@ var SpatialHash = aqua.type(aqua.type.Base,
           cellsTall = this.cellsTall,
           lastBox = this.lastBox,
           i, j;
-      for (i = parseInt((px - pr - lastBox.left) / cellWidth); 
-        i >= 0 && i < cellsWide && i < parseInt((px + pr - lastBox.left) / cellWidth + 1); 
+      for (i = Math.floor((px - pr - lastBox.left) / cellWidth); 
+        i >= 0 && i < cellsWide && i < Math.floor((px + pr - lastBox.left) / cellWidth + 1); 
         i++
       ) {
-        for (j = parseInt((py - pr - lastBox.bottom) / cellHeight);
-          j >= 0 && j < cellsTall && j < parseInt((py + pr - lastBox.bottom) / cellHeight + 1);
+        for (j = Math.floor((py - pr - lastBox.bottom) / cellHeight);
+          j >= 0 && j < cellsTall && j < Math.floor((py + pr - lastBox.bottom) / cellHeight + 1);
           j++
         ) {
           var id = hashId(this, i, j),
@@ -469,85 +443,6 @@ var World = aqua.type(aqua.GameObject,
       }
       
       this.hash.lastBox = this.box.copy();
-    },
-    draw: function(ctx, gl) {
-      var particles = this.particles,
-          buffer = this.buffer,
-          count = particles.length,
-          i;
-
-      // for ( i = 0; i < count; i++ ) {
-      //   particles[i].draw(ctx, gl, buffer);
-      // }
-      this.drawWater(ctx, gl);
-    },
-    drawWater: function(ctx, gl) {
-      var arrayBuffer = Graphics.array(this.particles.length * 6,
-            Graphics.ValueType.Vertex,
-            3,
-            null,
-            Graphics.Type.Float32,
-            
-            Graphics.ValueType.Color,
-            4,
-            null,
-            Graphics.Type.UnsignedByte),
-          floatView = new Float32Array(arrayBuffer),
-          byteView = new Uint8Array(arrayBuffer),
-          particles = this.particles,
-          p,
-          buffer = this.buffer,
-          count = particles.length,
-          i,
-          j,
-          offset = 0, // in bytes
-          particleArray,
-          x, y, r,
-          lx, ly;
-      
-      // var x = this.position[0], y = this.position[1], r = this.radius;
-      // 
-      // return Graphics.array(
-      //   6,
-      // 
-      //   Graphics.ValueType.Vertex,
-      //   3,
-      //   [x-r, y-r, 0, x+r, y-r, 0, x-r, y+r, 0, x+r, y-r, 0, x-r, y+r, 0, x+r, y+r, 0],
-      //   Graphics.Type.Float32,
-      // 
-      //   Graphics.ValueType.Color,
-      //   4,
-      //   [0,0,255,255, 0,0,255,255, 0,0,255,255, 0,0,255,255, 0,0,255,255, 0,0,255,255],
-      //   Graphics.Type.UnsignedByte
-      // );
-      
-      for ( i = 0; i < count; i++ ) {
-        p = particles[i];
-        x = p.x, y = p.y, r = p.radius;
-        
-        for ( j = 0; j < 24; j++ ) {
-          if (j % 4 == 0) {
-            floatView[offset + j] = x + (j % 8 > 3 ? 1 : -1) * r;
-          } else if (j % 4 == 1) {
-            floatView[offset + j] = y + (((j - 1) / 4 == 2 || (j - 1) / 4 == 4 || (j - 1) / 4 == 5) ? 1 : -1) * r;
-          }
-        }
-        
-        offset += 24;
-      }
-      
-      count *= 6 * 16;
-      for ( i = 0; i < count; i++ ) {
-        if ( i % 16 > 13 )
-          byteView[i] = 255;
-        else if (i % 16 > 11) {
-          p = particles[Math.floor(i/96)];
-          x = p.x, y = p.y, lx = p.lx, ly = p.ly;
-          byteView[i] = Math.clamp((Math.mag(x-lx,y-ly,2)) / 10 * 255, 0, 255);
-        }
-      }
-      
-      buffer.load(arrayBuffer).bind().triangles();
     }
   }
 );
@@ -564,7 +459,7 @@ var WorldRenderer = aqua.type(aqua.Renderer,
           'path': 'shaders/a_color'
         });
         
-        this.shader = graphics.shaders['a_color'];
+        this.shader = graphics.shaders.a_color;
       }
 
       if (!this.shader.program) {
@@ -610,11 +505,11 @@ var WorldRenderer = aqua.type(aqua.Renderer,
       
       for ( i = 0; i < count; i++ ) {
         p = particles[i];
-        x = p.x, y = p.y, r = p.radius;
+        x = p.x; y = p.y; r = p.radius;
         
         if ( !p.isTrigger ) {
         for ( j = 0; j < 24; j++ ) {
-          if (j % 4 == 0) {
+          if (j % 4 === 0) {
             floatView[offset + j] = x + (j % 8 > 3 ? 1 : -1) * r;
           } else if (j % 4 == 1) {
             floatView[offset + j] = y + (((j - 1) / 4 == 2 || (j - 1) / 4 == 4 || (j - 1) / 4 == 5) ? 1 : -1) * r;
@@ -630,7 +525,7 @@ var WorldRenderer = aqua.type(aqua.Renderer,
         p = particles[i];
         if (p.isTrigger) continue;
 
-        x = p.x, y = p.y, lx = p.lx, ly = p.ly;
+        x = p.x; y = p.y; lx = p.lx; ly = p.ly;
         d = Math.mag(x-lx,y-ly) * 2;
 
         red = Math.clamp(d / 50 * 255, 0, 218);

@@ -33,15 +33,17 @@
       return deferred;
     },
     script: function(path) {
+      var script, deferred;
+      
       if (this.promises[path]) {
         return this.promises[path];
       }
       
       // use old script if it was loaded old school
       if (!this.objects[path]) {
-        var script = $('script[src="'+this.fixPath('script',path)+'"]')[0];
+        script = $('script[src="'+this.fixPath('script',path)+'"]')[0];
         if (script) {
-          var deferred = when.defer();
+          deferred = when.defer();
           deferred.resolve();
           
           this.objects[path] = script;
@@ -51,8 +53,8 @@
         }
       }
       
-      var script = window.document.createElement('script'),
-          deferred = when.defer();
+      script = window.document.createElement('script');
+      deferred = when.defer();
 
       this.objects[path] = script;
       this.promises[path] = deferred.promise;
@@ -60,10 +62,8 @@
       script.onload = function() {
         setTimeout(function() {
           if (script.promise) {
-            console.log('wait');
             script.promise.then(deferred.resolve.bind(deferred, script));
-          } else {  
-            console.log(path);
+          } else {
             deferred.resolve(script);
           }
         }, 0);
@@ -82,7 +82,7 @@
       if (promise) {
         this.objects[path].promise = promise;
 
-        promise.then(function(){console.log(path)}).then(callback);
+        promise.then(callback);
       } else {
         callback();
       }
