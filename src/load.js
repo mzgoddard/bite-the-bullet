@@ -16,6 +16,9 @@
       
       return this;
     },
+    set: function(path, content) {
+      this.objects[path] = content;
+    },
     get: function(path) {
       return this.objects[path];
     },

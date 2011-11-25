@@ -1,8 +1,19 @@
 {
+  "link": [
+    { 
+      "source": "index.html",
+      "destination": "dist/index.html"
+    },
+    {
+      "source": "data",
+      "destination": "dist/data"
+    }
+  ],
   "files": {
     "dist/glider": {
       "src": [
         "src/load.js",
+        "src/compiled.js",
         "src/engine/base.js",
         "src/engine/math.js",
         "src/engine/object.js",
@@ -10,9 +21,9 @@
         "src/engine/sound.js",
         "src/engine/physics.js",
         "src/engine/init.js",
+        "src/game/main.js",
         "src/game/glider.js",
-        "src/game/jet.js",
-        "src/game/main.js"
+        "src/game/jet.js"
       ],
       "prehint": true,
       "posthint": true,
@@ -21,6 +32,26 @@
       "meta": {
         "label": "glider",
         "author": "Michael \"Z\" Goddard",
+        "version": "0.0.0",
+        "homeurl": "",
+        "license": [],
+        "copyright": ""
+      }
+    },
+    "dist/externals": {
+      "src": [
+        "src/externals/when/when.js",
+        "src/externals/gl-matrix/gl-matrix.js",
+        "src/externals/jquery/dist/jquery.js",
+        "src/externals/playtomic/playtomic.v1.9.js"
+      ],
+      "prehint": false,
+      "posthint": false,
+      "debug": false,
+
+      "meta": {
+        "label": "externals",
+        "author": "Everyone Else",
         "version": "0.0.0",
         "homeurl": "",
         "license": [],

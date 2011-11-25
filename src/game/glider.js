@@ -580,6 +580,11 @@ var GliderScore = aqua.type(aqua.Component,
         '</div><div class="name">'+
           name+
         '</div></div>').appendTo(this.stuntDiv);
+
+      trick.find('.name').css(
+        'right', 
+        -trick.find('.name').width() - 5);
+
       trick.time = time;
       trick.points = points;
 

@@ -2,7 +2,7 @@
 
 var document = window.document,
     setInterval = window.setInterval,
-    clearInterval = window.setInterval,
+    clearInterval = window.clearInterval,
     when = window.when,
     aqua = window.aqua;
 
@@ -39,23 +39,24 @@ var SoundContext = aqua.type(aqua.type.Base,
     onvisibilitychange: function() {
       if (document.webkitVisibilityState == 'visible') {
         if (this.visibilityInterval) {
-          clearInterval(this.visibilityInterval);
+          clearInterval( this.visibilityInterval );
         }
         
         var destination = 0,
             interval = setInterval((function() {
-          this.nodes.main.gain.value = (destination += aqua.game.timing.delta);
-          if (destination > 0.1) {
-            this.nodes.main.gain.value = 0.1;
-            clearInterval(interval);
-          }
-        }).bind(this),50);
+              this.nodes.main.gain.value = (destination += aqua.game.timing.delta);
+              if (destination > 0.1) {
+                this.nodes.main.gain.value = 0.1;
+                clearInterval(interval);
+              }
+            }).bind( this ),50);
         this.visibilityInterval = interval;
       } else {
         this.nodes.main.gain.value = 0;
         
-        if (this.visibilityInterval)
+        if (this.visibilityInterval) {
           clearInterval(this.visibilityInterval);
+        }
       }
     },
     _loadClip: function(name, clip) {

@@ -54,11 +54,11 @@ body {
   font-size: 20px;
 }
 
-.score .name {
+/*.score .name {
   position: absolute;
   width: 0;
   height: 0;
-}
+}*/
 
 #scoremode {
   z-index: 10;

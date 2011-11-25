@@ -129,6 +129,26 @@ function writeFile( filepath, contents, silent ) {
 	return true;
 }
 
+function linkFile( srcpath, destpath ) {
+  try {
+    fs.statSync( destpath );
+    return true;
+  } catch ( e ) {
+    // do nothing
+  }
+  
+  try {
+    fs.linkSync( srcpath, destpath );
+    // fs.writeFileSync( destpath, fs.readFileSync( srcpath, "UTF-8" ), "UTF-8" );
+  } catch( e ) {
+    error();
+    fail( e );
+  }
+  
+  ok();
+  return true;
+}
+
 // Read and parse a JSON file.
 function readJson( filepath, silent ) {
 	var result;
@@ -197,15 +217,27 @@ function uglify( src ) {
 }
 
 // Return deflated src input.
-function gzip( src ) {
-	return zlib.deflate( new Buffer( src ) );
+function gzip( src, callback ) {
+	return zlib.deflate( new Buffer( src ), callback );
 }
 
 // Jake Tasks
 
 desc( "Hint & Minify" );
-task( "default", [ "hint", "min" ], function() {
+task( "default", [ "link", "hint", "min" ], function() {
 	// Nothing
+});
+
+desc( "Link other files" );
+task( "link", function() {
+  
+  header( "Linking files." );
+  
+  if ( config.link ) {
+    config.link.forEach( function( src ) {
+      linkFile( src.source, src.destination );
+    });
+  }
 });
 
 desc( "Validate with JSHint." );
@@ -240,8 +272,17 @@ task( "hint", function() {
 
 desc( "Minify with Uglify-js." );
 task( "min", function() {
+  
+  var completed = [];
 
 	header( "Minifying with Uglify-js" );
+	
+	function addToComplete( minpath ) {
+	  completed.push( minpath );
+	  if ( completed.length == Object.keys( config.files ).length ) {
+	    complete();
+	  }
+	}
 
 	_.keys( config.files ).forEach(function( minpath ) {
 
@@ -281,11 +322,18 @@ task( "min", function() {
 			min = intro + min;
 
 			if ( writeFile( minpath, min, false ) ) {
-				ok( "Compressed size: " + (gzip( min ).length + "").yellow + " bytes gzipped (" + ( min.length + "" ).yellow + " bytes minified)." );
+			  gzip( min, function( unknown, compressed ) {
+          ok( "Compressed size: " + ( compressed.length + "").yellow + " bytes gzipped (" + ( min.length + "" ).yellow + " bytes minified)." );
+          addToComplete( minpath );
+			  });
+			} else {
+			  addToComplete( minpath );
 			}
+		} else {
+		  addToComplete( minpath );
 		}
 	});
-});
+}, true );
 
 desc( "View static analysis of JavaScript program code" );
 task( "stats", [], function() {
