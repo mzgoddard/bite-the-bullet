@@ -17,7 +17,9 @@ function() {
 
 var $ = window.$,
     when = window.when,
-    aqua = window.aqua;
+    mat4 = window.mat4,
+    aqua = window.aqua,
+    glider = window.glider;
 
 
 aqua.game = aqua.Game.create();

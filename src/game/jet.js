@@ -1,6 +1,7 @@
 (function(window, load) {
 
-var glider = window.glider;
+var aqua = window.aqua,
+    glider = window.glider;
 
 var Jet = aqua.type(aqua.Component,
   {

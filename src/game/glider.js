@@ -1,7 +1,22 @@
 (function(window, load) {
 load.module('game/glider.js', null, function() {
 
-var aqua = window.aqua,
+// make jshint happy
+var document = window.document,
+    localStorage = window.localStorage,
+    setTimeout = window.setTimeout,
+    setInterval = window.setInterval,
+    clearInterval = window.clearInterval,
+    ArrayBuffer = window.ArrayBuffer,
+    Float32Array = window.Float32Array,
+    atob = window.atob,
+
+    Playtomic = window.Playtomic,
+    vec3 = window.vec3,
+    when = window.when,
+    $ = window.$,
+
+    aqua = window.aqua,
     glider = window.glider;
 
 function normalizeAngle(angle) {
@@ -58,6 +73,25 @@ var GliderInput = aqua.type(aqua.Component,
     }
   }
 );
+
+var GliderReset = aqua.type(aqua.Component, {
+  init: function(map) {
+    this.inputMap = map.inputMap || map;
+  },
+  ongameadd: function(gameObject, game) {
+    this._keydown = this.keydown.bind(this);
+    window.addEventListener('keydown', this._keydown);
+    this.game = game;
+  },
+  keydown: function(e) {
+    console.log(e);
+    if (this.inputMap[e.keyCode] == 'up') {
+      window.removeEventListener('keydown', this._keydown);
+      this.game.add(glider.makeGlider());
+      this.game.destroy(this.gameObject);
+    }
+  }
+});
 
 var GliderMove = aqua.type(aqua.Component,
   {
@@ -218,7 +252,7 @@ var GliderMove = aqua.type(aqua.Component,
       var fadeHappy = this.fadeHappy = Math.clamp((this.x - this.world.box.left - this.world.box.width / 2) / 40, 0, 1);
       var fadeApproach = this.fadeApproach = Math.clamp((this.x - 240 + this.y / 8 - this.world.box.left) / (this.world.box.width / 6), 0, 1);
       
-      if (this.fadeApproach == 0) {
+      if (this.fadeApproach === 0) {
         this.inDanger = true;
       }
       
@@ -251,7 +285,7 @@ var GliderMove = aqua.type(aqua.Component,
       if (Date.now() - this.heatmapTime > 10000) {
         Playtomic.Log.Heatmap('Position', '0001', this.x - this.world.box.left, this.y);
         this.heatmapTime = Date.now();
-      };
+      }
       
       if (!(
         this.world.box.contains([this.x+this.radius,this.y+this.radius]) ||
@@ -288,7 +322,7 @@ var GliderScore = aqua.type(aqua.Component,
     init: function() {
       this.score = 0;
       this.playerName = localStorage && localStorage.playerName || 'Player';
-      this.bestScore = localStorage && localStorage.best && parseInt(JSON.parse(localStorage.best || '{}')[this.playerName]) || 0;
+      this.bestScore = localStorage && localStorage.best && parseInt(JSON.parse(localStorage.best || '{}')[this.playerName], 10) || 0;
 
       this.zoneTime = 0;
       this.zoneDiv = null;
@@ -329,7 +363,7 @@ var GliderScore = aqua.type(aqua.Component,
             });
             
             div.blur((function() {
-              if (div.text().trim() == '') {
+              if (div.text().trim() === '') {
                 div.text('Player');
               }
               localStorage.playerName = div.text();
@@ -345,14 +379,14 @@ var GliderScore = aqua.type(aqua.Component,
         this.modes.bestDiv.click(this.onmodeclick.bind(this,{
           div: this.modes.bestDiv,
           init: function(div) {
-            div.find('.value').text(parseInt(this.bestScore));
+            div.find('.value').text(parseInt(this.bestScore, 10));
             Playtomic.Leaderboards.SaveAndList(
               {
                 Name: this.playerName,
-                Points: parseInt(this.bestScore)
+                Points: parseInt(this.bestScore, 10)
               },
               'score',
-              this.showRank.bind(this, this.playerName, parseInt(this.bestScore)),
+              this.showRank.bind(this, this.playerName, parseInt(this.bestScore, 10)),
               {
                 allowduplicates: false
             });
@@ -361,17 +395,17 @@ var GliderScore = aqua.type(aqua.Component,
         this.modes.currentDiv.click(this.onmodeclick.bind(this,{
           div: this.modes.currentDiv,
           setter: function(div) {
-            div.text(parseInt(this.score));
+            div.text(parseInt(this.score, 10));
           },
           init: function(div) {
             if (this.move) {
               Playtomic.Leaderboards.SaveAndList(
                 {
                   Name: this.playerName,
-                  Points: parseInt(this.score)
+                  Points: parseInt(this.score, 10)
                 },
                 'score',
-                this.showRank.bind(this, this.playerName, parseInt(this.score)),
+                this.showRank.bind(this, this.playerName, parseInt(this.score, 10)),
                 {
                   allowduplicates: false
               });
@@ -388,7 +422,7 @@ var GliderScore = aqua.type(aqua.Component,
               div.find('.rank').html('1st' + '&nbsp;' + list[0].Name);
             }).bind(this));
           },
-          setter: null,
+          setter: null
         }));
         
         if (this.playerName == 'Player') {
@@ -410,8 +444,11 @@ var GliderScore = aqua.type(aqua.Component,
 
       var scoreDiv = $('.score'), newScoreDiv;
 
-      if (scoreDiv.length == 0) {
-        newScoreDiv = $('<div class="score"><div class="value">0</div><div class="rank"></div></div>').insertAfter('#scoremode');
+      if (scoreDiv.length === 0) {
+        newScoreDiv = $(
+          '<div class="score">'+
+          '<div class="value">0</div>'+
+          '<div class="rank"></div></div>').insertAfter('#scoremode');
       } else {
         newScoreDiv = $('<div class="score start"><div class="value">0</div><div class="rank"></div></div>').insertAfter('.score');
         setTimeout(function(){
@@ -441,7 +478,7 @@ var GliderScore = aqua.type(aqua.Component,
           suffixes = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'];
       if (!list) {
         Playtomic.Leaderboards.List('score', function(list) {
-          rankDiv.html(list[0].Rank + suffixes[list[0].Rank % 10] + '&nbsp;' + list[i].Name );
+          rankDiv.html(list[0].Rank + suffixes[list[0].Rank % 10] + '&nbsp;' + list[0].Name );
         }, {
           customfilters: {
             'Name': name,
@@ -464,15 +501,15 @@ var GliderScore = aqua.type(aqua.Component,
       if (move == null) {
         var scoreObj = {
           'Name': this.playerName,
-          'Points': parseInt(this.score),
+          'Points': parseInt(this.score, 10),
           'CustomData': {
             'Name': this.playerName,
-            'Points': parseInt(this.score),
+            'Points': parseInt(this.score, 10),
             'StartTime': this.startTime,
             'EndTime': Date.now()
           }
         },
-        callback = this.showRank.bind(this, this.playerName, parseInt(this.score));
+        callback = this.showRank.bind(this, this.playerName, parseInt(this.score, 10));
 
         if (this.modes.currentDiv.hasClass('off')) {
           callback = function(){};
@@ -518,7 +555,7 @@ var GliderScore = aqua.type(aqua.Component,
     },
     getLocale: function(name) {
       if (this.titles && this.titles[name]) {
-        name = this.titles[name][parseInt(Math.random() * this.titles[name].length - 1)];
+        name = this.titles[name][parseInt(Math.random() * this.titles[name].length - 1, 10)];
       }
       return name;
     },
@@ -532,7 +569,7 @@ var GliderScore = aqua.type(aqua.Component,
         '0001');
 
       if (this.titles && this.titles[name]) {
-        name = this.titles[name][parseInt(Math.random() * this.titles[name].length - 1)];
+        name = this.titles[name][parseInt(Math.random() * this.titles[name].length - 1, 10)];
       }
 
       name = name.replace(/ /g, '&nbsp;');
@@ -542,12 +579,9 @@ var GliderScore = aqua.type(aqua.Component,
           points+
         '</div><div class="name">'+
           name+
-        '</div></div>').appendTo(this.stuntDiv),
-          name = trick.find('.name');
+        '</div></div>').appendTo(this.stuntDiv);
       trick.time = time;
       trick.points = points;
-
-      name.css('right', -name.width() - 5);
 
       this.tricks.push(trick);
     },
@@ -573,7 +607,7 @@ var GliderScore = aqua.type(aqua.Component,
       delete this.tricks;
     },
     addZoneTrick: function() {
-      this.zoneTime = parseInt(this.zoneTime * 10) / 10;
+      this.zoneTime = parseInt(this.zoneTime * 10, 10) / 10;
       this.addTrick(this.zoneTime + 's ' + this.getLocale('in the Zone'), this.zoneTime * 10000);
       
       Playtomic.Leaderboards.Save({
@@ -600,7 +634,7 @@ var GliderScore = aqua.type(aqua.Component,
           this.score += (1 - this.move.fadeHappy) * delta * 10000;
         
           // in the zone
-          if (this.move.fadeHappy == 0) {
+          if (this.move.fadeHappy === 0) {
             this.zoneTime += delta;
             
             if (this.zoneTime - this.zoneTimeAwarded > 5) {
@@ -630,7 +664,7 @@ var GliderScore = aqua.type(aqua.Component,
 
           this.tricks.splice(0, 0, zoneDiv);
         }
-        if (this.zoneTime == 0 && this.zoneDiv) {
+        if (this.zoneTime === 0 && this.zoneDiv) {
           delete this.zoneDiv;
 
           zoneDiv.time = 2;
@@ -648,7 +682,7 @@ var GliderScore = aqua.type(aqua.Component,
       }
       
       if (zoneDiv) {
-        zoneDiv.text(parseInt(this.zoneTime * 10) / 10 + 's');
+        zoneDiv.text(parseInt(this.zoneTime * 10, 10) / 10 + 's');
       }
       
       for ( var i = 0; i < this.tricks.length; i++ ) {
@@ -740,25 +774,6 @@ var GliderRender = aqua.type(aqua.Component,
     }
   }
 );
-
-var GliderReset = aqua.type(aqua.Component, {
-  init: function(map) {
-    this.inputMap = map.inputMap || map;
-  },
-  ongameadd: function(gameObject, game) {
-    this._keydown = this.keydown.bind(this);
-    window.addEventListener('keydown', this._keydown);
-    this.game = game;
-  },
-  keydown: function(e) {
-    console.log(e);
-    if (this.inputMap[e.keyCode] == 'up') {
-      window.removeEventListener('keydown', this._keydown);
-      this.game.add(glider.makeGlider());
-      this.game.destroy(this.gameObject);
-    }
-  }
-});
 
 glider.GliderScore = GliderScore;
 glider.GliderReset = GliderReset;
