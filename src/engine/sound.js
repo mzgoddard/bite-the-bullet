@@ -9,7 +9,6 @@ var document = window.document,
 var SoundContext = aqua.type(aqua.type.Base,
   {
     init: function() {
-      console.log('sound:', window.webkitAudioContext);
       if (window.webkitAudioContext) {
         this.context = new window.webkitAudioContext();
         
@@ -60,7 +59,6 @@ var SoundContext = aqua.type(aqua.type.Base,
       }
     },
     _loadClip: function(name, clip) {
-      console.log(arguments);
       var node = this.nodes[name] = {
         source: this.context.createBufferSource(),
         buffer: this.context.createBuffer(clip, false)

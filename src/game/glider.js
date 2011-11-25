@@ -84,7 +84,6 @@ var GliderReset = aqua.type(aqua.Component, {
     this.game = game;
   },
   keydown: function(e) {
-    console.log(e);
     if (this.inputMap[e.keyCode] == 'up') {
       window.removeEventListener('keydown', this._keydown);
       this.game.add(glider.makeGlider());
@@ -473,7 +472,6 @@ var GliderScore = aqua.type(aqua.Component,
       scoreSetter.call(this,newScoreDiv.find('.value'));
     },
     showRank: function(name, score, list) {
-      console.log(arguments);
       var rankDiv = $('.score:last .rank'),
           suffixes = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'];
       if (!list) {

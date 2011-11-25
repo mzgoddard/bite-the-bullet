@@ -93,14 +93,12 @@ function(){
         gl.shaderSource(shader, load.get(options.path + '.vs'));
         gl.compileShader(shader);
         gl.attachShader(program, shader);
-        console.log(options.name, 'vertex');
         
         // fragment
         options.fragmentShader = shader = gl.createShader(gl.FRAGMENT_SHADER);
         gl.shaderSource(shader, load.get(options.path + '.fs'));
         gl.compileShader(shader);
         gl.attachShader(program, shader);
-        console.log(options.name, 'fragment');
         
         gl.linkProgram(program);
       },
