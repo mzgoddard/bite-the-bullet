@@ -1,5 +1,6 @@
 var // Dependency References
 		fs = require( "fs" ),
+		path = require( "path" ),
 		_ = require( "underscore" ),
 		jshint = require( "jshint" ).JSHINT,
 		colors = require( "colors" ),
@@ -224,7 +225,7 @@ function gzip( src, callback ) {
 // Jake Tasks
 
 desc( "Hint & Minify" );
-task( "default", [ "link", "hint", "min" ], function() {
+task( "default", [ "link", "hint", "min", "cleanup" ], function() {
 	// Nothing
 });
 
@@ -238,6 +239,24 @@ task( "link", function() {
       linkFile( src.source, src.destination );
     });
   }
+});
+
+desc( "Cleanup non min files." );
+task( "cleanup", function() {
+  
+  header( "Cleanup non min files." );
+  
+  if ( config.cleanup ) {
+    var files = fs.readdirSync( config.cleanup );
+    files.forEach( function( filepath ) {
+      filepath = path.join( config.cleanup, filepath );
+      
+      if ( /[^\.][^m][^i][^n]\.js$/.test( filepath ) ) {
+        fs.unlinkSync( filepath );
+      }
+    });
+  }
+  
 });
 
 desc( "Validate with JSHint." );
