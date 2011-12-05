@@ -52,10 +52,10 @@
 
       "meta": {
         "label": "externals",
-        "author": "Everyone Else",
+        "author": "Brandon Jones, John Resig, Playtomic, Brian Cavalier",
         "version": "0.0.0",
         "homeurl": "",
-        "license": [],
+        "license": ["MIT"],
         "copyright": ""
       }
     }
