@@ -82,8 +82,8 @@ var Ship = aqua.type(aqua.Component,
           var bullet = aqua.GameObject.create();
           bullet.add(btb.Bullet.create(
             [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-            [Math.cos(this.moveModel.angle) * 100 + this.moveModel.particle.velocity[0] / 0.05,
-            Math.sin(this.moveModel.angle) * 100 + this.moveModel.particle.velocity[1] / 0.05]));
+            [Math.cos(this.moveModel.angle) * 100,
+            Math.sin(this.moveModel.angle) * 100]));
           bullet.add(btb.BulletRender.create());
           aqua.game.add(bullet);
 
