@@ -29,17 +29,17 @@ var Bullet = aqua.type(aqua.Component,
     oncollision: function(other, collision) {
       if (this.startTimer < 0 && this.game) {
         if (other.bullet) {
-        	this.game.destroy(this.gameObject);
+          this.game.destroy(this.gameObject);
         }
-       	if (other.ship) {
-       	  var ang = (-other.ship.angle + Math.PI/2) % (Math.PI*2);
-      		if (Math.abs((Math.abs((ang - this.particle.angle))-Math.PI)) < Math.PI/4) {
-  	      	this.game.destroy(this.gameObject);
-        	}
-        	else {
-        	  this.game.destroy(other.ship.gameObject);
-        	}
-       	}
+        if (other.ship) {
+          var ang = (-other.ship.angle + Math.PI/2) % (Math.PI*2);
+          if (Math.abs((Math.abs((ang - this.particle.angle))-Math.PI)) < Math.PI/4) {
+            this.game.destroy(this.gameObject);
+          }
+          else {
+            this.game.destroy(other.ship.gameObject);
+          }
+        }
       }
     },
     update: function() {
@@ -82,6 +82,7 @@ var BulletRender = aqua.type(aqua.Component,
 
 btb.Bullet = Bullet;
 btb.BulletRender = BulletRender;
+btb.BulletRasterRender = BulletRasterRender
 
 });
 })(this, this.load);
