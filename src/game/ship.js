@@ -68,7 +68,7 @@ var ShipReset = aqua.type(aqua.Component, {
 
 var Ship = aqua.type(aqua.Component,
   {
-    firedelay: 1,
+    firedelay: 0.5,
 
     onadd: function(gameObject) {
       this.input = gameObject.get(ShipInput);
@@ -81,7 +81,7 @@ var Ship = aqua.type(aqua.Component,
           var bullet = aqua.GameObject.create();
           bullet.add(btb.Bullet.create(
             [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-            [Math.cos(this.moveModel.angle) * 30, Math.sin(this.moveModel.angle) * 30]));
+            [Math.cos(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[0] / 0.05, Math.sin(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[1] / 0.05]));
           bullet.add(btb.BulletRender.create());
 
           aqua.game.add(bullet);

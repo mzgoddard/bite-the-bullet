@@ -42,8 +42,9 @@ var BulletRender = aqua.type(aqua.Component,
       this.model = gameObject.get(Bullet);
       if (!this.path) {
         var radius = this.model.radius;
+        radius = Math.sqrt(radius*radius+radius*radius);
         this.path = new paper.Path.Rectangle(new paper.Rectangle(-radius/2,-radius/2,radius,radius));
-        this.path.fillColor = 'black';
+        this.path.fillColor = 'grey';
       }
     },
     ongamedestroy: function() {
@@ -51,6 +52,9 @@ var BulletRender = aqua.type(aqua.Component,
       delete this.path;
     },
     lateUpdate: function() {
+      if (this.model.startTimer < 0) {
+        this.path.fillColor = 'black';
+      }
       this.path.position.x = this.model.particle.position[0];
       this.path.position.y = this.model.particle.position[1];
     }
