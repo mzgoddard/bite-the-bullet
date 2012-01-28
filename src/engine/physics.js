@@ -36,7 +36,7 @@ var Particle = aqua.type(aqua.Emitter,
       this.friction = friction;
     },
     integrate: function(dt) {
-      if ( !this.isStatic && !this.isTrigger ) {
+      if ( !this.isStatic ) {
         vec3.set(this.position, this.temporaryPosition);
         vec3.add(
           vec3.subtract(

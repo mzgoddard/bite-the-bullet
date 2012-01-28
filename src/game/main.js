@@ -8,8 +8,7 @@ load.module('game/main.js',
   load.chain(load.script('engine/init.js'),
     function() {
       return when.all([
-        load.script('game/glider.js'),
-        load.script('game/jet.js')
+        load.script('game/ship.js')
       ]);
     }
   ),
@@ -49,7 +48,7 @@ aqua.game.task(function() {
 
 aqua.game.world = aqua.World.create(aqua.Box.create(400, 640, 0, 0));
 aqua.game.add(aqua.game.world);
-aqua.game.world.add(aqua.World.PaperRenderer.create());
+// aqua.game.world.add(aqua.World.PaperRenderer.create());
 // aqua.game.world.add(aqua.World.Renderer.create());
 
 
@@ -102,8 +101,8 @@ aqua.game.sound = aqua.SoundContext.create();
 //   return scoreObject;
 // })());
 
-// aqua.game.player = glider.makeGlider();
-// aqua.game.add(aqua.game.player);
+aqua.game.player = glider.makeShip();
+aqua.game.add(aqua.game.player);
 
 function loop() {
   aqua.requestAnimFrame.call(null, loop);
