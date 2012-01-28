@@ -53,14 +53,14 @@ aqua.game.add(aqua.game.world);
 // aqua.game.world.add(aqua.World.Renderer.create());
 
 
-for ( var idx = 0; idx < 500; idx++ )
-  aqua.game.world.addParticle(
-    aqua.Particle.create([
-        640 * (idx / 500),
-        Math.random()*380 + 10,
-        0],
-      4+Math.random()*1,
-      1));
+// for ( var idx = 0; idx < 500; idx++ )
+//   aqua.game.world.addParticle(
+//     aqua.Particle.create([
+//         640 * (idx / 500),
+//         Math.random()*380 + 10,
+//         0],
+//       4+Math.random()*1,
+//       1));
 
 // aqua.game.world.add(glider.Jet.create());
 
