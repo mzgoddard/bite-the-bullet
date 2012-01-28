@@ -9,7 +9,8 @@ load.module('game/main.js',
   load.chain(load.script('engine/init.js'),
     function() {
       return when.all([
-        load.script('game/ship.js')
+        load.script('game/ship.js'),
+        load.script('game/enemy.js')
       ]);
     }
   ),
