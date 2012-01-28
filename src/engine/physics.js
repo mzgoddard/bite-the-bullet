@@ -79,7 +79,7 @@ var Particle = aqua.type(aqua.Emitter,
     },
     test: function(other, collision) {
       if ( this.isStatic && other.isStatic ) return false;
-      
+
       // if ( this.mask & other.collisionMask == 0 || 
       //   other.mask & this.collisionMask == 0 ) {
       //   return false;
