@@ -192,10 +192,10 @@ var ShipMove = aqua.type(aqua.Component,
     },
     fixedUpdate: function() {
       if (this.input.get('left')) {
-        this.angle -= Math.PI * 0.08;
+        this.angle -= Math.PI * 0.04;
       }
       if (this.input.get('right')) {
-        this.angle += Math.PI * 0.08;
+        this.angle += Math.PI * 0.04;
       }
       if (this.input.get('up')) {
         this.particle.acceleration[0] = Math.cos(this.angle) * 100;
