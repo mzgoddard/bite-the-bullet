@@ -343,8 +343,9 @@ var ShipRender = aqua.type(aqua.Component,
       this.ship = gameObject.get(ShipMove);
       if (!this.path) {
         this.pathAngle = 0;
-        this.path = new paper.Path.Rectangle(new paper.Rectangle(-17.5,-17.5,35,35));
-        this.path.fillColor = 'blue';
+        // this.path = new paper.Path.Rectangle(new paper.Rectangle(-17.5,-17.5,35,35));
+        this.path = new paper.Path( [new paper.Point(90, -20), new paper.Point(20, 0), new paper.Point(90, 20)]);
+        this.path.strokeColor = 'blue';
       }
     },
     lateUpdate: function() {
