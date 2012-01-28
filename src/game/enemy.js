@@ -109,6 +109,23 @@ var EnemyRender = aqua.type(aqua.Component,
   }
 );
 
+var EnemyRasterRender = aqua.type(aqua.RasterRenderer,
+  {
+    init: function(def) {
+      this.angle = 0;
+      Object.getPrototypeOf(Object.getPrototypeOf(this)).init.call(this, def.image, EnemyMove);
+    },
+    lateUpdate: function() {
+      this.raster.position.x = this.transform.particle.position[0];
+      this.raster.position.y = this.transform.particle.position[1];
+      if (this.transform.angle != this.angle) {
+        this.raster.rotate((this.transform.angle - this.angle) / 2 / Math.PI * 360);
+        this.angle = this.transform.angle;
+      }
+    }
+  }
+);
+
 var EnemySpawner = aqua.type(aqua.Component,
   {
     init: function(def) {
@@ -133,6 +150,7 @@ btb.Enemy = {};
 btb.Enemy.Move = EnemyMove;
 btb.Enemy.Attack = EnemyAttack;
 btb.Enemy.Render = EnemyRender;
+btb.Enemy.RasterRender = EnemyRasterRender;
 btb.Enemy.Spawner = EnemySpawner;
 
 btb.makeEnemy = function(definition) {

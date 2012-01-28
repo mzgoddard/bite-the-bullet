@@ -15,6 +15,7 @@ var Graphics = aqua.type(aqua.type.Base,
     loadRaster: function(path) {
       if (!this.rasters[path]) {
         this.rasters[path] = new paper.Raster(load.get(path));
+        this.rasters[path].remove();
         this.symbols[path] = new paper.Symbol(this.rasters[path]);
       }
       return this.rasters[path];
@@ -26,6 +27,7 @@ var Graphics = aqua.type(aqua.type.Base,
     loadSymbol: function(path) {
       if (!this.rasters[path]) {
         this.rasters[path] = new paper.Raster(load.get(path));
+        this.rasters[path].remove();
         this.symbols[path] = new paper.Symbol(this.rasters[path]);
       }
       return this.symbols[path];
