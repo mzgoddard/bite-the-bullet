@@ -85,11 +85,6 @@ var Ship = aqua.type(aqua.Component,
             [Math.cos(this.moveModel.angle) * 100 + this.moveModel.particle.velocity[0] / 0.05,
             Math.sin(this.moveModel.angle) * 100 + this.moveModel.particle.velocity[1] / 0.05]));
           bullet.add(btb.BulletRender.create());
-// bullet.add(btb.Bullet.create(
-            // [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-            // vec3.scale(vec3.normalize([Math.cos(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[0] / 0.05,
-            // Math.sin(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[1] / 0.05,0]),200)
-            // ));
           aqua.game.add(bullet);
 
           this.firetimer = this.firedelay;
@@ -218,8 +213,6 @@ var ShipMove = aqua.type(aqua.Component,
           }
         }
         else if (this.decelState == 1) {
-          
-          console.log('hi');
           if (Math.abs(this.particle.velocity[0]) < 0.2 ){
             this.particle.velocity[0] = 0;
             this.particle.x = this.particle.lastPosition[0];
