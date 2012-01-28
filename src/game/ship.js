@@ -69,7 +69,7 @@ var ShipReset = aqua.type(aqua.Component, {
 var Ship = aqua.type(aqua.Component,
   {
     firedelay: 0.5,
-
+    ship: true,
     onadd: function(gameObject) {
       this.input = gameObject.get(ShipInput);
       this.moveModel = gameObject.get(ShipMove);
@@ -119,7 +119,7 @@ var ShipMove = aqua.type(aqua.Component,
       this.particle = aqua.Particle.create([this.x, this.y, 0], this.radius, 1);
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
-      
+      this.particle.ship = this;
       this.playing = false;
     },
     onadd: function(gameObject) {
@@ -152,7 +152,6 @@ var ShipMove = aqua.type(aqua.Component,
     oncollision: function(otherParticle, collision) {
       // console.log(otherParticle);
       this.energy += 1;
-      // aqua.game.world.removeParticle(otherParticle);
 
       // if (!this.playing) return;
       // 
@@ -192,7 +191,8 @@ var ShipMove = aqua.type(aqua.Component,
         this.particle.acceleration[0] = Math.cos(this.angle) * 100;
         this.particle.acceleration[1] = Math.sin(this.angle) * 100;
       }
-      
+       // console.log((-this.angle+Math.PI/2) % (Math.PI*2));
+      console.log((-this.angle+Math.PI/2));
       // if (!this.playing && this.input.get('up')) {
       //   this.playing = true;
       // 

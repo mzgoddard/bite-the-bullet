@@ -30,6 +30,12 @@ var Bullet = aqua.type(aqua.Component,
         if (other.bullet) {
         	this.game.destroy(this.gameObject);
         }
+       	if (other.ship) {
+       	  var ang = (-other.ship.angle + Math.PI/2) % (Math.PI*2);
+      		if (Math.abs((Math.abs((ang - this.particle.angle))-Math.PI)) < Math.PI/4) {
+  	      	this.game.destroy(this.gameObject);
+        	}
+       	}
       }
     },
     update: function() {
