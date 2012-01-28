@@ -1,7 +1,5 @@
 {
-  "hello": "world",
-  "files": [
-  {"type": "text",
-  "path": "shaders/basic.fs"}
-  ]
+  "move": {},
+  "attack": {},
+  "render": {}
 }

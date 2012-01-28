@@ -109,10 +109,31 @@ var EnemyRender = aqua.type(aqua.Component,
   }
 );
 
+var EnemySpawner = aqua.type(aqua.Component,
+  {
+    init: function(def) {
+      this.def = def;
+      this.timer = def.spawnDelay || 1;
+    },
+    ongameadd: function(gameObject, game) {
+      this.gameObject = gameObject;
+      this.game = game;
+    },
+    update: function() {
+      if (this.timer < 0) {
+        this.game.add(btb.makeEnemy(this.def));
+        this.game.destroy(this.gameObject);
+      }
+      this.timer -= this.game.timing.delta;
+    }
+  }
+);
+
 btb.Enemy = {};
 btb.Enemy.Move = EnemyMove;
 btb.Enemy.Attack = EnemyAttack;
 btb.Enemy.Render = EnemyRender;
+btb.Enemy.Spawner = EnemySpawner;
 
 btb.makeEnemy = function(definition) {
   var enemy = aqua.GameObject.create();
