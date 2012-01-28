@@ -82,7 +82,7 @@ var BulletRender = aqua.type(aqua.Component,
 
 btb.Bullet = Bullet;
 btb.BulletRender = BulletRender;
-btb.BulletRasterRender = BulletRasterRender
+// btb.BulletRasterRender = BulletRasterRender
 
 });
 })(this, this.load);

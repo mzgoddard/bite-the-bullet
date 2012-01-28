@@ -57,7 +57,7 @@ var LevelManager = aqua.type(aqua.GameObject,
     init: function() {
       Object.getPrototypeOf(Object.getPrototypeOf(this)).init.call(this);
       this.level = null;
-      this.levelIndex = 0;
+      this.levelIndex = parseInt(aqua.query('level', 1)) - 1;
 
       this.gameObject = this;
       this.next();
