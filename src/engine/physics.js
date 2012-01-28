@@ -26,6 +26,7 @@ var Particle = aqua.type(aqua.Emitter,
       
       this.velocity = ([0,0]);
       this.acceleration = ([0,0,0]);
+      this.angle = 0;
       
       this.temporaryPosition = (position).slice();
       
@@ -59,7 +60,7 @@ var Particle = aqua.type(aqua.Emitter,
       this.ly = this.lastPosition[1];
       this.velocity[0] = this.position[0]-this.lastPosition[0];
       this.velocity[1] = this.position[1]-this.lastPosition[1];
-      
+      this.angle = Math.atan(this.velocity[0]/this.velocity[1]);
       // zero acceleration
       for ( var i = 0; i < 3; i++ )
         this.acceleration[i] = 0;

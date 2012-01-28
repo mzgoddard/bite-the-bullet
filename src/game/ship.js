@@ -183,7 +183,7 @@ var ShipMove = aqua.type(aqua.Component,
         this.particle.acceleration[0] = Math.cos(this.angle) * 100;
         this.particle.acceleration[1] = Math.sin(this.angle) * 100;
       }
-
+      
       // if (!this.playing && this.input.get('up')) {
       //   this.playing = true;
       // 
