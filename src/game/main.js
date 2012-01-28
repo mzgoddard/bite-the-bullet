@@ -107,6 +107,7 @@ aqua.game.player = glider.makeShip();
 aqua.game.add(aqua.game.player);
 
 // aqua.game.add(btb.makeEnemy({move:{},attack:{},render:{}}));
+aqua.game.add(btb.LevelManager.makeLevelManager());
 
 function loop() {
   aqua.requestAnimFrame.call(null, loop);

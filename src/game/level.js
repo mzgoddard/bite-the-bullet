@@ -44,9 +44,32 @@ var Level = aqua.type(aqua.Component,
         }).bind(this, files[i]));
       }
     },
+    loadEnemy: function(object, json) {
+      if (json.file) {
+        this.loadEnemy(object, load.get(json.file));
+      }
+      return jQuery.extend(true, object, json);
+    },
     start: function() {
       this.ready.then((function(){
-        
+        console.log('start');
+        var i, j, enemy, enemyDef, spawner;
+        for (i = 0; i < this.def.enemies.length; i++) {
+          console.log(i);
+          enemy = this.def.enemies[i];
+          enemyDef = {};
+          enemyDef = this.loadEnemy(enemyDef, enemy);
+
+          for (j = 0; j < (enemyDef.spawnCount || 1); j++) {
+            console.log(j);
+            spawner = aqua.GameObject.create();
+            console.log(spawner);
+            spawner.add(btb.Enemy.Spawner.create(enemyDef));
+            console.log(spawner);
+            aqua.game.add(spawner);
+            console.log(spawner);
+          }
+        }
       }).bind(this));
     }
   }
