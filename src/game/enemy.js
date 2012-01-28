@@ -40,10 +40,56 @@ var EnemyMove = aqua.type(aqua.Component,
   }
 );
 
+var EnemyMoveSpread = aqua.type(EnemyMove,
+  {
+    init: function(def) {
+      this.def = def;
+      this.particle = aqua.Particle.create((def.position || [100, 100]), (def.radius || 10), 1);
+      this.particle.isTrigger = true;
+      this.particle.on('collision', this.oncollision.bind(this));
+      this.particle.enemy = this;
+    },
+    update: function() {
+      playerPos = aqua.game.player.components[0].gameObject.components[1].particle.position;
+      this.angle = Math.atan2(
+        this.particle.position[1] - playerPos[1],
+        this.particle.position[0] - playerPos[0]
+      )+Math.PI;
+    },
+    ongameadd: function(gameObject, game) {
+      this.gameObject = gameObject;
+      this.game = game;
+      game.world.addParticle(this.particle);
+      this.particle.lastPosition[0] -= (this.def.velocity && this.def.velocity[0] || 10) * 0.05;
+      this.particle.lastPosition[1] -= (this.def.velocity && this.def.velocity[1] || 10) * 0.05;
+      this.angle = Math.atan2(
+        this.particle.position[1] - this.particle.lastPosition[1],
+        this.particle.position[0] - this.particle.lastPosition[0]);
+    },
+    ongamedestroy: function(gameObject, game) {
+      delete this.gameObject;
+      delete this.game;
+      game.world.removeParticle(this.particle);
+    },
+    oncollision: function(other, collision) {
+      if (other.enemy) return;
+      if (other.bullet && !other.bullet.isLive) return;
+      if (other.ship) return;
+      this.gameObject.destroy(this);
+
+      this.call('hit');
+      var game = this.game, gameObject = this.gameObject;
+      setTimeout((function() {
+        game.destroy(gameObject);
+      }).bind(this), 250);
+    }
+  }
+);
+
 var EnemyAttack = aqua.type(aqua.Component,
   {
     defaults: {
-      fireDelay: 1
+      fireDelay: 2
     },
     init: function(def) {
       this.def = def;
@@ -69,6 +115,57 @@ var EnemyAttack = aqua.type(aqua.Component,
       bullet.add(btb.BulletRender.create());
 
       aqua.game.add(bullet);
+    }
+  }
+);
+
+var EnemyAttackSpread = aqua.type(EnemyAttack,
+  {
+    defaults: {
+      fireDelay: 3
+    },
+    init: function(def) {
+      this.def = def;
+      this.fireTimer = this.def.fireDelay || this.defaults.fireDelay;
+    },
+    onadd: function(gameObject) {
+      this.moveModel = gameObject.get(EnemyMove);
+    },
+    update: function() {
+      this.fireTimer -= aqua.game.timing.delta;
+      if (this.fireTimer <= 0) {
+        this.fire();
+        this.fireTimer = this.def.fireDelay || this.defaults.fireDelay;
+      }
+    },
+    fire: function() {
+      var bullet = aqua.GameObject.create(),
+          speed = this.def.bulletSpeed || 30;
+      bullet.add(btb.Bullet.create(
+        [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
+        [Math.cos(this.moveModel.angle) * speed + this.moveModel.particle.velocity[0] / 0.05,
+         Math.sin(this.moveModel.angle) * speed + this.moveModel.particle.velocity[1] / 0.05]));
+      bullet.add(btb.BulletRender.create());
+      
+      var bullet2 = aqua.GameObject.create(),
+          speed = this.def.bulletSpeed || 30;
+      bullet2.add(btb.Bullet.create(
+        [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
+        [Math.cos(this.moveModel.angle+Math.PI/8) * speed + this.moveModel.particle.velocity[0] / 0.05,
+         Math.sin(this.moveModel.angle+Math.PI/8) * speed + this.moveModel.particle.velocity[1] / 0.05]));
+      bullet2.add(btb.BulletRender.create());
+
+      var bullet3 = aqua.GameObject.create(),
+          speed = this.def.bulletSpeed || 30;
+      bullet3.add(btb.Bullet.create(
+        [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
+        [Math.cos(this.moveModel.angle-Math.PI/8) * speed + this.moveModel.particle.velocity[0] / 0.05,
+         Math.sin(this.moveModel.angle-Math.PI/8) * speed + this.moveModel.particle.velocity[1] / 0.05]));
+      bullet3.add(btb.BulletRender.create());
+
+      aqua.game.add(bullet);
+      aqua.game.add(bullet2);
+      aqua.game.add(bullet3);
     }
   }
 );
@@ -109,6 +206,23 @@ var EnemyRender = aqua.type(aqua.Component,
   }
 );
 
+var EnemyRasterRender = aqua.type(aqua.RasterRenderer,
+  {
+    init: function(def) {
+      this.angle = 0;
+      Object.getPrototypeOf(Object.getPrototypeOf(this)).init.call(this, def.image, EnemyMove);
+    },
+    lateUpdate: function() {
+      this.raster.position.x = this.transform.particle.position[0];
+      this.raster.position.y = this.transform.particle.position[1];
+      if (this.transform.angle != this.angle) {
+        this.raster.rotate((this.transform.angle - this.angle) / 2 / Math.PI * 360);
+        this.angle = this.transform.angle;
+      }
+    }
+  }
+);
+
 var EnemySpawner = aqua.type(aqua.Component,
   {
     init: function(def) {
@@ -131,8 +245,11 @@ var EnemySpawner = aqua.type(aqua.Component,
 
 btb.Enemy = {};
 btb.Enemy.Move = EnemyMove;
+btb.Enemy.MoveSpread = EnemyMoveSpread;
 btb.Enemy.Attack = EnemyAttack;
+btb.Enemy.AttackSpread = EnemyAttackSpread;
 btb.Enemy.Render = EnemyRender;
+btb.Enemy.RasterRender = EnemyRasterRender;
 btb.Enemy.Spawner = EnemySpawner;
 
 btb.makeEnemy = function(definition) {

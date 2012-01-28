@@ -34,6 +34,7 @@ aqua.game.task(paper.view.draw.bind(paper.view), aqua.Game.Priorities.RENDER);
 var path = new paper.Path.RoundRectangle(new paper.Rectangle(10, 10, 50, 50), new paper.Size(10, 10));
 path.strokeColor = 'black';
 
+aqua.game.graphics = aqua.Graphics.create();
 // aqua.game.graphics = aqua.initGraphics($('canvas')[0]);
 // aqua.game.graphics.addShader({name: 'basic', path:'shaders/basic'});
 // aqua.game.task(aqua.game.call.bind(aqua.game, 'render'), aqua.Game.Priorities.RENDER);

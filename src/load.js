@@ -184,13 +184,38 @@
 
       return deferred.promise;
     },
+    image: function(path) {
+      if (this.promises[path]) {
+        return this.promises[path];
+      }
+
+      var img = new Image(),
+          deferred = when.defer();
+
+      this.loadedAs[path] = 'image';
+      this.promises[path] = deferred.promise;
+
+      img.onload = (function() {
+        this.objects[path] = img;
+        deferred.resolve(img);
+      }).bind(this);
+      img.onerror = function() {
+        deferred.reject();
+      };
+
+      img.src = this.fixPath('data', path);
+
+      return deferred.promise;
+    },
     load: function(filepath) {
       if (typeof(filepath) == 'string') {
         return this[this.guessType(filepath)](filepath);
       } else {
         return this[filepath.type](filepath.path);
       }
-    }
+    },
+    package: function(path) {},
+    definition: function(path) {}
   }).init();
   
   window.load = load;
