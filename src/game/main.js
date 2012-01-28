@@ -97,7 +97,7 @@ aqua.game.world.add(aqua.World.PaperRenderer.create());
 //   graphics.useShader('basic');
 // }, -1000));
 
-aqua.game.sound = aqua.SoundContext.create();
+// aqua.game.sound = aqua.SoundContext.create();
 
 // aqua.game.task(function(){console.log('beep');});
 

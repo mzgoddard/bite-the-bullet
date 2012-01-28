@@ -151,6 +151,10 @@ var ShipMove = aqua.type(aqua.Component,
     oncollision: function(otherParticle, collision) {
       // console.log(otherParticle);
       this.energy += 1;
+      if (otherParticle.enemy){
+        this.gameObject.destroy(this);
+      }
+      
 
       // if (!this.playing) return;
       // 

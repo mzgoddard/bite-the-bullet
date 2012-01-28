@@ -28,7 +28,7 @@ var EnemyMove = aqua.type(aqua.Component,
     oncollision: function(other, collision) {
       if (other.enemy) return;
       if (other.bullet && !other.bullet.isLive) return;
-
+      if (other.ship) return;
       this.gameObject.destroy(this);
 
       this.call('hit');
