@@ -8,8 +8,7 @@
       function() {
         return when.all([
         load.script('engine/object.js'),
-        load.script('engine/graphics.js'),
-        load.script('engine/sound.js'),
+        load.script('engine/paper_graphics.js'),
         load.script('engine/physics.js')
         ]);
       }
