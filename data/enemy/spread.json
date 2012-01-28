@@ -1,0 +1,9 @@
+{
+  "move": {
+    "type": "MoveSpread"
+  },
+  "attack": {
+    "type": "AttackSpread"
+  },
+  "render": {}
+}
