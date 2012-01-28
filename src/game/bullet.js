@@ -32,13 +32,27 @@ var Bullet = aqua.type(aqua.Component,
         	this.game.destroy(this.gameObject);
         }
        	if (other.ship) {
-       	  var ang = (-other.ship.angle + Math.PI/2) % (Math.PI*2);
-      		if (Math.abs((Math.abs((ang - this.particle.angle))-Math.PI)) < Math.PI/4) {
-  	      	this.game.destroy(this.gameObject);
-        	}
-        	else {
-        	  this.game.destroy(other.ship.gameObject);
-        	}
+       	  var ang = Math.PI+other.ship.angle % (Math.PI*2);//(-other.ship.angle + Math.PI/2) % (Math.PI*2);
+       	  
+       	  var dx = other.ship.particle.position[0] - this.particle.position[0];
+       	  var dy = other.ship.particle.position[1] - this.particle.position[1];
+       	  var v1 = vec3.normalize([dx,dy,0]);
+       	  var v2 = vec3.normalize([Math.cos(ang),Math.sin(ang),0]);
+       	  var mag = vec3.length(vec3.subtract(v2,v1));
+       	  
+       	  
+       	  
+       	  console.log(mag);
+       	  if (mag < 0.6) {
+       	    this.game.destroy(this.gameObject);
+       	  }
+       	  else {
+            this.game.destroy(other.ship.gameObject);
+          }
+      		// if (Math.abs((Math.abs((ang - this.particle.angle))-Math.PI)) < Math.PI/4) {
+  	      	// this.game.destroy(this.gameObject);
+        	// }
+        	
        	}
       }
     },

@@ -98,8 +98,8 @@ var Ship = aqua.type(aqua.Component,
 var ShipMove = aqua.type(aqua.Component,
   {
     init: function() {
-      this.x = 640 / 8 * 5;
-      this.y = 480 / 8 * 3;
+      this.x = 300;
+      this.y = 100;
 
       this.vx = 0;
       this.vy = 0;

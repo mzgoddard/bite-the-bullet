@@ -14,7 +14,7 @@ load.module('engine/physics.js',
     load.script('engine/math.js')
   ]), function() {
 
-var posmul = 1.999, lastposmul = 0.999, friction = 0.001;
+var posmul = 2, lastposmul = 1, friction = 0;
 var Particle = aqua.type(aqua.Emitter,
   {
     init: function(position, radius, density) {
