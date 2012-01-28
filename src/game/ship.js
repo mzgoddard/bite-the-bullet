@@ -69,7 +69,7 @@ var ShipReset = aqua.type(aqua.Component, {
 var Ship = aqua.type(aqua.Component,
   {
     firedelay: 0.5,
-
+    ship: true,
     onadd: function(gameObject) {
       this.input = gameObject.get(ShipInput);
       this.moveModel = gameObject.get(ShipMove);
@@ -118,7 +118,7 @@ var ShipMove = aqua.type(aqua.Component,
       this.particle = aqua.Particle.create([this.x, this.y, 0], this.radius, 1);
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
-      
+      this.particle.ship = this;
       this.playing = false;
     },
     onadd: function(gameObject) {
@@ -151,7 +151,10 @@ var ShipMove = aqua.type(aqua.Component,
     oncollision: function(otherParticle, collision) {
       // console.log(otherParticle);
       this.energy += 1;
-      // aqua.game.world.removeParticle(otherParticle);
+      if (otherParticle.enemy){
+        this.gameObject.destroy(this);
+      }
+      
 
       // if (!this.playing) return;
       // 
@@ -191,147 +194,7 @@ var ShipMove = aqua.type(aqua.Component,
         this.particle.acceleration[0] = Math.cos(this.angle) * 100;
         this.particle.acceleration[1] = Math.sin(this.angle) * 100;
       }
-      
-      // if (!this.playing && this.input.get('up')) {
-      //   this.playing = true;
-      // 
-      //   // Playtomic.Log.Play();
-      //   if (this.gameObject.game.score) {
-      //     this.gameObject.game.score.setMove(this);
-      //   }
-      //   
-      //   this.heatmapTime = Date.now();
-      // } else if (!this.playing) {
-      //   this.x = this.world.box.left + this.world.box.width / 8 * 5;
-      //   return;
-      // }
-      // 
-      // var delta = aqua.game.timing.fixedDelta,
-      //     vl = Math.sqrt(this.vx*this.vx+this.vy*this.vy),
-      //     va = Math.atan2(this.vy, this.vx);
-      // 
-      // while (va > Math.PI)
-      //   va -= Math.PI * 2;
-      // while (va < -Math.PI)
-      //   va += Math.PI * 2;
-      // 
-      // this.ay -= 16;
-      // 
-      // var k = vl * 2,
-      //     n = k * Math.cos(va + Math.PI - this.angle - Math.PI / 2) * (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
-      //     nx = Math.cos(this.angle+Math.PI/2) * n,
-      //     ny = Math.sin(this.angle+Math.PI/2) * n;
-      // 
-      // this.ax += nx;
-      // this.ay += ny;
-      // 
-      // if (this.input.get('up')) {
-      //   this.angle += Math.PI * delta;
-      //   
-      //   if (this.x < this.world.box.left + this.world.box.width / 3) {
-      //     this.ax += Math.cos(this.angle) * 50;
-      //     this.ay += Math.sin(this.angle) * 50;
-      //   }
-      //   if (this.y < this.world.box.bottom + this.world.box.height / 8) {
-      //     this.ax += Math.cos(this.angle) * 50;
-      //     this.ay += Math.sin(this.angle) * 200;
-      //   }
-      // }
-      // 
-      // // integrate
-      // this.vx += this.ax / 2 * delta;
-      // this.x += this.vx * delta;
-      // this.vx += this.ax / 2 * delta;
-      // 
-      // this.vy += this.ay / 2 * delta;
-      // this.y += this.vy * delta;
-      // this.vy += this.ay / 2 * delta;
-      // 
-      // vec3.set([this.x, this.y, 0], this.particle.position);
-      // 
-      // this.angle -= Math.PI * 0.2 * delta;
-      // 
-      // if (this.angle > Math.PI) {
-      //   this.canScoreBackflip = true;
-      // }
-      // 
-      // while (this.angle > Math.PI)
-      //   this.angle -= Math.PI * 2;
-      // while (this.angle < -Math.PI)
-      //   this.angle += Math.PI * 2;
-      // 
-      // if (this.angle > -Math.PI / 4 && this.canScoreBackflip && aqua.game.score) {
-      //   this.canScoreBackflip = false;
-      //   aqua.game.score.addTrick('Backflip', 50000);
-      // }
-      // 
-      // this.ax = 0;
-      // this.ay = 0;
-      // 
-      // var fadeHappy = this.fadeHappy = Math.clamp((this.x - this.world.box.left - this.world.box.width / 2) / 40, 0, 1);
-      // var fadeApproach = this.fadeApproach = Math.clamp((this.x - 240 + this.y / 8 - this.world.box.left) / (this.world.box.width / 6), 0, 1);
-      // 
-      // if (this.fadeApproach === 0) {
-      //   this.inDanger = true;
-      // }
-      // 
-      // if (this.fadeApproach == 1 && this.inDanger) {
-      //   this.inDanger = false;
-      //   
-      //   if (aqua.game.score) {
-      //     aqua.game.score.addTrick('Back for More', 50000);
-      //   }
-      // }
-      // 
-      // if (this.sound.nodes) {
-      //   if (this.sound.nodes.happy)
-      //     this.sound.nodes.happy.source.gain.value = Math.clamp(Math.lerp(0, 1, fadeHappy), 0, 1);
-      //   if (this.sound.nodes.zone) {
-      //     this.sound.nodes.zone.source.gain.value = Math.clamp(Math.lerp(0, 1, Math.lerp((1-fadeHappy), 0, 1-Math.sqrt(fadeApproach))), 0, 1);
-      //   }
-      //   if (this.sound.nodes.approach) {
-      //     this.sound.nodes.approach.source.gain.value = Math.clamp(Math.lerp(1, 0, fadeApproach), 0, 1);
-      //   }
-      // }
-      // 
-      // if (this.world.box.contains([this.x, this.y])) {
-      //   if (fadeApproach > 0) {
-      //     this.score += fadeHappy * this.gameObject.game.timing.delta * 1000;
-      //     this.score += (1 - fadeHappy) * this.gameObject.game.timing.delta * 10000;
-      //   }
-      // }
-      // 
-      // if (Date.now() - this.heatmapTime > 10000) {
-      //   // Playtomic.Log.Heatmap('Position', '0001', this.x - this.world.box.left, this.y);
-      //   this.heatmapTime = Date.now();
-      // }
-      // 
-      // if (!(
-      //   this.world.box.contains([this.x+this.radius,this.y+this.radius]) ||
-      //   this.world.box.contains([this.x+this.radius,this.y-this.radius]) ||
-      //   this.world.box.contains([this.x-this.radius,this.y+this.radius]) ||
-      //   this.world.box.contains([this.x-this.radius,this.y-this.radius]))) {
-      //   
-      //   if (aqua.game.score) {
-      //     if (this.world.box.bottom > this.y) {
-      //       aqua.game.score.addTrick('The World is Flat', 10000);
-      //     } else if (this.world.box.top < this.y) {
-      //       aqua.game.score.addTrick('To The Sky', 200000);
-      //     } else if (this.world.box.right < this.x) {
-      //       aqua.game.score.addTrick('Exit Stage Right', 1000000);
-      //     } else if (this.world.box.left > this.x) {
-      //       aqua.game.score.addTrick('Exit Stage Left', 100000);
-      //     }
-      //   }
-      //   
-      //   // Playtomic.Log.Heatmap('Death', '0001', this.x - this.world.box.left, this.y);
-      //   
-      //   this.gameObject.game.destroy(this.gameObject);
-      //   
-      //   var resetObject = aqua.GameObject.create();
-      //   resetObject.add(ShipReset.create(this.gameObject.get(ShipInput)));
-      //   this.gameObject.game.add(resetObject);
-      // }
+
     }
   }
 );
@@ -366,6 +229,7 @@ glider.makeShip = function(gameObject) {
     87: 'up', // w
     65: 'left', // a
     68: 'right', // d
+    83: 'down', // s
     38: 'up', // up arrow
     32: 'fire' // space
   }));

@@ -16,7 +16,7 @@ load.module('game/main.js',
     }
   ),
 function() {
-
+setTimeout(function() {
 var $ = window.$,
     when = window.when,
     mat4 = window.mat4,
@@ -51,16 +51,8 @@ aqua.game.task(function() {
 
 aqua.game.world = aqua.World.create(aqua.Box.create(400, 640, 0, 0));
 aqua.game.add(aqua.game.world);
-// aqua.game.world.add(aqua.World.PaperRenderer.create());
+aqua.game.world.add(aqua.World.PaperRenderer.create());
 // aqua.game.world.add(aqua.World.Renderer.create());
-
-  aqua.game.world.addParticle(
-    aqua.Particle.create([
-        500,
-        200,
-        0],
-      4,
-      1));
 
 // for ( var idx = 0; idx < 500; idx++ )
 //   aqua.game.world.addParticle(
@@ -98,7 +90,7 @@ aqua.game.add(aqua.game.world);
 //   graphics.useShader('basic');
 // }, -1000));
 
-aqua.game.sound = aqua.SoundContext.create();
+// aqua.game.sound = aqua.SoundContext.create();
 
 // aqua.game.task(function(){console.log('beep');});
 
@@ -114,7 +106,7 @@ aqua.game.sound = aqua.SoundContext.create();
 aqua.game.player = glider.makeShip();
 aqua.game.add(aqua.game.player);
 
-aqua.game.add(btb.makeEnemy({move:{},attack:{},render:{}}));
+// aqua.game.add(btb.makeEnemy({move:{},attack:{},render:{}}));
 
 function loop() {
   aqua.requestAnimFrame.call(null, loop);
@@ -122,6 +114,7 @@ function loop() {
   aqua.game.step();
 }
 loop();
-
+}, 0);
 });
 })(this, this.load);
+
