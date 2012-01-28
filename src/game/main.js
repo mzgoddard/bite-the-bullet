@@ -10,7 +10,8 @@ load.module('game/main.js',
     function() {
       return when.all([
         load.script('game/ship.js'),
-        load.script('game/enemy.js')
+        load.script('game/enemy.js'),
+        load.script('game/level.js')
       ]);
     }
   ),
