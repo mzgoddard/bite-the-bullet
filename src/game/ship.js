@@ -82,9 +82,14 @@ var Ship = aqua.type(aqua.Component,
           var bullet = aqua.GameObject.create();
           bullet.add(btb.Bullet.create(
             [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-            [Math.cos(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[0] / 0.05, Math.sin(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[1] / 0.05]));
+            [Math.cos(this.moveModel.angle) * 100 + this.moveModel.particle.velocity[0] / 0.05,
+            Math.sin(this.moveModel.angle) * 100 + this.moveModel.particle.velocity[1] / 0.05]));
           bullet.add(btb.BulletRender.create());
-
+// bullet.add(btb.Bullet.create(
+            // [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
+            // vec3.scale(vec3.normalize([Math.cos(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[0] / 0.05,
+            // Math.sin(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[1] / 0.05,0]),200)
+            // ));
           aqua.game.add(bullet);
 
           this.firetimer = this.firedelay;
@@ -215,17 +220,17 @@ var ShipMove = aqua.type(aqua.Component,
         else if (this.decelState == 1) {
           
           console.log('hi');
-          if (Math.abs(this.particle.velocity[0]) < 0.1 ){
+          if (Math.abs(this.particle.velocity[0]) < 0.2 ){
             this.particle.velocity[0] = 0;
             this.particle.x = this.particle.lastPosition[0];
             this.particle.position[0] = this.particle.x;
           }
-          if (Math.abs(this.particle.velocity[1]) < 0.1 ){
+          if (Math.abs(this.particle.velocity[1]) < 0.2 ){
             this.particle.velocity[1] = 0;
             this.particle.y = this.particle.lastPosition[1];
             this.particle.position[1] = this.particle.y;
           }
-          else {
+          if ((Math.abs(this.particle.velocity[0]) >= 0.2) && Math.abs(this.particle.velocity[0]) >= 0.2) {
             this.particle.acceleration[0] = Math.cos(this.angle) * 100;
             this.particle.acceleration[1] = Math.sin(this.angle) * 100;
           }

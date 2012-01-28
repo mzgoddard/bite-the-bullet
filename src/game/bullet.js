@@ -13,6 +13,7 @@ var Bullet = aqua.type(aqua.Component,
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
       this.particle.bullet = this;
+      this.particle.maxVelocity = 200;
       this.startTimer = this.startTime;
     },
     ongameadd: function(gameObject, game) {
