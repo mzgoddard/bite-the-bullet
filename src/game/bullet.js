@@ -35,6 +35,9 @@ var Bullet = aqua.type(aqua.Component,
       		if (Math.abs((Math.abs((ang - this.particle.angle))-Math.PI)) < Math.PI/4) {
   	      	this.game.destroy(this.gameObject);
         	}
+        	else {
+        	  this.game.destroy(other.ship.gameObject);
+        	}
        	}
       }
     },
