@@ -14,3 +14,6 @@
 [submodule "src/externals/playtomic"]
 	path = src/externals/playtomic
 	url = https://github.com/playtomic/gameapi-html5.git
+[submodule "src/externals/paper"]
+	path = src/externals/paper
+	url = https://github.com/paperjs/paper.js

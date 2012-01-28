@@ -122,15 +122,19 @@ var Particle = aqua.type(aqua.Emitter,
         fric = Math.abs(c.distance) * (avm + bvm > 50 ? 0.1 : a.friction * b.friction);
         // fric = Math.abs(c.distance) * (avm + bvm > 10 ? 0.99 : a.friction * b.friction);
 
-      if (avm + bvm < 30) {
-        lambx *= 0.1;
-        lamby *= 0.1;
-      }
+      // if (avm + bvm < 30) {
+      //   lambx *= 0.1;
+      //   lamby *= 0.1;
+      // }
 
-      avx = (avx / avm) * (avm - fric);
-      avy = (avy / avm) * (avm - fric);
-      bvx = bvx / bvm * (bvm - fric);
-      bvy = bvy / bvm * (bvm - fric);
+      if (avm != 0) {
+        avx = (avx / avm) * (avm - fric);
+        avy = (avy / avm) * (avm - fric);
+      }
+      if (bvm != 0) {
+        bvx = bvx / bvm * (bvm - fric);
+        bvy = bvy / bvm * (bvm - fric);
+      }
 
       if (a.isStatic) {
         am = 0;
@@ -332,6 +336,11 @@ var World = aqua.type(aqua.GameObject,
       this.fixedDelta = 1 / 20;
       this.timeToPlay = 0;
       
+      box = box.copy();
+      box.left -= 50;
+      box.right += 50;
+      box.top += 50;
+      box.bottom -= 50;
       this.hash = SpatialHash.create(Box.create(50, 50, 0, 0), box);
       
       // this.buffer = ctx.buffer();
@@ -411,27 +420,34 @@ var World = aqua.type(aqua.GameObject,
         }
       });
       
-      this.box.translate(1,0);
+      // this.box.translate(1,0);
       this.hash.newBox = this.box.copy();
       
       for ( i = 0; i < count; i++ ) {
         p = particles[i];
         
-        if (p.position[0] + p.radius < box.left) {
+        if (p.position[0] < box.left) {
           var vx = p.position[0] - p.lastPosition[0];
-          p.position[0] = box.right - p.radius;
-          p.position[1] = box.height * Math.random();
+          p.position[0] = box.right;
+          p.lastPosition[0] = p.position[0] - vx;
+          // p.position[1] = box.height * Math.random();
 
-          p.lastPosition[1] = p.position[1];
+          // p.lastPosition[1] = p.position[1];
         }
-        if (p.position[0] + p.radius > box.right) {
-          p.position[0] = box.right - p.radius;
+        if (p.position[0] > box.right) {
+          var vx = p.position[0] - p.lastPosition[0];
+          p.position[0] = box.left;
+          p.lastPosition[0] = p.position[0] - vx;
         }
-        if (p.position[1] + p.radius > box.top) {
-          p.position[1] = box.top - p.radius;
+        if (p.position[1] > box.top) {
+          var vy = p.position[1] - p.lastPosition[1];
+          p.position[1] = box.bottom;
+          p.lastPosition[1] = p.position[1] - vy;
         }
-        if (p.position[1] - p.radius < box.bottom) {
-          p.position[1] = box.bottom + p.radius;
+        if (p.position[1] < box.bottom) {
+          var vy = p.position[1] - p.lastPosition[1];
+          p.position[1] = box.top;
+          p.lastPosition[1] = p.position[1] - vy;
         }
         
         this.hash.update(p);
@@ -567,9 +583,42 @@ var WorldRenderer = aqua.type(aqua.Renderer,
   }
 );
 
+var PaperRenderer = aqua.type(aqua.Component,
+  {
+    onadd: function(gameObject) {
+      this.world = gameObject;
+      if (!this.paths) {
+        this.paths = [];
+      }
+    },
+    lateUpdate: function() {
+      var i, path, particle;
+
+      for (i = this.paths.length; i < this.world.particles.length; i++) {
+        path = new paper.Path.Circle(new paper.Point(0, 0), 1);
+        path.fillColor = 'red';
+        path.currentSize = 1;
+        this.paths.push(path);
+      }
+      for (i = this.paths.length; i > this.world.particles.length; i--) {
+        this.paths.pop().remove();
+      }
+
+      for (i = 0; i < this.world.particles.length; i++) {
+        path = this.paths[i];
+        particle = this.world.particles[i];
+        path.scale(particle.radius / path.currentSize);
+        path.currentSize = particle.radius;
+        path.translate(new paper.Point(particle.position[0]-path.position.x, particle.position[1]-path.position.y));
+      }
+    }
+  }
+);
+
 aqua.Particle = Particle;
 aqua.World = World;
 aqua.World.Renderer = WorldRenderer;
+aqua.World.PaperRenderer = PaperRenderer;
 aqua.Box = Box;
 
 });
