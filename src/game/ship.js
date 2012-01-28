@@ -1,5 +1,5 @@
 (function(window, load) {
-load.module('game/ship.js', null, function() {
+load.module('game/ship.js', load.script('game/bullet.js'), function() {
 
 var ShipInput = aqua.type(aqua.Component,
   {
@@ -78,11 +78,19 @@ var Ship = aqua.type(aqua.Component,
     update: function() {
       if (this.input.get('fire')) {
         if (this.firetimer <= 0) {
-          
+          var bullet = aqua.GameObject.create();
+          bullet.add(btb.Bullet.create(
+            [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
+            [Math.cos(this.moveModel.angle) * 30, Math.sin(this.moveModel.angle) * 30]));
+          bullet.add(btb.BulletRender.create());
 
-          this.firetimer += this.firedelay;
+          aqua.game.add(bullet);
+          console.log(bullet);
+
+          this.firetimer = this.firedelay;
         }
       }
+      this.firetimer -= aqua.game.timing.delta;
     }
   }
 );
@@ -142,8 +150,9 @@ var ShipMove = aqua.type(aqua.Component,
       }
     },
     oncollision: function(otherParticle, collision) {
+      // console.log(otherParticle);
       this.energy += 1;
-      aqua.game.world.removeParticle(otherParticle);
+      // aqua.game.world.removeParticle(otherParticle);
 
       // if (!this.playing) return;
       // 
@@ -334,7 +343,7 @@ var ShipRender = aqua.type(aqua.Component,
       this.ship = gameObject.get(ShipMove);
       if (!this.path) {
         this.pathAngle = 0;
-        this.path = new paper.Path.Rectangle(new paper.Rectangle(-12.5,-12.5,25,25));
+        this.path = new paper.Path.Rectangle(new paper.Rectangle(-17.5,-17.5,35,35));
         this.path.fillColor = 'blue';
       }
     },
