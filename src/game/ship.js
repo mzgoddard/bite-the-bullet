@@ -31,7 +31,7 @@ var ShipInput = aqua.type(aqua.Component,
       return this.state[name].pressed && Date.now() - this.state[name].start;
     },
     keydown: function(e) {
-      console.log(e);
+      // console.log(e);
       var state = this.state[this.inputMap[e.keyCode]];
       if (!state) return;
       

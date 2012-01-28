@@ -214,8 +214,72 @@
         return this[filepath.type](filepath.path);
       }
     },
-    package: function(path) {},
-    definition: function(path) {}
+    package: function(path) {
+      if (this.promises[path]) {
+        return this.promises[path];
+      }
+
+      var defer = when.defer(),
+          waiting = 0,
+          jsonRE = /^{/,
+          def;
+
+      function recurse(files) {
+        if (!files) return;
+
+        var i;
+        waiting += files.length;
+        for (i = 0; i < files.length; i++) {
+          load.load(files[i])
+            .then((function(filepath){
+              console.log(filepath, load.type(filepath));
+              if (load.type(filepath) == "json") {
+                recurse(load.get(filepath).files);
+              }
+
+              waiting--;
+              if (waiting == 0) {
+                defer.resolve();
+              }
+            }).bind(this, files[i]));
+        }
+      }
+
+      if (typeof(path) == "object") {
+        recurse(path.files);
+
+        if (waiting == 0) {
+          defer.resolve();
+        }
+      } else if (jsonRE.test(path.trim())) {
+        def = JSON.parse(path);
+        recurse(def.files);
+
+        if (waiting == 0) {
+          defer.resolve();
+        }
+      } else {
+        load.json(path).then(function() {
+          recurse(load.get(path).files);
+
+          if (waiting == 0) {
+            defer.resolve();
+          }
+        });
+      }
+
+      this.promises[path] = defer.promise;
+      return defer.promise;
+    },
+    definition: function(json) {
+      function recurse(object, json) {
+        if (json.file) {
+          recurse(object, load.get(json.file));
+        }
+        return jQuery.extend(true, object, json);
+      }
+      return recurse({}, json);
+    }
   }).init();
   
   window.load = load;

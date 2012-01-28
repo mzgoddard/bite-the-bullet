@@ -10,39 +10,23 @@ var Level = aqua.type(aqua.Component,
     init: function(def) {
       this.ready = when.defer();
       this.waiting = 0;
+      
+      var promise;
 
       if (typeof(def) == "object") {
         this.def = def;
-        this.load(def.files);
+        promise = load.package(def);
       } else if (this.jsonRE.test(def.trim())) {
         this.def = JSON.parse(def);
-        this.load(this.def.files);
+        promise = load.package(this.def);
       } else {
-        load.text(def).then((function(){
-          this.def = JSON.parse(load.get(def));
-          this.load(this.def.files);
+        promise = load.package(def);
+        promise.then((function() {
+          this.def = load.get(def);
         }).bind(this));
       }
-    },
-    load: function(files) {
-      if (!files) return;
 
-      var i;
-      this.waiting += files.length;
-      for (i = 0; i < files.length; i++) {
-        load.load(files[i])
-        .then((function(filepath){
-          console.log(filepath, load.type(filepath));
-          if (load.type(filepath) == "json") {
-            this.load(load.get(filepath).files);
-          }
-        
-          this.waiting--;
-          if (this.waiting == 0) {
-            this.ready.resolve();
-          }
-        }).bind(this, files[i]));
-      }
+      when.chain(promise, this.ready);
     },
     loadEnemy: function(object, json) {
       if (json.file) {
@@ -52,22 +36,15 @@ var Level = aqua.type(aqua.Component,
     },
     start: function() {
       this.ready.then((function(){
-        console.log('start');
         var i, j, enemy, enemyDef, spawner;
         for (i = 0; i < this.def.enemies.length; i++) {
-          console.log(i);
           enemy = this.def.enemies[i];
-          enemyDef = {};
-          enemyDef = this.loadEnemy(enemyDef, enemy);
+          enemyDef = load.definition(enemy);
 
           for (j = 0; j < (enemyDef.spawnCount || 1); j++) {
-            console.log(j);
             spawner = aqua.GameObject.create();
-            console.log(spawner);
             spawner.add(btb.Enemy.Spawner.create(enemyDef));
-            console.log(spawner);
             aqua.game.add(spawner);
-            console.log(spawner);
           }
         }
       }).bind(this));
@@ -80,7 +57,7 @@ var LevelManager = aqua.type(aqua.GameObject,
     init: function() {
       Object.getPrototypeOf(Object.getPrototypeOf(this)).init.call(this);
       this.level = null;
-      this.levelIndex = 0;
+      this.levelIndex = parseInt(aqua.query('level', 1)) - 1;
 
       this.gameObject = this;
       this.next();

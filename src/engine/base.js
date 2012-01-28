@@ -157,5 +157,16 @@
       }
     }
   );
+  
+  aqua.query = function(name, _default) {
+    var split = location.search.substring(1).split('&'), i, keyvalue;
+    for (i = 0; i < split.length; i++) {
+      keyvalue = split[i].split('=');
+      if (keyvalue[0] == name) {
+        return unescape(keyvalue[1]);
+      }
+    }
+    return _default;
+  };
 
 })(this);
