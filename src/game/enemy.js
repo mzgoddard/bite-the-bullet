@@ -31,6 +31,7 @@ var EnemyMove = aqua.type(aqua.Component,
 
       this.gameObject.destroy(this);
 
+      this.call('hit');
       var game = this.game, gameObject = this.gameObject;
       setTimeout((function() {
         game.destroy(gameObject);
@@ -59,11 +60,12 @@ var EnemyAttack = aqua.type(aqua.Component,
       }
     },
     fire: function() {
-      var bullet = aqua.GameObject.create();
+      var bullet = aqua.GameObject.create(),
+          speed = this.def.bulletSpeed || 30;
       bullet.add(btb.Bullet.create(
         [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-        [Math.cos(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[0] / 0.05,
-         Math.sin(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[1] / 0.05]));
+        [Math.cos(this.moveModel.angle) * speed + this.moveModel.particle.velocity[0] / 0.05,
+         Math.sin(this.moveModel.angle) * speed + this.moveModel.particle.velocity[1] / 0.05]));
       bullet.add(btb.BulletRender.create());
 
       aqua.game.add(bullet);
@@ -84,7 +86,9 @@ var EnemyRender = aqua.type(aqua.Component,
       var radius = this.moveModel.particle.radius;
       radius = Math.sqrt(radius*radius+radius*radius);
       this.path = new paper.Path.Rectangle(new paper.Rectangle(-radius/2,-radius/2,radius,radius));
-      this.path.fillColor = this.def.color || 'red';
+      this.path.fillColor = this.def.color || 'orange';
+      // console.log(this.moveModel.on);
+      this.moveModel.on('hit', this.onhit.bind(this));
     },
     ongamedestroy: function(gameObject, game) {
       this.path.remove();
@@ -98,6 +102,9 @@ var EnemyRender = aqua.type(aqua.Component,
         this.path.rotate((this.moveModel.angle - this.pathAngle) / 2 / Math.PI * 360);
         this.pathAngle = this.moveModel.angle;
       }
+    },
+    onhit: function() {
+      this.path.fillColor = this.def.hitColor || 'red';
     }
   }
 );
