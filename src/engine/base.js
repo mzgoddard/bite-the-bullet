@@ -119,10 +119,10 @@
 
   aqua.Emitter = aqua.type(aqua.type.Base,
     {
-      init: function() {
-        this._events = {};
-      },
       on: function(name, f) {
+        if (!this._events) {
+          this._events = {};
+        }
         if (!this._events[name])
           this._events[name] = [];
         
@@ -131,6 +131,9 @@
       },
       off: function(name, f) {
         var index = -1;
+        if (!this._events) {
+          this._events = {};
+        }
         if (this._events[name]) {
           if ((index = this._events[name].indexOf(f))) {
             this._events[name].splice(index, 1);
@@ -138,6 +141,9 @@
         }
       },
       call: function(name) {
+        if (!this._events) {
+          this._events = {};
+        }
         if (this._events[name]) {
           var args = [], i, events = this._events[name];
           for ( i = 1; i < arguments.length; i++ ) {

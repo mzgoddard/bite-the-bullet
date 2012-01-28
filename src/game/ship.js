@@ -85,7 +85,6 @@ var Ship = aqua.type(aqua.Component,
           bullet.add(btb.BulletRender.create());
 
           aqua.game.add(bullet);
-          console.log(bullet);
 
           this.firetimer = this.firedelay;
         }

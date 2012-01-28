@@ -41,6 +41,13 @@ var Bullet = aqua.type(aqua.Component,
     update: function() {
       this.startTimer -= aqua.game.timing.delta;
     }
+  },
+  {
+    isLive: {
+      get: function() {
+        return this.startTimer <= 0;
+      }
+    }
   }
 );
 

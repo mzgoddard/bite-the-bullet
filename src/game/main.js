@@ -9,7 +9,8 @@ load.module('game/main.js',
   load.chain(load.script('engine/init.js'),
     function() {
       return when.all([
-        load.script('game/ship.js')
+        load.script('game/ship.js'),
+        load.script('game/enemy.js')
       ]);
     }
   ),
@@ -111,6 +112,8 @@ aqua.game.sound = aqua.SoundContext.create();
 
 aqua.game.player = glider.makeShip();
 aqua.game.add(aqua.game.player);
+
+aqua.game.add(btb.makeEnemy({move:{},attack:{},render:{}}));
 
 function loop() {
   aqua.requestAnimFrame.call(null, loop);
