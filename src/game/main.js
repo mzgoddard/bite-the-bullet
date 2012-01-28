@@ -113,6 +113,8 @@ aqua.game.sound = aqua.SoundContext.create();
 aqua.game.player = glider.makeShip();
 aqua.game.add(aqua.game.player);
 
+aqua.game.add(btb.makeEnemy({move:{},attack:{},render:{}}));
+
 function loop() {
   aqua.requestAnimFrame.call(null, loop);
 

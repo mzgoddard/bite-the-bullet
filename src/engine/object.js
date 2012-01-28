@@ -143,7 +143,7 @@ var GameObject = aqua.type(aqua.type.Base,
   }
 );
 
-var Component = aqua.type(aqua.type.Base,
+var Component = aqua.type(aqua.Emitter,
   {
     // onadd: when added to object
     onadd: function(gameObject){},

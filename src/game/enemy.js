@@ -6,6 +6,9 @@ var EnemyMove = aqua.type(aqua.Component,
     init: function(def) {
       this.def = def;
       this.particle = aqua.Particle.create((def.position || [100, 100]), (def.radius || 10), 1);
+      this.particle.isTrigger = true;
+      this.particle.on('collision', this.oncollision.bind(this));
+      this.particle.enemy = this;
     },
     ongameadd: function(gameObject, game) {
       this.gameObject = gameObject;
@@ -23,6 +26,9 @@ var EnemyMove = aqua.type(aqua.Component,
       game.world.removeParticle(this.particle);
     },
     oncollision: function(other, collision) {
+      if (other.enemy) return;
+      if (other.bullet && !other.bullet.isLive) return;
+
       this.gameObject.destroy(this);
 
       var game = this.game, gameObject = this.gameObject;
@@ -35,8 +41,32 @@ var EnemyMove = aqua.type(aqua.Component,
 
 var EnemyAttack = aqua.type(aqua.Component,
   {
+    defaults: {
+      fireDelay: 1
+    },
     init: function(def) {
-      
+      this.def = def;
+      this.fireTimer = this.def.fireDelay || this.defaults.fireDelay;
+    },
+    onadd: function(gameObject) {
+      this.moveModel = gameObject.get(EnemyMove);
+    },
+    update: function() {
+      this.fireTimer -= aqua.game.timing.delta;
+      if (this.fireTimer <= 0) {
+        this.fire();
+        this.fireTimer = this.def.fireDelay || this.defaults.fireDelay;
+      }
+    },
+    fire: function() {
+      var bullet = aqua.GameObject.create();
+      bullet.add(btb.Bullet.create(
+        [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
+        [Math.cos(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[0] / 0.05,
+         Math.sin(this.moveModel.angle) * 30 + this.moveModel.particle.velocity[1] / 0.05]));
+      bullet.add(btb.BulletRender.create());
+
+      aqua.game.add(bullet);
     }
   }
 );
