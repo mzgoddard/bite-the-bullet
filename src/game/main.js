@@ -1,6 +1,7 @@
 (function(window, load) {
 
 window.glider = {};
+window.btb = {};
 
 var when = window.when;
 

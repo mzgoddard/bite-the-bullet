@@ -30,7 +30,7 @@ var ShipInput = aqua.type(aqua.Component,
       return this.state[name].pressed && Date.now() - this.state[name].start;
     },
     keydown: function(e) {
-      // console.log(e);
+      console.log(e);
       var state = this.state[this.inputMap[e.keyCode]];
       if (!state) return;
       
@@ -65,6 +65,27 @@ var ShipReset = aqua.type(aqua.Component, {
     }
   }
 });
+
+var Ship = aqua.type(aqua.Component,
+  {
+    firedelay: 1,
+
+    onadd: function(gameObject) {
+      this.input = gameObject.get(ShipInput);
+      this.moveModel = gameObject.get(ShipMove);
+      this.firetimer = 0;
+    },
+    update: function() {
+      if (this.input.get('fire')) {
+        if (this.firetimer <= 0) {
+          
+
+          this.firetimer += this.firedelay;
+        }
+      }
+    }
+  }
+);
 
 var ShipMove = aqua.type(aqua.Component,
   {
@@ -337,9 +358,10 @@ glider.makeShip = function(gameObject) {
     65: 'left', // a
     68: 'right', // d
     38: 'up', // up arrow
-    32: 'up' // space
+    32: 'fire' // space
   }));
   gameObject.add(ShipMove.create());
+  gameObject.add(Ship.create());
   gameObject.add(ShipRender.create());
 
   return gameObject;

@@ -144,11 +144,16 @@ var Particle = aqua.type(aqua.Emitter,
         bm = 0;
       }
 
+      var solve = true;
       if (a.isTrigger) {
         a.call('collision', b, c);
-      } else if (b.isTrigger) {
+        solve = false;
+      }
+      if (b.isTrigger) {
         b.call('collision', a, c);
-      } else {
+        solve = false;
+      }
+      if (solve) {
         a.lastPosition[0] = a.lx = a.position[0] + avx;
         a.lastPosition[1] = a.ly = a.position[1] + avy;
         a.position[0] += lambx * am; a.x = a.position[0];
