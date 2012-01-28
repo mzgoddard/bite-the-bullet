@@ -9,6 +9,7 @@
     init: function() {
       this.objects = {};
       this.promises = {};
+      this.loadedAs = {};
       this.paths = {
         'script': 'src/',
         'data': 'data/'
@@ -22,8 +23,25 @@
     get: function(path) {
       return this.objects[path];
     },
+    type: function(path) {
+      if (typeof(path) == 'string') {
+        return this.loadedAs[path];
+      } else {
+        return path.type;
+      }
+    },
     fixPath: function(type, path) {
       return this.paths[type] + path;
+    },
+    guessType: function(path) {
+      if (/\.(png|jpg|jpeg$)/i.test(path)) {
+        return 'image';
+      } else if (/\.txt$/i.test(path)) {
+        return 'text';
+      } else if (/\.json$/i.test(path)) {
+        return 'json';
+      }
+      return 'data';
     },
     chain: function(promise, callback) {
       var deferred = when.defer();
@@ -98,6 +116,7 @@
       var xhr = new XMLHttpRequest(),
           deferred = when.defer();
 
+      this.loadedAs[path] = 'text';
       this.promises[path] = deferred.promise;
 
       xhr.onload = (function() {
@@ -122,6 +141,7 @@
       var xhr = new XMLHttpRequest(),
           deferred = when.defer();
 
+      this.loadedAs[path] = 'data';
       this.promises[path] = deferred.promise;
 
       xhr.onload = (function() {
@@ -137,6 +157,39 @@
       xhr.send();
       
       return deferred.promise;
+    },
+    json: function(path) {
+      if (this.promises[path]) {
+        return this.promises[path];
+      }
+
+      var xhr = new XMLHttpRequest(),
+          deferred = when.defer();
+
+      this.loadedAs[path] = 'json';
+      this.promises[path] = deferred.promise;
+
+      xhr.onload = (function() {
+        this.objects[path] = JSON.parse(xhr.responseText);
+        deferred.resolve(xhr.responseText);
+      }).bind(this);
+      xhr.onerror = function() {
+        deferred.reject();
+      };
+
+      // xhr.responseType = 'text';
+      xhr.open('GET', this.fixPath('data', path));
+      // xhr.responseType = 'json';
+      xhr.send();
+
+      return deferred.promise;
+    },
+    load: function(filepath) {
+      if (typeof(filepath) == 'string') {
+        return this[this.guessType(filepath)](filepath);
+      } else {
+        return this[filepath.type](filepath.path);
+      }
     }
   }).init();
   
