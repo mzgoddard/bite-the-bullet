@@ -27,7 +27,9 @@ var Bullet = aqua.type(aqua.Component,
     },
     oncollision: function(other, collision) {
       if (this.startTimer < 0 && this.game) {
-        this.game.destroy(this.gameObject);
+        if (other.bullet) {
+        	this.game.destroy(this.gameObject);
+        }
       }
     },
     update: function() {
