@@ -30,7 +30,7 @@ var ShipInput = aqua.type(aqua.Component,
       return this.state[name].pressed && Date.now() - this.state[name].start;
     },
     keydown: function(e) {
-      console.log(e);
+      // console.log(e);
       var state = this.state[this.inputMap[e.keyCode]];
       if (!state) return;
       
@@ -85,6 +85,7 @@ var ShipMove = aqua.type(aqua.Component,
       this.score = 0;
       
       this.angle = 0;
+      this.energy = 0;
       
       this.particle = aqua.Particle.create([this.x, this.y, 0], this.radius, 1);
       this.particle.isTrigger = true;
@@ -120,6 +121,9 @@ var ShipMove = aqua.type(aqua.Component,
       }
     },
     oncollision: function(otherParticle, collision) {
+      this.energy += 1;
+      aqua.game.world.removeParticle(otherParticle);
+
       // if (!this.playing) return;
       // 
       // var delta = aqua.game.timing.fixedDelta,
@@ -149,10 +153,10 @@ var ShipMove = aqua.type(aqua.Component,
     },
     fixedUpdate: function() {
       if (this.input.get('left')) {
-        this.angle -= Math.PI * 0.02;
+        this.angle -= Math.PI * 0.08;
       }
       if (this.input.get('right')) {
-        this.angle += Math.PI * 0.02;
+        this.angle += Math.PI * 0.08;
       }
       if (this.input.get('up')) {
         this.particle.acceleration[0] = Math.cos(this.angle) * 100;

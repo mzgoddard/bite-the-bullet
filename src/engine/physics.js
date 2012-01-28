@@ -245,9 +245,15 @@ var SpatialHash = aqua.type(aqua.type.Base,
       this.box = box;
       this.newBox = world.copy();
       this.lastBox = world.copy();
-      
+    
       this.cellsWide = Math.ceil(world.width / box.width);
       this.cellsTall = Math.ceil(world.height / box.height);
+    
+      for ( var i = 0; i < this.cellsWide; i++ ) {
+        for ( var j = 0; j < this.cellsTall; j++ ) {
+          this.arrayHash[ hashId( this, i, j ) ] = [];
+        }
+      }
     },
     each: function(f) {
       var i;
@@ -262,59 +268,66 @@ var SpatialHash = aqua.type(aqua.type.Base,
         Math.floor((y - this.lastBox.bottom) / this.box.height))];
     },
     add: function(p) {
-      var px = p.position[0],
-          py = p.position[1],
+      var px = p.x,
+          py = p.y,
           pr = p.radius,
           cellWidth = this.box.width,
           cellHeight = this.box.height,
           cellsWide = this.cellsWide,
           cellsTall = this.cellsTall,
           newBox = this.newBox,
+          maxI = Math.floor((px + pr - newBox.left) / cellWidth + 1),
+          maxJ = Math.floor((py + pr - newBox.bottom) / cellHeight + 1),
           i, j;
       for (i = Math.floor((px - pr - newBox.left) / cellWidth); 
-        i >= 0 && i < cellsWide && i < Math.floor((px + pr - newBox.left) / cellWidth + 1); 
+        i >= 0 && i < cellsWide && i < maxI; 
         i++
       ) {
         for (j = Math.floor((py - pr - newBox.bottom) / cellHeight);
-          j >= 0 && j < cellsTall && j < Math.floor((py + pr - newBox.bottom) / cellHeight + 1);
+          j >= 0 && j < cellsTall && j < maxJ;
           j++
         ) {
           var id = hashId(this, i, j),
               cell = this.arrayHash[id];
-          if (!cell) this.arrayHash[id] = cell = [];
           cell.push(p);
         }
       }
       
-      vec3.set(p.position, p.oldPosition);
+      p.oldX = p.x;
+      p.oldY = p.y;
+      // vec3.set(p.position, p.oldPosition);
     },
     remove: function(p) {
-      var px = p.oldPosition[0],
-          py = p.oldPosition[1],
+      var px = p.oldX,
+          py = p.oldY,
           pr = p.radius,
           cellWidth = this.box.width,
           cellHeight = this.box.height,
           cellsWide = this.cellsWide,
           cellsTall = this.cellsTall,
           lastBox = this.lastBox,
+          maxI = Math.floor((px + pr - lastBox.left) / cellWidth + 1),
+          maxJ = Math.floor((py + pr - lastBox.bottom) / cellHeight + 1),
           i, j;
       for (i = Math.floor((px - pr - lastBox.left) / cellWidth); 
-        i >= 0 && i < cellsWide && i < Math.floor((px + pr - lastBox.left) / cellWidth + 1); 
+        i >= 0 && i < cellsWide && i < maxI; 
         i++
       ) {
         for (j = Math.floor((py - pr - lastBox.bottom) / cellHeight);
-          j >= 0 && j < cellsTall && j < Math.floor((py + pr - lastBox.bottom) / cellHeight + 1);
+          j >= 0 && j < cellsTall && j < maxJ;
           j++
         ) {
           var id = hashId(this, i, j),
-              cell = this.arrayHash[id];
-          if (!cell) this.arrayHash[id] = cell = [];
-          cell.splice(cell.indexOf(p), 1);
+              cell = this.arrayHash[id],
+              index = cell.indexOf( p );
+          cell[ index ] = cell[ cell.length - 1 ];
+          cell.pop();
+          // cell.splice(cell.indexOf(p), 1);
         }
       }
     },
     update: function(p) {
-      // if (p.position[0] == p.oldPosition[0] && p.position[1] == p.oldPosition[1]) return;
+      // if (p.x == p.oldPosition[0] && p.y == p.oldPosition[1]) return;
       this.remove(p);
       this.add(p);
     }
@@ -358,8 +371,12 @@ var World = aqua.type(aqua.GameObject,
     removeParticle: function(particle) {
       this.game.task((function(){
         var index = this.particles.indexOf(particle);
-        if (index) {
-          this.particles.splice(index, 1);
+        if (index != -1) {
+          this.particles[ index ] = this.particles[ this.particles.length - 1 ];
+          this.particles[ index ].index = index;
+
+          this.particles.pop();
+
           this.hash.remove(particle);
         }
       }).bind(this), aqua.Game.Priorities.GARBAGE, false, true);
