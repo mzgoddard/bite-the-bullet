@@ -1,5 +1,11 @@
 {
+  "files": [
+    "enemy/images/enemy1.png"
+  ],
   "move": {},
   "attack": {},
-  "render": {}
+  "render": {
+    "type": "RasterRender",
+    "image": "enemy/images/enemy1.png"
+  }
 }
