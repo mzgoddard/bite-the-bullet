@@ -15,7 +15,7 @@ load.module('game/main.js',
     }
   ),
 function() {
-
+setTimeout(function() {
 var $ = window.$,
     when = window.when,
     mat4 = window.mat4,
@@ -50,7 +50,7 @@ aqua.game.task(function() {
 
 aqua.game.world = aqua.World.create(aqua.Box.create(400, 640, 0, 0));
 aqua.game.add(aqua.game.world);
-// aqua.game.world.add(aqua.World.PaperRenderer.create());
+aqua.game.world.add(aqua.World.PaperRenderer.create());
 // aqua.game.world.add(aqua.World.Renderer.create());
 
   aqua.game.world.addParticle(
@@ -121,6 +121,7 @@ function loop() {
   aqua.game.step();
 }
 loop();
-
+}, 0);
 });
 })(this, this.load);
+
