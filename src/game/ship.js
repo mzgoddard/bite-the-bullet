@@ -8,7 +8,8 @@ var ShipInput = aqua.type(aqua.Component,
       
       this.inputMap = inputMap;
       this.state = {};
-      
+      this.deccelState = 0;
+       
       for ( key in inputMap ) {
         this.state[inputMap[key]] = {
           pressed: false
@@ -120,6 +121,7 @@ var ShipMove = aqua.type(aqua.Component,
       this.particle.on('collision', this.oncollision.bind(this));
       this.particle.ship = this;
       this.playing = false;
+      this.decelState = 0;
     },
     onadd: function(gameObject) {
       this.input = gameObject.get(ShipInput);
@@ -194,7 +196,45 @@ var ShipMove = aqua.type(aqua.Component,
         this.particle.acceleration[0] = Math.cos(this.angle) * 100;
         this.particle.acceleration[1] = Math.sin(this.angle) * 100;
       }
-
+      
+      if (this.input.get('down') && (this.particle.velocity[0] !== 0 || this.particle.velocity[1] !== 0)) {
+        if (this.decelState == 0) {
+          var targetangle = (-this.particle.angle+(3*Math.PI/2))%(Math.PI*2);
+          this.angle = this.angle%(Math.PI*2);
+          if (Math.abs(this.angle - targetangle) < 0.01) {
+            this.angle = targetangle;
+            this.decelState = 1;
+          }
+          else if (this.angle > targetangle) {
+            this.angle = this.angle - 0.2*(this.angle - targetangle);
+          }
+          else if (this.angle < targetangle) {
+            this.angle = this.angle + 0.2*(targetangle - this.angle);
+          }
+        }
+        else if (this.decelState == 1) {
+          
+          console.log('hi');
+          if (Math.abs(this.particle.velocity[0]) < 0.1 ){
+            this.particle.velocity[0] = 0;
+            this.particle.x = this.particle.lastPosition[0];
+            this.particle.position[0] = this.particle.x;
+          }
+          if (Math.abs(this.particle.velocity[1]) < 0.1 ){
+            this.particle.velocity[1] = 0;
+            this.particle.y = this.particle.lastPosition[1];
+            this.particle.position[1] = this.particle.y;
+          }
+          else {
+            this.particle.acceleration[0] = Math.cos(this.angle) * 100;
+            this.particle.acceleration[1] = Math.sin(this.angle) * 100;
+          }
+        } 
+      }
+      else {
+        this.decelState = 0;
+      }
+     
     }
   }
 );
