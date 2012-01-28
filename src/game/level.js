@@ -39,8 +39,7 @@ var Level = aqua.type(aqua.Component,
         var i, j, enemy, enemyDef, spawner;
         for (i = 0; i < this.def.enemies.length; i++) {
           enemy = this.def.enemies[i];
-          enemyDef = {};
-          enemyDef = this.loadEnemy(enemyDef, enemy);
+          enemyDef = load.definition(enemy);
 
           for (j = 0; j < (enemyDef.spawnCount || 1); j++) {
             spawner = aqua.GameObject.create();

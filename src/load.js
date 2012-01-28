@@ -271,8 +271,14 @@
       this.promises[path] = defer.promise;
       return defer.promise;
     },
-    definition: function(path) {
-      
+    definition: function(json) {
+      function recurse(object, json) {
+        if (json.file) {
+          recurse(object, load.get(json.file));
+        }
+        return jQuery.extend(true, object, json);
+      }
+      return recurse({}, json);
     }
   }).init();
   
