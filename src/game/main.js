@@ -59,7 +59,8 @@ aqua.game.player = btb.makeShip();
 aqua.game.add(aqua.game.player);
 
 // aqua.game.add(btb.makeEnemy({move:{},attack:{},render:{}}));
-aqua.game.add(btb.LevelManager.makeLevelManager());
+aqua.game.levelManager = btb.LevelManager.makeLevelManager();
+aqua.game.add(aqua.game.levelManager);
 
 function loop() {
   aqua.requestAnimFrame.call(null, loop);

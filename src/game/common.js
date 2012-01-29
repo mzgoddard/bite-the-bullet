@@ -26,6 +26,10 @@ var TallyType = aqua.type(aqua.Component, {
   ongamedestroy: function(gameObject,game) {
     tallyStuff[this.kind] -= 1;
     console.log(this.kind + " :" + tallyStuff[this.kind]);
+    
+    if (tallyStuff["enemy"] == 0 && tallyStuff["bullet"] == 0) {
+      aqua.game.levelManager.next();
+    }
   }
   
 });
