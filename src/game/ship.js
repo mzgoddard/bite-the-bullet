@@ -89,7 +89,9 @@ var Ship = aqua.type(aqua.Component,
                    this.moveModel.particle.position[1]+Math.sin(this.moveModel.angle)*this.moveModel.radius],
                 velocity:
                   [Math.cos(this.moveModel.angle) * speed,
-                   Math.sin(this.moveModel.angle) * speed]
+                   Math.sin(this.moveModel.angle) * speed],
+                source:
+                  this.moveModel.particle
               }}));
 
           aqua.game.add(bullet);

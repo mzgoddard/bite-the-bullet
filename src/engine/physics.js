@@ -390,6 +390,7 @@ var World = aqua.type(aqua.GameObject,
     addParticle: function(particle) {
       this.particles.push(particle);
       this.hash.add(particle);
+      particle.index = this.particles.length - 1;
     },
     removeParticle: function(particle) {
       this.game.task((function(){

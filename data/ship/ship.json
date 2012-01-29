@@ -23,7 +23,8 @@
     "type": "Ship",
     "bullet": {
       "file": "enemy/bob-bullet.json",
-      "speed": 120
+      "speed": 120,
+      "startTime": 0
     }
   },
   "render": {

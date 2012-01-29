@@ -23,6 +23,7 @@ var Bullet = aqua.type(aqua.Component,
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
       this.particle.bullet = this;
+      this.particle.source = def.source || null;
       this.particle.maxVelocity = 200;
       this.startTimer = this.startTime;
     },
@@ -41,8 +42,9 @@ var Bullet = aqua.type(aqua.Component,
       game.world.removeParticle(this.particle);
     },
     oncollision: function(other, collision) {
-      if (this.startTimer < 0 && this.game) {
-        if (other.bullet) {
+      // console.log(other.index, this.particle.source.index, this.startTimer);
+      if (this.game && (other != this.particle.source || this.startTimer < 0)) {
+        if (other.bullet && (other.source != this.particle.source || this.startTimer < 0)) {
           this.game.destroy(this.gameObject);
           this.soundModel.play("bcollide");
         }
