@@ -1,4 +1,5 @@
 {
+  "cleanup": "dist",
   "link": [
     { 
       "source": "index.html",
@@ -51,7 +52,7 @@
         "src/externals/jquery/dist/jquery.js",
         "src/externals/playtomic/playtomic.v1.9.js",
         "src/externals/paper/dist/paper.js",
-        "src/externals/sm2/swf/soundmanager2.js"
+        "src/externals/sm2/swf/soundmanager2-nodebug.js"
       ],
       "prehint": false,
       "posthint": false,

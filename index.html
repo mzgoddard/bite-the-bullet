@@ -2,17 +2,18 @@
   <head>
     <title>Dawn Glider</title>
     <link rel="stylesheet" href="data/forms/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
-    <script src="externals.js" type="text/javascript" charset="utf-8"></script>
-    <script src="glider.js" type="text/javascript" charset="utf-8"></script>
+    <script src="externals.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="glider.min.js" type="text/javascript" charset="utf-8"></script>
     
         <!-- configure it for your use -->
         <script type="text/javascript">
     
+        soundPromise = when.defer();
         soundManager.url = 'sm2/swf/'; // directory where SM2 .SWFs live
         soundManager.onready(function(){
     
           // SM2 has loaded - now you can create and play sounds!
-
+          soundPromise.resolve();
       
     
         });
@@ -20,6 +21,7 @@
         soundManager.ontimeout(function(){
     
           // Hrmm, SM2 could not start. Flash blocker involved? Show an error, etc.?
+          soundPromise.resolve();
     
         });
     
