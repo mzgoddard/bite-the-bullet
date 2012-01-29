@@ -3,7 +3,7 @@
     "enemy/images/enemy1.png",
     "enemy/bob-bullet.json"
   ],
-  "order": ["sound","move","attack","render"],
+  "order": ["sound","move","attack","render","tally"],
   "move": {},
   "attack": {
     "bullet": {
