@@ -1,0 +1,37 @@
+{
+  "files": [
+    "enemy/bob.json",
+    "enemy/spread.json"
+  ],
+  "title": "THIS IS LEVEL 2",
+  "enemies": [
+    {
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[100,100],
+		"velocity":[50, -50]
+      }
+    },
+	{
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[540,100],
+		"velocity":[-25, -25]
+      }
+    },
+    {
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[100,300],
+		"velocity":[25, 25]
+      }
+    },
+	{
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[540,300],
+		"velocity":[-50, 50]
+      }
+    }
+  ]
+}
