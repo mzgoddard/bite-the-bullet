@@ -18,7 +18,7 @@
 	{
 		"file": "enemy/bob.json",
 		"move": {
-			"position":[540,300],
+			"position":[700,500],
 			"velocity":[-25, 0]
 		},
 		"attack": {
