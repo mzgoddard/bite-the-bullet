@@ -12,7 +12,8 @@ load.module('game/main.js',
         load.script('game/ship.js'),
         load.script('game/enemy.js'),
         load.script('game/level.js'),
-        load.script('game/common.js')
+        load.script('game/common.js'),
+        soundPromise
       ]);
     }
   ),
@@ -70,6 +71,7 @@ function loop() {
 }
 loop();
 }, 0);
+
 });
 })(this, this.load);
 
