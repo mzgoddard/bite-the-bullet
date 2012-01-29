@@ -5,16 +5,26 @@ var Bullet = aqua.type(aqua.Component,
   {
     radius: 5,
     startTime: 2,
-    init: function(pos, vel) {
+    init: function(def) {
+      this.def = def;
       this.angle = 0;
-      this.particle = aqua.Particle.create([0+pos[0], 0+pos[1]], this.radius, 1);
-      this.particle.lastPosition[0] -= vel[0] * 0.05;
-      this.particle.lastPosition[1] -= vel[1] * 0.05;
+      this.particle = aqua.Particle.create([0, 0], this.radius, 1);
+      if (def.position) {
+        this.setPosition(def.position);
+      }
+      if (def.velocity) {
+        this.setVelocity(def.velocity);
+      }
+      // this.particle.lastPosition[0] -= vel[0] * 0.05;
+      // this.particle.lastPosition[1] -= vel[1] * 0.05;
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
       this.particle.bullet = this;
       this.particle.maxVelocity = 200;
       this.startTimer = this.startTime;
+    },
+    onadd: function(gameObject) {
+      gameObject.bullet = this;
     },
     ongameadd: function(gameObject, game) {
       this.game = game;
@@ -51,6 +61,18 @@ var Bullet = aqua.type(aqua.Component,
     },
     update: function() {
       this.startTimer -= aqua.game.timing.delta;
+    },
+    setPosition: function(pt) {
+      this.particle.position[0]=pt[0];
+      this.particle.position[1]=pt[1];
+      var vx = this.particle.position[0] - this.particle.lastPosition[0],
+          vy = this.particle.position[1] - this.particle.lastPosition[1];
+      this.particle.lastPosition[0]=pt[0] - vx;
+      this.particle.lastPosition[1]=pt[1] - vy;
+    },
+    setVelocity: function(pt) {
+      this.particle.lastPosition[0] = (this.particle.position[0] - pt[0] * 0.05);
+      this.particle.lastPosition[1] = (this.particle.position[1] - pt[1] * 0.05);
     }
   },
   {

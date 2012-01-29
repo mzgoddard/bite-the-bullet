@@ -86,6 +86,8 @@ var GameObject = aqua.type(aqua.type.Base,
       if (this.game) {
         component.ongameadd(this, this.game);
       }
+
+      return component;
     },
     get: function(typeObject) {
       var components = this.components,

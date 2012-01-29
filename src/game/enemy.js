@@ -141,13 +141,15 @@ var EnemyAttack = aqua.type(aqua.Component,
       }
     },
     fire: function() {
-      var bullet = aqua.GameObject.create(),
-          speed = this.def.bulletSpeed || 30;
-      bullet.add(btb.Bullet.create(
-        [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-        [Math.cos(this.moveModel.angle) * speed + this.moveModel.particle.velocity[0] / 0.05,
-         Math.sin(this.moveModel.angle) * speed + this.moveModel.particle.velocity[1] / 0.05]));
-      bullet.add(btb.BulletRender.create());
+      var speed = this.def.bulletSpeed || 30,
+          bullet = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
+            position:
+              [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
+            velocity:
+              [Math.cos(this.moveModel.angle) * speed + this.moveModel.particle.velocity[0] / 0.05,
+               Math.sin(this.moveModel.angle) * speed + this.moveModel.particle.velocity[1] / 0.05]
+          }}));
+      // console.log(btb.make(this.def.bullet));
 
       aqua.game.add(bullet);
       this.soundModel.play("bullet");
@@ -177,29 +179,28 @@ var EnemyAttackSpread = aqua.type(EnemyAttack,
       }
     },
     fire: function() {
-      var bullet = aqua.GameObject.create(),
-          speed = this.def.bulletSpeed || 30;
-      bullet.add(btb.Bullet.create(
-        [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-        [Math.cos(this.moveModel.angle) * speed + this.moveModel.particle.velocity[0] / 0.05,
-         Math.sin(this.moveModel.angle) * speed + this.moveModel.particle.velocity[1] / 0.05]));
-      bullet.add(btb.BulletRender.create());
-      
-      var bullet2 = aqua.GameObject.create(),
-          speed = this.def.bulletSpeed || 30;
-      bullet2.add(btb.Bullet.create(
-        [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-        [Math.cos(this.moveModel.angle+Math.PI/8) * speed + this.moveModel.particle.velocity[0] / 0.05,
-         Math.sin(this.moveModel.angle+Math.PI/8) * speed + this.moveModel.particle.velocity[1] / 0.05]));
-      bullet2.add(btb.BulletRender.create());
-
-      var bullet3 = aqua.GameObject.create(),
-          speed = this.def.bulletSpeed || 30;
-      bullet3.add(btb.Bullet.create(
-        [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-        [Math.cos(this.moveModel.angle-Math.PI/8) * speed + this.moveModel.particle.velocity[0] / 0.05,
-         Math.sin(this.moveModel.angle-Math.PI/8) * speed + this.moveModel.particle.velocity[1] / 0.05]));
-      bullet3.add(btb.BulletRender.create());
+      var speed = this.def.bulletSpeed || 30,
+          bullet = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
+            position:
+              [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
+            velocity:
+              [Math.cos(this.moveModel.angle) * speed + this.moveModel.particle.velocity[0] / 0.05,
+               Math.sin(this.moveModel.angle) * speed + this.moveModel.particle.velocity[1] / 0.05]
+          }})),
+          bullet2 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
+            position:
+              [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
+            velocity:
+              [Math.cos(this.moveModel.angle+Math.PI/8) * speed + this.moveModel.particle.velocity[0] / 0.05,
+               Math.sin(this.moveModel.angle+Math.PI/8) * speed + this.moveModel.particle.velocity[1] / 0.05]
+          }})),
+          bullet3 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
+            position:
+              [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
+            velocity:
+              [Math.cos(this.moveModel.angle-Math.PI/8) * speed + this.moveModel.particle.velocity[0] / 0.05,
+               Math.sin(this.moveModel.angle-Math.PI/8) * speed + this.moveModel.particle.velocity[1] / 0.05]
+          }}));
 
       aqua.game.add(bullet);
       aqua.game.add(bullet2);
@@ -319,18 +320,20 @@ btb.make = function(definition) {
 
   keys = Object.keys(definition);
 
-  if (definition.order) {
-    definition.order.forEach(function(i) {
-      var index = keys.indexOf(i);
-      if (index != -1) {
-        keys.splice(index, 1);
-      }
-    });
-    order = definition.order.slice();
-    order.splice(0, 0, 0, 0);
-    console.log(order);
-    keys.splice.apply(keys, order);
-    console.log(keys);
+  if (definition.components) {
+    keys = definition.components;
+  } else {
+    if (definition.order) {
+      definition.order.forEach(function(i) {
+        var index = keys.indexOf(i);
+        if (index != -1) {
+          keys.splice(index, 1);
+        }
+      });
+      order = definition.order.slice();
+      order.splice(0, 0, 0, 0);
+      keys.splice.apply(keys, order);
+    }
   }
   
   ['files', 'file', 'order'].forEach(function(i) {

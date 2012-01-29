@@ -1,0 +1,9 @@
+{
+  "components": ["model", "render"],
+  "model": {
+    "type": "Bullet"
+  },
+  "render": {
+    "type": "BulletRender"
+  }
+}

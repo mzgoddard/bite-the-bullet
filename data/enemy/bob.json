@@ -1,10 +1,15 @@
 {
   "files": [
-    "enemy/images/enemy1.png"
+    "enemy/images/enemy1.png",
+    "enemy/bob-bullet.json"
   ],
   "order": ["sound","move","attack","render"],
   "move": {},
-  "attack": {},
+  "attack": {
+    "bullet": {
+      "file": "enemy/bob-bullet.json"
+    }
+  },
   "render": {
     "type": "RasterRender",
     "image": "enemy/images/enemy1.png"
