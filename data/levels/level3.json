@@ -8,14 +8,14 @@
       "file": "enemy/spread.json",
       "move": {
         "position":[590,50],
-		"velocity":[0, 0]
+        "velocity":[0, 0]
       }
     },
     {
       "file": "enemy/spread.json",
       "move": {
         "position":[50,350],
-		"velocity":[0, 0]
+        "velocity":[0, 0]
       }
     }
   ]
