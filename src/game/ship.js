@@ -122,7 +122,7 @@ var ShipMove = aqua.type(aqua.Component,
       this.score = 0;
       
       this.angle = 0;
-      this.energy = 0;
+      this.energy = 10;
       
       this.particle = aqua.Particle.create([this.x, this.y, 0], this.radius, 1);
       this.particle.isTrigger = true;
@@ -266,21 +266,6 @@ var ShipRasterRender = aqua.type(aqua.RasterRenderer,
 
 btb.makeShip = function(gameObject) {
   return btb.make(load.get('ship/ship.json'));
-  gameObject = gameObject || aqua.GameObject.create();
-
-  gameObject.add(ShipInput.create({
-    87: 'up', // w
-    65: 'left', // a
-    68: 'right', // d
-    83: 'down', // s
-    38: 'up', // up arrow
-    32: 'fire' // space
-  }));
-  gameObject.add(ShipMove.create());
-  gameObject.add(Ship.create());
-  gameObject.add(ShipRender.create());
-
-  return gameObject;
 };
 
 btb.ShipInput = ShipInput;
