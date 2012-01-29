@@ -53,7 +53,7 @@ var Bullet = aqua.type(aqua.Component,
           var v1 = vec3.normalize([dx,dy,0]);
           var v2 = vec3.normalize([Math.cos(ang),Math.sin(ang),0]);
           var mag = vec3.length(vec3.subtract(v2,v1));
-          if (mag < 0.6) {
+          if (mag < 0.9) {
             this.game.destroy(this.gameObject);
             this.soundModel.play("pickup");
           }
