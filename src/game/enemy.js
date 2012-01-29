@@ -298,6 +298,7 @@ btb.make = function(definition) {
   });
 
   for (key in keys) {
+    componentCls = null;
     key = keys[key];
     if (definition[key].type) {
       componentCls = btb[definition[key].type];

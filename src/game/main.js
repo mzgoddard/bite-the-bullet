@@ -52,7 +52,7 @@ aqua.game.task(function() {
 
 aqua.game.world = aqua.World.create(aqua.Box.create(400, 640, 0, 0));
 aqua.game.add(aqua.game.world);
-aqua.game.world.add(aqua.World.PaperRenderer.create());
+// aqua.game.world.add(aqua.World.PaperRenderer.create());
 // aqua.game.world.add(aqua.World.Renderer.create());
 
 // for ( var idx = 0; idx < 500; idx++ )

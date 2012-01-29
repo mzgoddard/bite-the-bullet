@@ -4,7 +4,7 @@ load.module('game/bullet.js', null, function() {
 var Bullet = aqua.type(aqua.Component,
   {
     radius: 5,
-    startTime: 1,
+    startTime: 2,
     init: function(pos, vel) {
       this.angle = 0;
       this.particle = aqua.Particle.create([0+pos[0], 0+pos[1]], this.radius, 1);
