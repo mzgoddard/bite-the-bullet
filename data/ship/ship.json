@@ -16,13 +16,14 @@
   },
   "move": {
     "type": "ShipMove",
-    "maxVelocity": 50
+    "radius": 15,
+    "maxVelocity": 100
   },
   "model": {
     "type": "Ship",
     "bullet": {
       "file": "enemy/bob-bullet.json",
-      "speed": 100
+      "speed": 120
     }
   },
   "render": {
