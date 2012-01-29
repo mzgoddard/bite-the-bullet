@@ -164,9 +164,12 @@ var ShipMove = aqua.type(aqua.Component,
         this.game.destroy(this.gameObject);
       }
       if (otherParticle.bullet){
-        this.energy += 10;
-        $('#energy').css('width',this.energy+"%");
-        console.log("e:"+this.energy);
+        if (!otherParticle.bullet.energyHarvested) {
+          otherParticle.bullet.energyHarvested = true;
+          this.energy += 10;
+          $('#energy').css('width',this.energy+"%");
+          console.log("e:"+this.energy);
+        }
       }
     },
     fixedUpdate: function() {

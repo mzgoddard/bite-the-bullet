@@ -25,6 +25,7 @@ var Bullet = aqua.type(aqua.Component,
       this.particle.bullet = this;
       this.particle.maxVelocity = 200;
       this.startTimer = this.startTime;
+      this.energyHarvested = false;
     },
     onadd: function(gameObject) {
       gameObject.bullet = this;
