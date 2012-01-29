@@ -28,7 +28,7 @@ var Bullet = aqua.type(aqua.Component,
     },
     onadd: function(gameObject) {
       gameObject.bullet = this;
-      //this.soundModel = gameObject.get(BulletSound);
+      this.soundModel = gameObject.get(BulletSound);
     },
     ongameadd: function(gameObject, game) {
       this.game = game;
