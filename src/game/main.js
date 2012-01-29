@@ -3,6 +3,7 @@
 window.glider = {};
 window.btb = {};
 window.muted = false;
+window.credits = false;
 var when = window.when;
 
 load.module('game/main.js',
