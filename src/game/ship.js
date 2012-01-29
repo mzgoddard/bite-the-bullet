@@ -96,6 +96,17 @@ var Ship = aqua.type(aqua.Component,
 
           aqua.game.add(bullet);
           this.moveModel.energy -= 10;
+          
+          if (this.moveModel.energy < 10) {
+            $('#w1').text("MAIN GUN: UNARMED").css('color','#666');
+          }
+          if (this.moveModel.energy < 30) {
+            $('#w2').text("SPREAD: UNARMED").css('color','#666');
+          }
+          if (this.moveModel.energy < 80) {
+            $('#w3').text("MAIN NOVA: UNARMED").css('color','#666');
+          }
+
           $('#energy').css('width',this.moveModel.energy+"%");
           this.firetimer = this.firedelay;
         }
@@ -216,6 +227,15 @@ var ShipMove = aqua.type(aqua.Component,
           otherParticle.bullet.energyHarvested = true;
           if (this.energy < 100) {
             this.energy += 10;
+            if (this.energy >= 10) {
+              $('#w1').text("MAIN GUN: ARMED!!").css('color','#800');
+            }
+            if (this.energy >= 30) {
+              $('#w2').text("SPREAD: ARMED!!").css('color','#800');;
+            }
+            if (this.energy >= 80) {
+              $('#w3').text("MAIN NOVA: ARMED!!").css('color','#800');;
+            }
           }
           $('#energy').css('width',this.energy+"%");
         }
