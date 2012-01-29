@@ -129,6 +129,15 @@ var Ship = aqua.type(aqua.Component,
           }.bind(this)));
 
           this.moveModel.energy -= 30;
+          if (this.moveModel.energy < 10) {
+            $('#w1').text("MAIN GUN: UNARMED").css('color','#666');
+          }
+          if (this.moveModel.energy < 30) {
+            $('#w2').text("SPREAD: UNARMED").css('color','#666');
+          }
+          if (this.moveModel.energy < 80) {
+            $('#w3').text("MAIN NOVA: UNARMED").css('color','#666');
+          }
           $('#energy').css('width',this.moveModel.energy+"%");
           this.firetimer = this.firedelay;
         }
@@ -151,6 +160,15 @@ var Ship = aqua.type(aqua.Component,
           }.bind(this)));
 
           this.moveModel.energy -= 80;
+          if (this.moveModel.energy < 10) {
+            $('#w1').text("MAIN GUN: UNARMED").css('color','#666');
+          }
+          if (this.moveModel.energy < 30) {
+            $('#w2').text("SPREAD: UNARMED").css('color','#666');
+          }
+          if (this.moveModel.energy < 80) {
+            $('#w3').text("MAIN NOVA: UNARMED").css('color','#666');
+          }
           $('#energy').css('width',this.moveModel.energy+"%");
           this.firetimer = this.firedelay;
         }
