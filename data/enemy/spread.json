@@ -1,15 +1,23 @@
 {
-  "file": "enemy/bob.json",
+  "files": [
+  "enemy/images/enemy_spread.png",
+		"enemy/bob.json",
+		"enemy/spread-bullet.json"
+	],
   "move": {
     "type": "MoveSpread"
   },
   "attack": {
     "type": "AttackSpread",
     "bullet": {
+			"file": "enemy/spread-bullet.json",
       "model": {
         "startTime": 2
       }
     }
   },
-  "render": {}
+  "render": {
+    "type": "RasterRender",
+    "image": "enemy/images/enemy_spread.png"
+  }
 }

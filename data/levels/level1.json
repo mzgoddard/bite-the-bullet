@@ -1,22 +1,25 @@
 {
-  "files": [
-    "enemy/bob.json",
-    "enemy/spread.json"
-  ],
-  "enemies": [
-    {
-      "file": "enemy/bob.json",
-	  "move": {
-        "position":[100,100],
-		"velocity":[50, 0]
-      }
-    },
+	"files": [
+		"enemy/bob.json",
+		"enemy/spread.json"
+	],
+	"enemies": [
 	{
-      "file": "enemy/spread.json",
-	  "move": {
-        "position":[540,300],
-		"velocity":[-50, 0]
-      }
-    }
-  ]
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[100,100],
+			"velocity":[50, 0]
+		},
+		"attack": {
+			"bulletSpeed": 100
+		}
+	},
+	{
+		"file": "enemy/spread.json",
+		"move": {
+			"position":[540,300],
+			"velocity":[-50, 0]
+		}
+	}
+	]
 }
