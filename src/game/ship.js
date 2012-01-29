@@ -133,6 +133,7 @@ var ShipMove = aqua.type(aqua.Component,
     },
     onadd: function(gameObject) {
       this.input = gameObject.get(ShipInput);
+      $('#energy').css('width',this.energy+"%");
     },
     ondestroy: function() {
       this.input = null;
@@ -159,10 +160,13 @@ var ShipMove = aqua.type(aqua.Component,
       }
     },
     oncollision: function(otherParticle, collision) {
-      // console.log(otherParticle);
-      this.energy += 1;
       if (otherParticle.enemy){
         this.game.destroy(this.gameObject);
+      }
+      if (otherParticle.bullet){
+        this.energy += 10;
+        $('#energy').css('width',this.energy+"%");
+        console.log("e:"+this.energy);
       }
     },
     fixedUpdate: function() {
