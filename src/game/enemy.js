@@ -1,6 +1,35 @@
 (function(window, load) {
 load.module('game/enemy.js', load.script('game/bullet.js'), function() {
 
+var EnemySound = aqua.type(aqua.Component,
+  {
+    init: function(def) {
+      this.def = def;
+      this.sounds = 
+      {      
+        "explode": soundManager.createSound({
+          id: 'aSound',
+          url: 'data/enemy/sfx/explode-enemy1.wav'}),
+        "bullet": soundManager.createSound({
+          id: 'bSound',
+          url: 'data/weapons/sfx/shoot-bullet.wav'}),
+        "shipexplode": soundManager.createSound({
+          id: 'cSound',
+          url: 'data/ship/sfx/explode-ship1.wav'})
+      };
+    },
+    
+    play: function(name) {
+      if (this.sounds[name]) {
+        this.sounds[name].play();
+      }
+      else return(false);
+    }
+    
+
+  }
+);
+
 var EnemyMove = aqua.type(aqua.Component,
   {
     init: function(def) {
@@ -8,10 +37,11 @@ var EnemyMove = aqua.type(aqua.Component,
       this.particle = aqua.Particle.create((def.position || [100, 100]), (def.radius || 10), 1);
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
-      this.particle.enemy = this;
+      this.particle.enemy = this;  
     },
     ongameadd: function(gameObject, game) {
       this.gameObject = gameObject;
+      this.soundModel = gameObject.get(EnemySound);
       this.game = game;
       game.world.addParticle(this.particle);
       this.particle.lastPosition[0] -= (this.def.velocity && this.def.velocity[0] || 10) * 0.05;
@@ -24,6 +54,7 @@ var EnemyMove = aqua.type(aqua.Component,
       delete this.gameObject;
       delete this.game;
       game.world.removeParticle(this.particle);
+      this.soundModel.play("explode");
     },
     oncollision: function(other, collision) {
       if (other.enemy) return;
@@ -58,6 +89,7 @@ var EnemyMoveSpread = aqua.type(EnemyMove,
     },
     ongameadd: function(gameObject, game) {
       this.gameObject = gameObject;
+      this.soundModel = gameObject.get(EnemySound);
       this.game = game;
       game.world.addParticle(this.particle);
       this.particle.lastPosition[0] -= (this.def.velocity && this.def.velocity[0] || 10) * 0.05;
@@ -70,6 +102,7 @@ var EnemyMoveSpread = aqua.type(EnemyMove,
       delete this.gameObject;
       delete this.game;
       game.world.removeParticle(this.particle);
+      this.soundModel.play("explode");
     },
     oncollision: function(other, collision) {
       if (other.enemy) return;
@@ -97,6 +130,7 @@ var EnemyAttack = aqua.type(aqua.Component,
     },
     onadd: function(gameObject) {
       this.moveModel = gameObject.get(EnemyMove);
+      this.soundModel = gameObject.get(EnemySound);
     },
     update: function() {
       this.fireTimer -= aqua.game.timing.delta;
@@ -115,6 +149,7 @@ var EnemyAttack = aqua.type(aqua.Component,
       bullet.add(btb.BulletRender.create());
 
       aqua.game.add(bullet);
+      this.soundModel.play("bullet");
     }
   }
 );
@@ -130,6 +165,8 @@ var EnemyAttackSpread = aqua.type(EnemyAttack,
     },
     onadd: function(gameObject) {
       this.moveModel = gameObject.get(EnemyMove);
+    this.soundModel = gameObject.get(EnemySound);
+
     },
     update: function() {
       this.fireTimer -= aqua.game.timing.delta;
@@ -166,6 +203,8 @@ var EnemyAttackSpread = aqua.type(EnemyAttack,
       aqua.game.add(bullet);
       aqua.game.add(bullet2);
       aqua.game.add(bullet3);
+      this.soundModel.play("bullet");
+
     }
   }
 );
@@ -243,6 +282,8 @@ var EnemySpawner = aqua.type(aqua.Component,
   }
 );
 
+
+
 btb.Enemy = {};
 btb.Enemy.Move = EnemyMove;
 btb.Enemy.MoveSpread = EnemyMoveSpread;
@@ -251,10 +292,12 @@ btb.Enemy.AttackSpread = EnemyAttackSpread;
 btb.Enemy.Render = EnemyRender;
 btb.Enemy.RasterRender = EnemyRasterRender;
 btb.Enemy.Spawner = EnemySpawner;
+btb.Enemy.Sound = EnemySound;
 
 btb.makeEnemy = function(definition) {
   var enemy = aqua.GameObject.create();
-
+  
+  enemy.add((btb.Enemy[definition.sound.type || "Sound"]).create(definition.sound));
   enemy.add((btb.Enemy[definition.move.type || "Move"]).create(definition.move));
   enemy.add((btb.Enemy[definition.attack.type || "Attack"]).create(definition.attack));
   enemy.add((btb.Enemy[definition.render.type || "Render"]).create(definition.render));

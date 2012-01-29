@@ -1,4 +1,5 @@
 {
+  "file": "enemy/bob.json",
   "move": {
     "type": "MoveSpread"
   },

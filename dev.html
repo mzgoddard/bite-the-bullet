@@ -10,6 +10,31 @@
     <script src="src/externals/paper/dist/paper.js" type="text/javascript" charset="utf-8"></script>
     <script src="src/load.js" type="text/javascript" charset="utf-8"></script>
     <script src="src/game/main.js" type="text/javascript" charset="utf-8"></script>
+    <!-- include SM2 library -->
+    <script type="text/javascript" src="src/externals/sm2/swf/soundmanager2.js"></script>
+    
+    <!-- configure it for your use -->
+    <script type="text/javascript">
+    
+    soundManager.url = 'src/externals/sm2/swf/'; // directory where SM2 .SWFs live
+    var soudnds
+    soundManager.onready(function(){
+    
+      // SM2 has loaded - now you can create and play sounds!
+    
+      
+    
+      
+    
+    });
+    
+    soundManager.ontimeout(function(){
+    
+      // Hrmm, SM2 could not start. Flash blocker involved? Show an error, etc.?
+    
+    });
+    
+    </script>
   </head>
   <body>
     <canvas resize></canvas>

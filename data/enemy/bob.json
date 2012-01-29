@@ -7,5 +7,6 @@
   "render": {
     "type": "RasterRender",
     "image": "enemy/images/enemy1.png"
-  }
+  },
+  "sound": {}  
 }
