@@ -40,7 +40,7 @@ var EnemyMove = aqua.type(aqua.Component,
       this.particle.on('collision', this.oncollision.bind(this));
       this.particle.enemy = this;  
     },
-    ongameadd: function(gameObject, game) {
+    ongameadd: function(gameObject, game) {        
       this.gameObject = gameObject;
       this.soundModel = gameObject.get(EnemySound);
       this.game = game;

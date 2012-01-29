@@ -11,7 +11,8 @@ load.module('game/main.js',
       return when.all([
         load.script('game/ship.js'),
         load.script('game/enemy.js'),
-        load.script('game/level.js')
+        load.script('game/level.js'),
+        load.script('game/common.js')
       ]);
     }
   ),
@@ -104,7 +105,7 @@ aqua.game.add(aqua.game.world);
 //   return scoreObject;
 // })());
 
-aqua.game.player = glider.makeShip();
+aqua.game.player = btb.makeShip();
 aqua.game.add(aqua.game.player);
 
 // aqua.game.add(btb.makeEnemy({move:{},attack:{},render:{}}));
