@@ -1,8 +1,12 @@
 {
   "files": [
-    "ship/images/ship.png"
+    "ship/images/ship.png",
+    "weapons/images/ship_bullet.png"
   ],
-  "components": ["input", "move", "model", "render"],
+  "components": ["sound","input", "move", "model", "render"],
+  "sound": {
+    "type": "ShipSound"
+  },
   "input": {
     "type": "ShipInput",
     "map": {
@@ -19,12 +23,17 @@
   "move": {
     "type": "ShipMove",
     "radius": 15,
-    "maxVelocity": 100
+    "maxVelocity": 100,
+    "x": 400,
+    "y": 300
   },
   "model": {
     "type": "Ship",
     "bullet": {
       "file": "enemy/bob-bullet.json",
+      "render": {
+        "image": "weapons/images/ship_bullet.png"
+      },
       "speed": 120,
       "startTime": 0.1
     }
