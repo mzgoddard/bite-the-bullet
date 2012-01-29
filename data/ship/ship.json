@@ -11,7 +11,9 @@
       "68": "right",
       "83": "down",
       "38": "up",
-      "32": "fire"
+      "73": "fire",
+      "79": "fire2",
+      "80": "fire3"
     }
   },
   "move": {
@@ -23,7 +25,8 @@
     "type": "Ship",
     "bullet": {
       "file": "enemy/bob-bullet.json",
-      "speed": 120
+      "speed": 120,
+      "startTime": 0.1
     }
   },
   "render": {

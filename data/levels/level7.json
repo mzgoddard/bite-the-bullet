@@ -1,0 +1,60 @@
+{
+	"files": [
+	"enemy/bob.json",
+	"enemy/spread.json"
+	],
+	"title": "CAUGHT IN THE MIDDLE",
+	"enemies": [
+	{
+		"file": "enemy/spread.json",
+		"move": {
+			"position":[500,100],
+			"velocity":[-5, 5]
+		}
+	},
+	{
+		"file": "enemy/spread.json",
+		"move": {
+			"position":[575,150],
+			"velocity":[-5, 5]
+		}
+	},
+	{
+		"file": "enemy/spread.json",
+		"move": {
+			"position":[550,100],
+			"velocity":[-5, 5]
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[200,450],
+			"velocity":[15, -15]
+		}, 
+		"attack": {
+			"bulletSpeed": 80
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[250,450],
+			"velocity":[15, -15]
+		},
+		"attack": {
+				"bulletSpeed": 80
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[250, 500],
+			"velocity":[15, -15]
+		},
+		"attack": {
+			"bulletSpeed": 80
+		}
+	}
+	]
+}
