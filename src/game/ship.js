@@ -85,7 +85,8 @@ var Ship = aqua.type(aqua.Component,
           var speed = this.def.bullet.speed || 100,
               bullet = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
                 position:
-                  [this.moveModel.particle.position[0]+Math.cos(this.moveModel.angle)*this.moveModel.radius,this.moveModel.particle.position[1]+Math.sin(this.moveModel.angle)*this.moveModel.radius],
+                  [this.moveModel.particle.position[0]+Math.cos(this.moveModel.angle)*this.moveModel.radius,
+                   this.moveModel.particle.position[1]+Math.sin(this.moveModel.angle)*this.moveModel.radius],
                 velocity:
                   [Math.cos(this.moveModel.angle) * speed,
                    Math.sin(this.moveModel.angle) * speed]
