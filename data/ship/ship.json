@@ -19,7 +19,7 @@
   },
   "model": {
     "type": "Ship"
-  }
+  },
   "render": {
     "type": "ShipRasterRender",
     "image": "ship/images/ship.png"
