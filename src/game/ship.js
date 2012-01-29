@@ -274,7 +274,7 @@ var ShipMove = aqua.type(aqua.Component,
       if (otherParticle.bullet){
         if (!otherParticle.bullet.energyHarvested && otherParticle.bullet.isLive) {
           otherParticle.bullet.energyHarvested = true;
-          if (energy < 100) {
+          if (this.energy < 100) {
             this.energy += 10;
           }
           $('#energy').css('width',this.energy+"%");
