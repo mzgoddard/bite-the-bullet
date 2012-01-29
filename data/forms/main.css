@@ -11,6 +11,10 @@ body {
 #c3 {
   width:1024px;margin:auto;
 }
+.overlay {
+  position: absolute;
+  width: 800px;
+}
 
 #credits {
   -webkit-transition: color 2s ease-out;
