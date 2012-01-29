@@ -186,7 +186,12 @@
       this.promises[path] = deferred.promise;
 
       xhr.onload = (function() {
-        this.objects[path] = JSON.parse(xhr.responseText);
+        try {
+          this.objects[path] = JSON.parse(xhr.responseText);
+        } catch (e) {
+          console.error('failed to parse ' + path)
+          console.error(e.toString());
+        }
         deferred.resolve(xhr.responseText);
       }).bind(this);
       xhr.onerror = function() {

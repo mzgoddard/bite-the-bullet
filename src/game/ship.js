@@ -83,7 +83,7 @@ var Ship = aqua.type(aqua.Component,
           bullet.add(btb.Bullet.create({
             position: [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
             velocity: [Math.cos(this.moveModel.angle) * 100,
-            Math.sin(this.moveModel.angle) * 100]}));
+                       Math.sin(this.moveModel.angle) * 100]}));
           bullet.add(btb.BulletRender.create());
           aqua.game.add(bullet);
 
@@ -97,9 +97,9 @@ var Ship = aqua.type(aqua.Component,
 
 var ShipMove = aqua.type(aqua.Component,
   {
-    init: function() {
-      this.x = 300;
-      this.y = 100;
+    init: function(def) {
+      this.x = def.x || 300;
+      this.y = def.y || 100;
 
       this.vx = 0;
       this.vy = 0;
@@ -109,7 +109,7 @@ var ShipMove = aqua.type(aqua.Component,
 
       this.angle = 0;
 
-      this.radius = 25;
+      this.radius = def.radius || 25;
       
       this.score = 0;
       
