@@ -8,7 +8,7 @@
     {
       "file": "enemy/spread.json",
       "move": {
-        "position":[-50,50],
+        "position":[750,50],
         "velocity":[-10, 0]
       }
     }
