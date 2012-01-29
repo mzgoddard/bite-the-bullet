@@ -156,34 +156,6 @@ var ShipMove = aqua.type(aqua.Component,
       if (otherParticle.enemy){
         this.game.destroy(this.gameObject);
       }
-      
-
-      // if (!this.playing) return;
-      // 
-      // var delta = aqua.game.timing.fixedDelta,
-      //     vx = otherParticle.lastPosition[0] - otherParticle.position[0],
-      //     vy = otherParticle.lastPosition[1] - otherParticle.position[1],
-      //     vl = Math.sqrt(vx*vx+vy*vy),
-      //     va = Math.atan2(vy, vx);
-      // 
-      // if (isNaN(vx) || isNaN(vy)) {
-      //   return;
-      // }
-      // 
-      // while (va > Math.PI)
-      //   va -= Math.PI * 2;
-      // while (va < -Math.PI)
-      //   va += Math.PI * 2;
-      // 
-      // var k = vl,
-      //     n = k * 
-      //       Math.cos(va + Math.PI - this.angle - Math.PI / 2) * 
-      //       (Math.abs(va - this.angle) < Math.PI / 2 ? 1 : 0),
-      //     nx = Math.cos(this.angle+Math.PI/2) * n,
-      //     ny = Math.sin(this.angle+Math.PI/2) * n * 2;
-      //     // console.log(nx, ny);
-      // this.ax += Math.clamp(nx, -10, 1000);
-      // this.ay += ny;
     },
     fixedUpdate: function() {
       if (this.input.get('left')) {
