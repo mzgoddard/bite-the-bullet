@@ -80,10 +80,10 @@ var Ship = aqua.type(aqua.Component,
       if (this.input.get('fire')) {
         if (this.firetimer <= 0) {
           var bullet = aqua.GameObject.create();
-          bullet.add(btb.Bullet.create(
-            [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-            [Math.cos(this.moveModel.angle) * 100,
-            Math.sin(this.moveModel.angle) * 100]));
+          bullet.add(btb.Bullet.create({
+            position: [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
+            velocity: [Math.cos(this.moveModel.angle) * 100,
+            Math.sin(this.moveModel.angle) * 100]}));
           bullet.add(btb.BulletRender.create());
           aqua.game.add(bullet);
 

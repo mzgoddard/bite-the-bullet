@@ -334,14 +334,14 @@ btb.make = function(definition) {
       order.splice(0, 0, 0, 0);
       keys.splice.apply(keys, order);
     }
+
+    ['files', 'file', 'order'].forEach(function(i) {
+      var index = keys.indexOf(i);
+      if (index != -1) {
+        keys.splice(index, 1);
+      }
+    });
   }
-  
-  ['files', 'file', 'order'].forEach(function(i) {
-    var index = keys.indexOf(i);
-    if (index != -1) {
-      keys.splice(index, 1);
-    }
-  });
 
   for (i = 0; i < keys.length; i++) {
     componentCls = null;

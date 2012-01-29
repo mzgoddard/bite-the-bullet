@@ -1,9 +1,13 @@
 {
+  "files": [
+    "weapons/images/bullet.png"
+  ],
   "components": ["model", "render"],
   "model": {
     "type": "Bullet"
   },
   "render": {
-    "type": "BulletRender"
+    "type": "BulletRasterRender",
+    "image": "weapons/images/bullet.png"
   }
 }
