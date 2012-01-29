@@ -1,17 +1,17 @@
 (function(window, load) {
-load.module('game/ship.js', load.script('game/bullet.js'), function() {
+load.module('game/ship.js', when.all([load.script('game/bullet.js'), load.package('ship/ship.json')]), function() {
 
 var ShipInput = aqua.type(aqua.Component,
   {
-    init: function(inputMap) {
+    init: function(def) {
       var key;
       
-      this.inputMap = inputMap;
+      this.inputMap = def.map;
       this.state = {};
       this.deccelState = 0;
-       
-      for ( key in inputMap ) {
-        this.state[inputMap[key]] = {
+      
+      for ( key in def.map ) {
+        this.state[def.map[key]] = {
           pressed: false
         };
       }
@@ -82,8 +82,8 @@ var Ship = aqua.type(aqua.Component,
           var bullet = aqua.GameObject.create();
           bullet.add(btb.Bullet.create({
             position: [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-            velocity: [Math.cos(this.moveModel.angle) * 200,
-            Math.sin(this.moveModel.angle) * 200]}));
+            velocity: [Math.cos(this.moveModel.angle) * 100,
+            Math.sin(this.moveModel.angle) * 100]}));
           bullet.add(btb.BulletRender.create());
           aqua.game.add(bullet);
 
@@ -260,7 +260,25 @@ var ShipRender = aqua.type(aqua.Component,
   }
 );
 
+var ShipRasterRender = aqua.type(aqua.RasterRenderer,
+  {
+    init: function(def) {
+      this.angle = 0;
+      Object.getPrototypeOf(Object.getPrototypeOf(this)).init.call(this, def.image, ShipMove);
+    },
+    lateUpdate: function() {
+      this.raster.position.x = this.transform.particle.position[0];
+      this.raster.position.y = this.transform.particle.position[1];
+      if (this.transform.angle != this.angle) {
+        this.raster.rotate((this.transform.angle - this.angle) / 2 / Math.PI * 360);
+        this.angle = this.transform.angle;
+      }
+    }
+  }
+);
+
 glider.makeShip = function(gameObject) {
+  return btb.make(load.get('ship/ship.json'));
   gameObject = gameObject || aqua.GameObject.create();
 
   gameObject.add(ShipInput.create({
@@ -277,6 +295,12 @@ glider.makeShip = function(gameObject) {
 
   return gameObject;
 };
+
+btb.ShipInput = ShipInput;
+btb.Ship = Ship;
+btb.ShipMove = ShipMove;
+btb.ShipRender = ShipRender;
+btb.ShipRasterRender = ShipRasterRender;
 
 });
 })(this, this.load);
