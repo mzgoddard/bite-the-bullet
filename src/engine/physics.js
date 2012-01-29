@@ -369,7 +369,7 @@ var World = aqua.type(aqua.GameObject,
       this.box = box;
       this.gravity = [0, 0, 0];
       
-      this.fixedDelta = 1 / 20;
+      this.fixedDelta = 1 / 50;
       this.timeToPlay = 0;
       
       box = box.copy();
@@ -411,8 +411,8 @@ var World = aqua.type(aqua.GameObject,
       this.game.timing.fixedDelta = fixedDelta;
       this.timeToPlay += this.game.timing.delta;
       
-      if (this.timeToPlay > 1 / 20) {
-        this.timeToPlay -= 1 / 20;
+      while (this.timeToPlay > 1 / 50) {
+        this.timeToPlay -= 1 / 50;
         
         this.game.call('fixedUpdate', this);
         
