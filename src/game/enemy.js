@@ -83,7 +83,7 @@ var EnemyMoveSpread = aqua.type(EnemyMove,
       this.particle.enemy = this;
     },
     update: function() {
-      playerPos = aqua.game.player.components[0].gameObject.components[1].particle.position;
+      playerPos = aqua.game.player.get(btb.ShipMove).particle.position;
       this.angle = Math.atan2(
         this.particle.position[1] - playerPos[1],
         this.particle.position[0] - playerPos[0]
