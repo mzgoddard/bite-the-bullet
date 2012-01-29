@@ -61,7 +61,9 @@ var EnemyMove = aqua.type(aqua.Component,
       if (other.bullet && !other.bullet.isLive && other.source == this.particle) return;
       if (other.ship) return;
       this.gameObject.destroy(this);
-
+      if (other.bullet) {
+        this.game.destroy(other.bullet.gameObject);
+      }      
       this.call('hit');
       var game = this.game, gameObject = this.gameObject;
       setTimeout((function() {
@@ -109,9 +111,12 @@ var EnemyMoveSpread = aqua.type(EnemyMove,
       if (other.bullet && !other.bullet.isLive && other.source == this.particle) return;
       if (other.ship) return;
       this.gameObject.destroy(this);
-
+      if (other.bullet) {
+        this.game.destroy(other.bullet.gameObject);
+      }    
       this.call('hit');
       var game = this.game, gameObject = this.gameObject;
+
       setTimeout((function() {
         game.destroy(gameObject);
       }).bind(this), 250);

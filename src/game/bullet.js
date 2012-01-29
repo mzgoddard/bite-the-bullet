@@ -18,14 +18,13 @@ var Bullet = aqua.type(aqua.Component,
       if (def.startTime) {
         this.startTime = def.startTime;
       }
-      // this.particle.lastPosition[0] -= vel[0] * 0.05;
-      // this.particle.lastPosition[1] -= vel[1] * 0.05;
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
       this.particle.bullet = this;
       this.particle.source = def.source || null;
       this.particle.maxVelocity = 200;
       this.startTimer = this.startTime;
+      this.energyHarvested = false;
     },
     onadd: function(gameObject) {
       gameObject.bullet = this;
@@ -56,7 +55,7 @@ var Bullet = aqua.type(aqua.Component,
           var v1 = vec3.normalize([dx,dy,0]);
           var v2 = vec3.normalize([Math.cos(ang),Math.sin(ang),0]);
           var mag = vec3.length(vec3.subtract(v2,v1));
-          if (mag < 0.6) {
+          if (mag < 0.9) {
             this.game.destroy(this.gameObject);
             this.soundModel.play("pickup");
           }
