@@ -205,6 +205,7 @@ var ShipMove = aqua.type(aqua.Component,
         aqua.game.sound.nodes.zone.source.gain.value = 0;
         aqua.game.sound.nodes.approach.source.gain.value = 0;
       }
+      setTimeout("aqua.game.levelManager.playerdied()",3000);
     },
     oncollision: function(otherParticle, collision) {
       if (otherParticle.enemy){

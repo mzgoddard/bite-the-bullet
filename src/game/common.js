@@ -1,8 +1,6 @@
 (function(window, load) {
 load.module('game/bullet.js', null, function() {
 
-var tallyStuff = {};
-
 var TallyType = aqua.type(aqua.Component, {
   
   init: function(def) {
@@ -14,20 +12,20 @@ var TallyType = aqua.type(aqua.Component, {
   },
   
   ongameadd: function(gameObject,game) {
-    if (tallyStuff[this.kind]) {
-      tallyStuff[this.kind] += 1;
+    if (aqua.game.tallyStuff[this.kind]) {
+      aqua.game.tallyStuff[this.kind] += 1;
     }
     else {
-      tallyStuff[this.kind] = 1;
+      aqua.game.tallyStuff[this.kind] = 1;
     }
-    console.log(this.kind + " :" + tallyStuff[this.kind]);
+    console.log(this.kind + " :" + aqua.game.tallyStuff[this.kind]);
   },
   
   ongamedestroy: function(gameObject,game) {
-    tallyStuff[this.kind] -= 1;
-    console.log(this.kind + " :" + tallyStuff[this.kind]);
+    aqua.game.tallyStuff[this.kind] -= 1;
+    console.log(this.kind + " :" + aqua.game.tallyStuff[this.kind]);
     
-    if (tallyStuff["enemy"] == 0 && tallyStuff["bullet"] == 0) {
+    if (aqua.game.tallyStuff["enemy"] == 0 && aqua.game.tallyStuff["bullet"] == 0) {
       setTimeout("aqua.game.levelManager.transition()",3000);
     }
   }

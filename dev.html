@@ -49,6 +49,18 @@
       #levelcomplete a {
         color:#fff;
       }
+      #leveldied {
+        color:#fff;
+        font-family: sans-serif;
+        font-weight:800;
+        font-size:3em;
+        text-align:center;
+        margin-top:100px;
+        display:none;
+      }
+      #leveldied a {
+        color:#fff;
+      }
     </style>
   </head>
   <body>
@@ -61,10 +73,15 @@
       </div>
       <div style="margin: auto; width:800px; height:600px; overflow:hidden; background: url(data/forms/bg.png);">
         <div id="levelcomplete">
-            <p>Level Complete!</p>
-            <p>&nbsp;</p>
-            <p><a href="#" onclick="aqua.game.levelManager.retry()">Retry</a> / <a href="#" onclick="aqua.game.levelManager.next()">Next</a></p>
-            </div>
+          <p>Level Complete!</p>
+          <p>&nbsp;</p>
+          <p><a href="#" onclick="aqua.game.levelManager.repeat()">Retry</a> / <a href="#" onclick="aqua.game.levelManager.next()">Next</a></p>
+        </div>
+        <div id="leveldied">
+          <p>Oh No!</p>
+          <p>&nbsp;</p>
+          <p><a href="#" onclick="aqua.game.levelManager.repeat()">Retry</a> / <a href="#" onclick="aqua.game.levelManager.next()">Skip</a></p>
+        </div>
         <canvas resize width="800" height="600"></canvas>
       </div>
     </div>

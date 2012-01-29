@@ -64,6 +64,7 @@ var LevelManager = aqua.type(aqua.GameObject,
       this.next();
     },
     next: function() {
+      aqua.game.tallyStuff["enemy"] -= 1;
       $('#levelcomplete').hide();
       this.level = Level.create("levels/level" + (++this.levelIndex) + ".json");
       this.gameObject.add(this.level);
@@ -74,7 +75,9 @@ var LevelManager = aqua.type(aqua.GameObject,
       aqua.game.player.components[0].gameObject.components[1].particle.lastPosition[1] = 300;
     },
     repeat: function() {
+      aqua.game.tallyStuff["enemy"] -= 1;
       $('#levelcomplete').hide();
+      $('#leveldied').hide();
       this.level = Level.create("levels/level" + (this.levelIndex) + ".json");
       this.gameObject.add(this.level);
       this.level.start();
@@ -85,6 +88,21 @@ var LevelManager = aqua.type(aqua.GameObject,
     },
     transition: function() {
       $('#levelcomplete').show();
+      aqua.game.tallyStuff["enemy"] += 1;
+    },
+    playerdied: function() {
+      $('#leveldied').show();    
+      aqua.game.tallyStuff["enemy"] += 1;
+      aqua.game.objects.forEach(
+        function(gameObject) {
+          if (gameObject.get(btb.Bullet) || gameObject.get(btb.ShipMove) || gameObject.get(btb.EnemyMove)) {
+            aqua.game.destroy(gameObject); 
+          }
+        }
+      );
+      aqua.game.player = btb.makeShip();
+      aqua.game.add(aqua.game.player);
+      
     },
     cheat: function() {
       
