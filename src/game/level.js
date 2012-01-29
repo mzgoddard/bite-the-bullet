@@ -25,6 +25,8 @@ var Level = aqua.type(aqua.Component,
           this.def = load.get(def);
         }).bind(this));
       }
+      
+      
 
       when.chain(promise, this.ready);
     },
@@ -36,6 +38,7 @@ var Level = aqua.type(aqua.Component,
     },
     start: function() {
       this.ready.then((function(){
+        $("#title").text(this.def.title);
         var i, j, enemy, enemyDef, spawner;
         for (i = 0; i < this.def.enemies.length; i++) {
           enemy = this.def.enemies[i];
