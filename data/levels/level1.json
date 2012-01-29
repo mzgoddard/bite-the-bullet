@@ -15,10 +15,13 @@
 		}
 	},
 	{
-		"file": "enemy/spread.json",
+		"file": "enemy/bob.json",
 		"move": {
 			"position":[540,300],
 			"velocity":[-25, 0]
+		},
+		"attack": {
+			"bulletSpeed": 100
 		}
 	}
 	]
