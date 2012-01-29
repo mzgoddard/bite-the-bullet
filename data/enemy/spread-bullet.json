@@ -1,5 +1,7 @@
 {
+	"file": "enemy/bob-bullet.json", 
   "files": [
+		"enemy/bob-bullet.json", 
     "weapons/images/bad_blip.png"
   ],
   "components": ["sound", "model", "render"],
@@ -11,6 +13,6 @@
   },
   "render": {
     "type": "BulletRasterRender",
-    "image": "weapons/images/bad_blip.png"
+    "image": "weapons/images/bullet.png"
   }
 }
