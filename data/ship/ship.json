@@ -1,6 +1,7 @@
 {
   "files": [
-    "ship/images/ship.png"
+    "ship/images/ship.png",
+    "weapons/images/ship_bullet.png"
   ],
   "components": ["sound","input", "move", "model", "render"],
   "sound": {
@@ -30,6 +31,9 @@
     "type": "Ship",
     "bullet": {
       "file": "enemy/bob-bullet.json",
+      "render": {
+        "image": "weapons/images/ship_bullet.png"
+      },
       "speed": 120,
       "startTime": 0.1
     }
