@@ -15,10 +15,15 @@
     }
   },
   "move": {
-    "type": "ShipMove"
+    "type": "ShipMove",
+    "maxVelocity": 50
   },
   "model": {
-    "type": "Ship"
+    "type": "Ship",
+    "bullet": {
+      "file": "enemy/bob-bullet.json",
+      "speed": 100
+    }
   },
   "render": {
     "type": "ShipRasterRender",
