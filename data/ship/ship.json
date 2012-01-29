@@ -26,7 +26,7 @@
     "bullet": {
       "file": "enemy/bob-bullet.json",
       "speed": 120,
-      "startTime": 0
+      "startTime": 0.1
     }
   },
   "render": {
