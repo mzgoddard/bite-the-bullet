@@ -28,6 +28,7 @@ var Bullet = aqua.type(aqua.Component,
     },
     onadd: function(gameObject) {
       gameObject.bullet = this;
+      this.soundModel = gameObject.get(BulletSound);
     },
     ongameadd: function(gameObject, game) {
       this.game = game;
@@ -55,6 +56,7 @@ var Bullet = aqua.type(aqua.Component,
           console.log(mag);
           if (mag < 0.6) {
             this.game.destroy(this.gameObject);
+            this.soundModel.play("pickup");
           }
           else {
             this.game.destroy(other.ship.gameObject);
@@ -132,9 +134,32 @@ var BulletRasterRender = aqua.type(aqua.RasterRenderer,
   }
 );
 
+var BulletSound = aqua.type(aqua.Component,
+  {
+    init: function(def) {
+      this.def = def;
+      this.sounds = 
+      {      
+        "pickup": soundManager.createSound({
+          id: 'dSound',
+          url: 'data/ship/sfx/pickup-energy.wav'})
+      };
+    },
+    
+    play: function(name) {
+      console.log(name, this);
+      if (this.sounds[name]) {
+        this.sounds[name].play();
+      }
+      else return(false);
+    }
+  }
+);
+
 btb.Bullet = Bullet;
 btb.BulletRender = BulletRender;
-btb.BulletRasterRender = BulletRasterRender
+btb.BulletRasterRender = BulletRasterRender;
+btb.BulletSound = BulletSound;
 
 });
 })(this, this.load);
