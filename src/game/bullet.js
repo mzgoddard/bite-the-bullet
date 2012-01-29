@@ -77,8 +77,8 @@ var Bullet = aqua.type(aqua.Component,
       this.particle.lastPosition[1]=pt[1] - vy;
     },
     setVelocity: function(pt) {
-      this.particle.lastPosition[0] = (this.particle.position[0] - pt[0] * 0.05);
-      this.particle.lastPosition[1] = (this.particle.position[1] - pt[1] * 0.05);
+      this.particle.lastPosition[0] = (this.particle.position[0] - pt[0] * 0.02);
+      this.particle.lastPosition[1] = (this.particle.position[1] - pt[1] * 0.02);
       this.angle = Math.atan2(
         this.particle.position[1] - this.particle.lastPosition[1],
         this.particle.position[0] - this.particle.lastPosition[0]);

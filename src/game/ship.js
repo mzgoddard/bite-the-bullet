@@ -205,7 +205,7 @@ var ShipMove = aqua.type(aqua.Component,
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
       this.particle.ship = this;
-      this.particle.maxVelocity = (def.maxVelocity || 50) * 0.05;
+      this.particle.maxVelocity = (def.maxVelocity || 50) * 0.02;
       this.playing = false;
       this.decelState = 0;
     },
