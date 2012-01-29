@@ -1,0 +1,25 @@
+{
+  "files": [
+    "enemy/bob.json",
+    "enemy/spread.json"
+  ],
+  "enemies": [
+    {
+      "file": "enemy/bob.json"
+    },
+    {
+      "file": "enemy/spread.json",
+      "move": {
+        "position":[590,50],
+		"velocity":[0, 25]
+      }
+    },
+    {
+      "file": "enemy/spread.json",
+      "move": {
+        "position":[50,350],
+		"velocity":[-25, 0]
+      }
+    }
+  ]
+}
