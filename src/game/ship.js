@@ -81,7 +81,7 @@ var Ship = aqua.type(aqua.Component,
     },
     update: function() {
       if (this.input.get('fire')) {
-        if (this.firetimer <= 0) {
+        if (this.firetimer <= 0 && this.moveModel.energy > 0) {
           var speed = this.def.bullet.speed || 100,
               bullet = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
                 position:
@@ -93,7 +93,8 @@ var Ship = aqua.type(aqua.Component,
               }}));
 
           aqua.game.add(bullet);
-
+          this.moveModel.energy -= 10;
+          $('#energy').css('width',this.moveModel.energy+"%");
           this.firetimer = this.firedelay;
         }
       }
@@ -168,7 +169,6 @@ var ShipMove = aqua.type(aqua.Component,
           otherParticle.bullet.energyHarvested = true;
           this.energy += 10;
           $('#energy').css('width',this.energy+"%");
-          console.log("e:"+this.energy);
         }
       }
     },
