@@ -1,0 +1,13 @@
+{
+  "files": [
+    "weapons/images/bad_blip.png"
+  ],
+  "components": ["model", "render"],
+  "model": {
+    "type": "Bullet"
+  },
+  "render": {
+    "type": "BulletRasterRender",
+    "image": "weapons/images/bad_blip.png"
+  }
+}
