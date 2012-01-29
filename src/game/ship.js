@@ -131,7 +131,7 @@ var ShipMove = aqua.type(aqua.Component,
     },
     ongameadd: function(gameObject, game) {
       game.world.addParticle(this.particle);
-      
+      this.game = game;
       this.world = game.world;
       this.sound = game.sound;
       
@@ -154,7 +154,7 @@ var ShipMove = aqua.type(aqua.Component,
       // console.log(otherParticle);
       this.energy += 1;
       if (otherParticle.enemy){
-        this.gameObject.destroy(this);
+        this.game.destroy(this.gameObject);
       }
       
 
