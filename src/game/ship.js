@@ -71,6 +71,9 @@ var Ship = aqua.type(aqua.Component,
   {
     firedelay: 0.5,
     ship: true,
+    init: function(def) {
+      this.def = def;
+    },
     onadd: function(gameObject) {
       this.input = gameObject.get(ShipInput);
       this.moveModel = gameObject.get(ShipMove);
@@ -79,12 +82,15 @@ var Ship = aqua.type(aqua.Component,
     update: function() {
       if (this.input.get('fire')) {
         if (this.firetimer <= 0) {
-          var bullet = aqua.GameObject.create();
-          bullet.add(btb.Bullet.create({
-            position: [this.moveModel.particle.position[0],this.moveModel.particle.position[1]], 
-            velocity: [Math.cos(this.moveModel.angle) * 100,
-                       Math.sin(this.moveModel.angle) * 100]}));
-          bullet.add(btb.BulletRender.create());
+          var speed = this.def.bullet.speed || 100,
+              bullet = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
+                position:
+                  [this.moveModel.particle.position[0]+Math.cos(this.moveModel.angle)*this.moveModel.radius,this.moveModel.particle.position[1]+Math.sin(this.moveModel.angle)*this.moveModel.radius],
+                velocity:
+                  [Math.cos(this.moveModel.angle) * speed,
+                   Math.sin(this.moveModel.angle) * speed]
+              }}));
+
           aqua.game.add(bullet);
 
           this.firetimer = this.firedelay;
@@ -120,6 +126,7 @@ var ShipMove = aqua.type(aqua.Component,
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
       this.particle.ship = this;
+      this.particle.maxVelocity = (def.maxVelocity || 50) * 0.05;
       this.playing = false;
       this.decelState = 0;
     },
