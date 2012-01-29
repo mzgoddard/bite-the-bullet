@@ -32,8 +32,8 @@ paper.view.size.width=500;
 paper.view.size.height=500;
 aqua.game.task(paper.view.draw.bind(paper.view), aqua.Game.Priorities.RENDER);
 
-var path = new paper.Path.RoundRectangle(new paper.Rectangle(10, 10, 50, 50), new paper.Size(10, 10));
-path.strokeColor = 'black';
+//var path = new paper.Path.RoundRectangle(new paper.Rectangle(10, 10, 50, 50), new paper.Size(10, 10));
+//path.strokeColor = 'black';
 
 aqua.game.graphics = aqua.Graphics.create();
 // aqua.game.graphics = aqua.initGraphics($('canvas')[0]);
