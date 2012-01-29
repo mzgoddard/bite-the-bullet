@@ -6,7 +6,8 @@ window.btb = {};
 var when = window.when;
 
 load.module('game/main.js',
-  load.chain(load.script('engine/init.js'),
+  load.chain(
+    load.script('engine/init.js'),
     function() {
       return when.all([
         load.script('game/ship.js'),
@@ -24,6 +25,7 @@ var $ = window.$,
     aqua = window.aqua,
     glider = window.glider;
 
+    console.log(aqua,aqua.World);
 
 aqua.game = aqua.Game.create();
 
