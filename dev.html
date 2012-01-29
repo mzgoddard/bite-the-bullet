@@ -8,20 +8,17 @@
     
     <script src="src/externals/gl-matrix/gl-matrix.js" type="text/javascript" charset="utf-8"></script>
     <script src="src/externals/paper/dist/paper.js" type="text/javascript" charset="utf-8"></script>
-    <script src="src/load.js" type="text/javascript" charset="utf-8"></script>
-    <script src="src/game/main.js" type="text/javascript" charset="utf-8"></script>
-    <!-- include SM2 library -->
     <script type="text/javascript" src="src/externals/sm2/swf/soundmanager2-nodebug.js"></script>
-    
-    <!-- configure it for your use -->
+
     <script type="text/javascript">
-    
+
+    soundPromise = when.defer();
     soundManager.url = 'src/externals/sm2/swf/'; // directory where SM2 .SWFs live
     soundManager.onready(function(){
     
       // SM2 has loaded - now you can create and play sounds!
 
-      
+      soundPromise.resolve();
     
     });
     
@@ -29,9 +26,16 @@
     
       // Hrmm, SM2 could not start. Flash blocker involved? Show an error, etc.?
     
+      soundPromise.resolve();
     });
     
     </script>
+
+    <script src="src/load.js" type="text/javascript" charset="utf-8"></script>
+    <script src="src/game/main.js" type="text/javascript" charset="utf-8"></script>
+    <!-- include SM2 library -->
+    
+    <!-- configure it for your use -->
     <style>
       body {
         color:#000;
