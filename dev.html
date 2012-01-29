@@ -61,6 +61,27 @@
       #leveldied a {
         color:#fff;
       }
+      #nomorelevels {
+        color:#fff;
+        font-family: sans-serif;
+        font-weight:800;
+        font-size:3em;
+        text-align:center;
+        margin-top:100px;
+        display:none;
+      }
+      #titlescreen {
+        color:#fff;
+        font-family: sans-serif;
+        font-weight:800;
+        font-size:3em;
+        text-align:center;
+        margin-top:100px;
+        display:none;
+      }
+      #titlescreen a {
+        color:#fff;
+      }
       #title {
         font-size:2em;
         font-weight:500;
@@ -90,10 +111,9 @@
         </div>
         
         <div style="">
-          <div id="title">loading level...</div>
+          <div id="title">&nbsp;</div>
           <div style="background-color: gray; width: 300px;">
             <div id="energy" style="background-color: orange; width: 0%; height: 2em;"><span id="eword">ENERGY</span></div>
-          </div>
         </div>
       </div>
       <div style="margin: auto; width:800px; height:600px; overflow:hidden; background: url(data/forms/bg.jpg);">
@@ -106,6 +126,17 @@
           <p>Oh No!</p>
           <p>&nbsp;</p>
           <p><a href="#" onclick="aqua.game.levelManager.repeat()">Retry</a> / <a href="#" onclick="aqua.game.levelManager.next()">Skip</a></p>
+        </div>
+        <div id="nomorelevels" class="overlay">
+          <p>That's it!</p>
+          <p>No more levels.</p>
+          <p>Hope you had some fun.</p>
+        </div>
+        <div id="titlescreen" class="overlay">
+          <p>BITE THE BULLET</p>
+          <p style="font-size:0.5em;">Blah blah blah.</p>
+          <p style="font-size:0.5em;">Blah blah blah.</p>
+          <p></p><a href="#" onclick="aqua.game.levelManager.next()">Play</a></p>
         </div>
         <canvas resize width="800" height="600"></canvas>
       </div>

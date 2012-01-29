@@ -56,23 +56,32 @@ var LevelManager = aqua.type(aqua.GameObject,
   {
     init: function() {
       console.log('huh?');
+      $('#titlescreen').show();
       Object.getPrototypeOf(Object.getPrototypeOf(this)).init.call(this);
       this.level = null;
       this.levelIndex = parseInt(aqua.query('level', 1)) - 1;
 
       this.gameObject = this;
-      this.next();
     },
     next: function() {
+      $('#titlescreen').hide();
       aqua.game.tallyStuff["enemy"] -= 1;
       $('#levelcomplete').hide();
-      this.level = Level.create("levels/level" + (++this.levelIndex) + ".json");
-      this.gameObject.add(this.level);
-      this.level.start();
-      aqua.game.player.components[0].gameObject.components[1].particle.position[0] = 400;
-      aqua.game.player.components[0].gameObject.components[1].particle.lastPosition[0] = 400;
-      aqua.game.player.components[0].gameObject.components[1].particle.position[1] = 300;
-      aqua.game.player.components[0].gameObject.components[1].particle.lastPosition[1] = 300;
+      
+      if (this.levelIndex == 10) {
+        $('#levelcomplete').hide();
+        $('#leveldied').hide();
+        $('#nomorelevels').show();
+      }
+      else{
+        this.level = Level.create("levels/level" + (++this.levelIndex) + ".json");
+        this.gameObject.add(this.level);
+        this.level.start();
+        aqua.game.player.components[0].gameObject.components[1].particle.position[0] = 400;
+        aqua.game.player.components[0].gameObject.components[1].particle.lastPosition[0] = 400;
+        aqua.game.player.components[0].gameObject.components[1].particle.position[1] = 300;
+        aqua.game.player.components[0].gameObject.components[1].particle.lastPosition[1] = 300;
+      }
     },
     repeat: function() {
       aqua.game.tallyStuff["enemy"] -= 1;
