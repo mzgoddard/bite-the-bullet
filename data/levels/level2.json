@@ -5,34 +5,31 @@
   ],
   "enemies": [
     {
-      "file": "enemy/bob.json"
-    },
-    {
       "file": "enemy/bob.json",
 	  "move": {
         "position":[100,100],
-		"velocity":[25, 25]
+		"velocity":[50, -50]
       }
     },
 	{
       "file": "enemy/bob.json",
 	  "move": {
         "position":[540,100],
-		"velocity":[25, -25]
+		"velocity":[-25, -25]
       }
     },
     {
       "file": "enemy/bob.json",
 	  "move": {
-        "position":[100,200],
-		"velocity":[-25, -25]
+        "position":[100,300],
+		"velocity":[25, 25]
       }
     },
 	{
       "file": "enemy/bob.json",
 	  "move": {
-        "position":[540,200],
-		"velocity":[-25, 25]
+        "position":[540,300],
+		"velocity":[-50, 50]
       }
     }
   ]
