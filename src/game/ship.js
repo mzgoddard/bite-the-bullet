@@ -280,26 +280,26 @@ var ShipMove = aqua.type(aqua.Component,
             this.decelState = 1;
           }
           else if (this.angle > targetangle) {
-            this.angle = this.angle - 0.2*(this.angle - targetangle);
+            this.angle = this.angle - 0.3*(this.angle - targetangle);
           }
           else if (this.angle < targetangle) {
-            this.angle = this.angle + 0.2*(targetangle - this.angle);
+            this.angle = this.angle + 0.3*(targetangle - this.angle);
           }
         }
         else if (this.decelState == 1) {
-          if (Math.abs(this.particle.velocity[0]) < 0.2 ){
+          if (Math.abs(this.particle.velocity[0]) < 0.4 ){
             this.particle.velocity[0] = 0;
             this.particle.x = this.particle.lastPosition[0];
             this.particle.position[0] = this.particle.x;
           }
-          if (Math.abs(this.particle.velocity[1]) < 0.2 ){
+          if (Math.abs(this.particle.velocity[1]) < 0.4 ){
             this.particle.velocity[1] = 0;
             this.particle.y = this.particle.lastPosition[1];
             this.particle.position[1] = this.particle.y;
           }
-          if ((Math.abs(this.particle.velocity[0]) >= 0.2) && Math.abs(this.particle.velocity[0]) >= 0.2) {
-            this.particle.acceleration[0] = Math.cos(this.angle) * 100;
-            this.particle.acceleration[1] = Math.sin(this.angle) * 100;
+          if ((Math.abs(this.particle.velocity[0]) >= 0.4) || Math.abs(this.particle.velocity[1]) >= 0.4) {
+            this.particle.acceleration[0] = Math.cos(this.angle) * 350;
+            this.particle.acceleration[1] = Math.sin(this.angle) * 350;
           }
         } 
       }
