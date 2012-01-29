@@ -44,7 +44,7 @@ var Bullet = aqua.type(aqua.Component,
       if (this.startTimer < 0 && this.game) {
         if (other.bullet) {
           this.game.destroy(this.gameObject);
-          this.soundModel.play("bcollide");
+          //this.soundModel.play("bcollide");
         }
         if (other.ship) {
           var ang = Math.PI+other.ship.angle % (Math.PI*2);//(-other.ship.angle + Math.PI/2) % (Math.PI*2);
@@ -57,7 +57,7 @@ var Bullet = aqua.type(aqua.Component,
           console.log(mag);
           if (mag < 0.6) {
             this.game.destroy(this.gameObject);
-            this.soundModel.play("pickup");
+            //this.soundModel.play("pickup");
           }
           else {
             this.game.destroy(other.ship.gameObject);
