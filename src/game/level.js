@@ -75,7 +75,9 @@ var LevelManager = aqua.type(aqua.GameObject,
         url: 'data/levels/sfx/bgm.mp3',
         autoLoad: true,
         autoPlay: true,
-        loops: 100,
+        onfinish: function() {
+          this.play();
+        },        
         volume: 80
       });
 
