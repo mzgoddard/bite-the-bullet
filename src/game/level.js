@@ -64,6 +64,7 @@ var LevelManager = aqua.type(aqua.GameObject,
       this.next();
     },
     next: function() {
+      $('#levelcomplete').hide();
       this.level = Level.create("levels/level" + (++this.levelIndex) + ".json");
       this.gameObject.add(this.level);
       this.level.start();
@@ -71,6 +72,19 @@ var LevelManager = aqua.type(aqua.GameObject,
       aqua.game.player.components[0].gameObject.components[1].particle.lastPosition[0] = 400;
       aqua.game.player.components[0].gameObject.components[1].particle.position[1] = 300;
       aqua.game.player.components[0].gameObject.components[1].particle.lastPosition[1] = 300;
+    },
+    repeat: function() {
+      $('#levelcomplete').hide();
+      this.level = Level.create("levels/level" + (this.levelIndex) + ".json");
+      this.gameObject.add(this.level);
+      this.level.start();
+      aqua.game.player.components[0].gameObject.components[1].particle.position[0] = 400;
+      aqua.game.player.components[0].gameObject.components[1].particle.lastPosition[0] = 400;
+      aqua.game.player.components[0].gameObject.components[1].particle.position[1] = 300;
+      aqua.game.player.components[0].gameObject.components[1].particle.lastPosition[1] = 300;
+    },
+    transition: function() {
+      $('#levelcomplete').show();
     },
     cheat: function() {
       

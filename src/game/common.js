@@ -28,7 +28,7 @@ var TallyType = aqua.type(aqua.Component, {
     console.log(this.kind + " :" + tallyStuff[this.kind]);
     
     if (tallyStuff["enemy"] == 0 && tallyStuff["bullet"] == 0) {
-      setTimeout("aqua.game.levelManager.next()",3000);
+      setTimeout("aqua.game.levelManager.transition()",3000);
     }
   }
   
