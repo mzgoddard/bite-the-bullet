@@ -85,7 +85,7 @@ var LevelManager = aqua.type(aqua.GameObject,
       $('#titlescreen').hide();
       aqua.game.tallyStuff["enemy"] -= 1;
       $('#levelcomplete').hide();
-      
+      $('#leveldied').hide();
       if (this.levelIndex == 10) {
         $('#levelcomplete').hide();
         $('#leveldied').hide();
