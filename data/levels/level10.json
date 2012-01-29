@@ -3,7 +3,7 @@
 	"enemy/bob.json",
 	"enemy/spread.json"
 	],
-	"title": "BOOP BOOP DOOM",
+	"title": "BOOP BOOP... DOOM",
 	"enemies": [
 	{
 		"file": "enemy/spread.json",
@@ -22,7 +22,7 @@
 	{
 		"file": "enemy/spread.json",
 		"move": {
-			"position":[-50,50],
+			"position":[750,50],
 			"velocity":[0, 0]
 		}
 	},
@@ -36,28 +36,28 @@
 	{
 		"file": "enemy/spread.json",
 		"move": {
-			"position":[-50, 300],
+			"position":[750, 300],
 			"velocity":[0, 0]
 		}
 	},
 	{
 		"file": "enemy/spread.json",
 		"move": {
-			"position":[50, -50],
+			"position":[50, 550],
 			"velocity":[0, 0]
 		}
 	},
 	{
 		"file": "enemy/spread.json",
 		"move": {
-			"position":[400, -50],
+			"position":[400, 550],
 			"velocity":[0, 0]
 		}
 	},
 	{
 		"file": "enemy/spread.json",
 		"move": {
-			"position":[-50, -50],
+			"position":[750, 550],
 			"velocity":[0, 0]
 		}
 	}

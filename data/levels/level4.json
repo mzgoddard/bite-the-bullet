@@ -3,12 +3,12 @@
 	"enemy/bob.json",
 	"enemy/spread.json"
 	],
-	"title": "THIS IS LEVEL 2",
+	"title": "NOW OR NEVER",
 	"enemies": [
 	{
 		"file": "enemy/bob.json",
 		"move": {
-			"position":[50,50],
+			"position":[50,300],
 			"velocity":[25, -25]
 		},
 		"attack": {
@@ -18,8 +18,8 @@
 	{
 		"file": "enemy/bob.json",
 		"move": {
-			"position":[540,100],
-			"velocity":[25, -25]
+			"position":[150,300],
+			"velocity":[-25, 25]
 		},
 		"attack": {
 			"bulletSpeed": 100
@@ -28,8 +28,8 @@
 	{
 		"file": "enemy/bob.json",
 		"move": {
-			"position":[100,300],
-			"velocity":[25, 25]
+			"position":[650,300],
+			"velocity":[25, -25]
 		},
 		"attack": {
 			"bulletSpeed": 100
@@ -39,8 +39,8 @@
 	{
 		"file": "enemy/bob.json",
 		"move": {
-			"position":[540,300],
-			"velocity":[25, 25]
+			"position":[750,300],
+			"velocity":[-25, 25]
 		},
 		"attack": {
 			"bulletSpeed": 100

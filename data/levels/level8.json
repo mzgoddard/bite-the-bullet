@@ -1,0 +1,99 @@
+{
+	"files": [
+	"enemy/bob.json",
+	"enemy/spread.json"
+	],
+	"title": "DUCKS DUCKS DUCKS",
+	"enemies": [
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[50,100],
+			"velocity":[10, 0]
+		},
+		"attack": {
+			"bulletSpeed": 40
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[100,150],
+			"velocity":[10, 0]
+		},
+		"attack": {
+			"bulletSpeed": 40
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[150,200],
+			"velocity":[10, 0]
+		},
+		"attack": {
+			"bulletSpeed": 40
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[200,250],
+			"velocity":[10, 0]
+		},
+		"attack": {
+			"bulletSpeed": 40
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[250, 300],
+			"velocity":[10, 0]
+		},
+		"attack": {
+			"bulletSpeed": 40
+		}
+	},	
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[200, 350],
+			"velocity":[10, 0]
+		},
+		"attack": {
+			"bulletSpeed": 40
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[150, 400],
+			"velocity":[10, 0]
+		},
+		"attack": {
+			"bulletSpeed": 40
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[100, 450],
+			"velocity":[10, 0]
+		},
+		"attack": {
+			"bulletSpeed": 40
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[50,500],
+			"velocity":[10, 0]
+		},
+		"attack": {
+			"bulletSpeed": 40
+		}
+	}
+	]
+}
