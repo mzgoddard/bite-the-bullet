@@ -7,15 +7,15 @@
     {
       "file": "enemy/bob.json",
 	  "move": {
-        "position":[100,200],
-		"velocity":[-50, 0]
+        "position":[100,100],
+		"velocity":[50, 0]
       }
     },
 	{
       "file": "enemy/bob.json",
 	  "move": {
-        "position":[540,200],
-		"velocity":[50, 0]
+        "position":[540,300],
+		"velocity":[-50, 0]
       }
     }
   ]
