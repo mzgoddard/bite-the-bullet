@@ -56,14 +56,15 @@ var LevelManager = aqua.type(aqua.GameObject,
   {
     init: function() {
       console.log('huh?');
+      $('#titlescreen').show();
       Object.getPrototypeOf(Object.getPrototypeOf(this)).init.call(this);
       this.level = null;
       this.levelIndex = parseInt(aqua.query('level', 1)) - 1;
 
       this.gameObject = this;
-      this.next();
     },
     next: function() {
+      $('#titlescreen').hide();
       aqua.game.tallyStuff["enemy"] -= 1;
       $('#levelcomplete').hide();
       this.level = Level.create("levels/level" + (++this.levelIndex) + ".json");
