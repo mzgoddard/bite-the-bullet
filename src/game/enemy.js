@@ -92,8 +92,8 @@ var EnemyMoveSpread = aqua.type(EnemyMove,
       this.soundModel = gameObject.get(EnemySound);
       this.game = game;
       game.world.addParticle(this.particle);
-      this.particle.lastPosition[0] -= (this.def.velocity && this.def.velocity[0] || 10) * 0.05;
-      this.particle.lastPosition[1] -= (this.def.velocity && this.def.velocity[1] || 10) * 0.05;
+      this.particle.lastPosition[0] -= (this.def.velocity ? this.def.velocity[0] : 10) * 0.05;
+      this.particle.lastPosition[1] -= (this.def.velocity ? this.def.velocity[1] : 10) * 0.05;
       this.angle = Math.atan2(
         this.particle.position[1] - this.particle.lastPosition[1],
         this.particle.position[0] - this.particle.lastPosition[0]);

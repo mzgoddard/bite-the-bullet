@@ -159,6 +159,7 @@
   );
   
   aqua.query = function(name, _default) {
+    console.log('aqua.query', arguments);
     var split = location.search.substring(1).split('&'), i, keyvalue;
     for (i = 0; i < split.length; i++) {
       keyvalue = split[i].split('=');
