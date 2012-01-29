@@ -4,7 +4,12 @@
     "type": "MoveSpread"
   },
   "attack": {
-    "type": "AttackSpread"
+    "type": "AttackSpread",
+    "bullet": {
+      "model": {
+        "startTime": 2
+      }
+    }
   },
   "render": {}
 }
