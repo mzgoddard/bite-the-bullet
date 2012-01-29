@@ -2,7 +2,10 @@
   "files": [
     "weapons/images/bullet.png"
   ],
-  "components": ["model", "render"],
+  "components": ["sound","model", "render"],
+  "sound": {
+    "type": "BulletSound"
+  },
   "model": {
     "type": "Bullet"
   },
