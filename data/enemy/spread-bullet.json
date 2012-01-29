@@ -1,0 +1,16 @@
+{
+  "files": [
+    "weapons/images/bad_blip.png"
+  ],
+  "components": ["sound", "model", "render"],
+  "sound": {
+    "type": "BulletSound"
+  },
+  "model": {
+    "type": "Bullet"
+  },
+  "render": {
+    "type": "BulletRasterRender",
+    "image": "weapons/images/bad_blip.png"
+  }
+}

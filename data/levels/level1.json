@@ -1,0 +1,19 @@
+{
+	"files": [
+		"enemy/bob.json",
+		"enemy/spread.json"
+	],
+	"title": "PLAY CATCH",
+	"enemies": [
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[-25, 300],
+			"velocity":[-25, 0]
+		},
+		"attack": {
+			"bulletSpeed": 100
+		}
+	}
+	]
+}

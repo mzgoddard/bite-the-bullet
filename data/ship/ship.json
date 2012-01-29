@@ -1,0 +1,33 @@
+{
+  "files": [
+    "ship/images/ship.png"
+  ],
+  "components": ["input", "move", "model", "render"],
+  "input": {
+    "type": "ShipInput",
+    "map": {
+      "87": "up",
+      "65": "left",
+      "68": "right",
+      "83": "down",
+      "38": "up",
+      "32": "fire"
+    }
+  },
+  "move": {
+    "type": "ShipMove",
+    "radius": 15,
+    "maxVelocity": 100
+  },
+  "model": {
+    "type": "Ship",
+    "bullet": {
+      "file": "enemy/bob-bullet.json",
+      "speed": 120
+    }
+  },
+  "render": {
+    "type": "ShipRasterRender",
+    "image": "ship/images/ship.png"
+  }
+}

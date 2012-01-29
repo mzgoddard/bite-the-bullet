@@ -1,0 +1,23 @@
+{
+  "files": [
+    "enemy/images/enemy1.png",
+    "enemy/bob-bullet.json"
+  ],
+  "order": ["sound","move","attack","render","tally"],
+  "move": {},
+  "attack": {
+    "bullet": {
+      "file": "enemy/bob-bullet.json"
+    }
+  },
+  "render": {
+    "type": "RasterRender",
+    "image": "enemy/images/enemy1.png"
+  },
+  "tally": {
+    "type": "TallyType",
+    "kind": "enemy"
+  },
+  "sound": {}
+  
+}

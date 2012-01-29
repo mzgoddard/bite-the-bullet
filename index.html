@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Dawn Glider</title>
+    <link rel="stylesheet" href="data/forms/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <script src="externals.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="glider.min.js" type="text/javascript" charset="utf-8"></script>
+    
+        <!-- configure it for your use -->
+        <script type="text/javascript">
+    
+        soundManager.url = 'sm2/swf/'; // directory where SM2 .SWFs live
+        soundManager.onready(function(){
+    
+          // SM2 has loaded - now you can create and play sounds!
+
+      
+    
+        });
+    
+        soundManager.ontimeout(function(){
+    
+          // Hrmm, SM2 could not start. Flash blocker involved? Show an error, etc.?
+    
+        });
+    
+        </script>
+    
+  </head>
+  <body>
+    <div id="c1">
+    <div id="c2">
+    <div style="margin: auto; width:800px;">
+      <div id="title">...</div>
+      <div style="background-color: gray; width: 300px;">
+        <div id="energy" style="background-color: orange; width: 23%; height: 2em;"></div>
+      </div>
+      <div style="margin: auto; width:800px; height:600px; overflow:hidden; background: url(data/forms/bg.png);">
+        <canvas resize width="800" height="600"></canvas>
+      </div>
+    </div>
+    </div>
+    </div>
+    <!-- <div id="game">
+      <div id="stunts">
+        <div id="scoremode">
+          <div class="off name">My Name</div>
+          <div class="off best">My Best</div>
+          <div class="off current">Current</div>
+          <div class="off world">World Best</div>
+        </div>
+      </div>
+      
+      <div id="credits" class="load">
+        <p>Z Goddard &lt;z@gradientstudios.com&gt;</p>
+        <p>Kevin Notar &lt;knotar@berklee.edu&gt;</p>
+        <script>
+          window.addEventListener('load', function() {
+            $('#game #credits').removeClass('load');
+          });
+        </script>
+      </div>
+    </div> -->
+    
+    <!-- // <script type="text/javascript" charset="utf-8">
+    //   (function() {
+    //     var a = 'NDIyNjY2MDEyMTI2MDI0NjQ0MDAw',
+    //         b = 'NjEyNjI3MTM3MzAxNzM2NzIwMDA=',
+    //         c = 'NDIwMDU1NTY1NTAxMTMwNTUyMDA=';
+    //     
+    //     eval(atob('KGZ1bmN0aW9uKCkge3ZhciBkID0gZnVuY3Rpb24oYSl7cmV0dXJuIHBhcnNlSW50KGF0b2IoYSksOCkudG9TdHJpbmcoMTYpO307UGxheXRvbWljLkxvZy5WaWV3KDUxOTQsICc0NGI2YzBhMmIwNTM0NzBjJywgJ2M1NjVjYmVjMWVmNzQwMTg4MGI2ZWI0MTJjNWE2ZicsIGRvY3VtZW50LmxvY2F0aW9uKTt9KSgpOw=='));
+    //   })();
+    // </script> -->
+    <!-- // <script src="src/engine/loadforms.js" type="text/javascript" charset="utf-8"></script> -->
+  </body>
+</html>

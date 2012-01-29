@@ -1,0 +1,122 @@
+body {
+  margin: 0;
+  background: #ccc;
+}
+#c1 {
+  display:table;margin:0 auto;height:100%;
+}
+#c2 {
+  display:table-cell;vertical-align:middle;height:100%;
+}
+#c3 {
+  width:1024px;margin:auto;
+}
+
+#credits {
+  -webkit-transition: color 2s ease-out;
+  color: rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  
+  position: fixed;
+  
+  left: 5px;
+  bottom: 5px;
+}
+
+#credits:hover {
+  -webkit-transition: color 250ms ease-out;
+  color: white;
+}
+
+#credits.load {
+  color: white;
+}
+
+#credits p {
+  margin: 0;
+}
+
+.score {
+  -webkit-transition: opacity 500ms ease 500ms;
+  position: relative;
+  left: none;
+  opacity: 1;
+  font-size: 2em;
+}
+
+.score.start {
+  opacity: 0;
+}
+
+.score.off {
+  -webkit-transition: opacity 510ms;
+  opacity: 0;
+  height: 0;
+}
+
+.score .rank {
+  position: absolute;
+  right: -5px;
+  width: 0;
+  height: 0;
+  text-align: left;
+  margin-top: -34px;
+  font-size: 20px;
+}
+
+/*.score .name {
+  position: absolute;
+  width: 0;
+  height: 0;
+}*/
+
+#scoremode {
+  z-index: 10;
+}
+
+#scoremode div {
+  cursor: hand;
+  position: fixed;
+  top: 0;
+  -webkit-transition: opacity 250ms;
+  opacity: 1;
+  display: inline;
+}
+
+#scoremode div.off {
+  opacity: 0.3;
+}
+
+#scoremode div.off:hover {
+  opacity: 0.5;
+}
+
+#stunts {
+  color: white;
+  
+  position: fixed;
+  top: 14px;
+  
+  text-align: center;
+}
+
+.trick {
+  -webkit-transition: top 500ms ease-out, opacity 250ms ease-in-out;
+  opacity: 1;
+  
+  position: absolute;
+  right: 0;
+}
+
+.trick .value {
+  
+}
+
+.trick .name {
+  position: absolute;
+  margin-top: -18px;
+}
+
+.zone {
+  right: -6px;
+}
