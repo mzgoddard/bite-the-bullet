@@ -29,7 +29,6 @@ var Bullet = aqua.type(aqua.Component,
     onadd: function(gameObject) {
       gameObject.bullet = this;
       this.soundModel = gameObject.get(BulletSound);
-      console.log("HEYYYYY ",this.soundModel);
     },
     ongameadd: function(gameObject, game) {
       this.game = game;
@@ -45,7 +44,7 @@ var Bullet = aqua.type(aqua.Component,
       if (this.startTimer < 0 && this.game) {
         if (other.bullet) {
           this.game.destroy(this.gameObject);
-          //this.soundModel.play("bcollide");
+          this.soundModel.play("bcollide");
         }
         if (other.ship) {
           var ang = Math.PI+other.ship.angle % (Math.PI*2);//(-other.ship.angle + Math.PI/2) % (Math.PI*2);
@@ -55,10 +54,9 @@ var Bullet = aqua.type(aqua.Component,
           var v1 = vec3.normalize([dx,dy,0]);
           var v2 = vec3.normalize([Math.cos(ang),Math.sin(ang),0]);
           var mag = vec3.length(vec3.subtract(v2,v1));
-          console.log(mag);
           if (mag < 0.6) {
             this.game.destroy(this.gameObject);
-            //this.soundModel.play("pickup");
+            this.soundModel.play("pickup");
           }
           else {
             this.game.destroy(other.ship.gameObject);
@@ -152,7 +150,6 @@ var BulletSound = aqua.type(aqua.Component,
     },
     
     play: function(name) {
-      console.log(name, this);
       if (this.sounds[name]) {
         this.sounds[name].play();
       }

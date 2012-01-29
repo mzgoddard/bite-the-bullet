@@ -20,7 +20,6 @@ var EnemySound = aqua.type(aqua.Component,
     },
     
     play: function(name) {
-      console.log(name, this);
       if (this.sounds[name]) {
         this.sounds[name].play();
       }
