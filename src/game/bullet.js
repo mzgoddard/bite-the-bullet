@@ -18,8 +18,6 @@ var Bullet = aqua.type(aqua.Component,
       if (def.startTime) {
         this.startTime = def.startTime;
       }
-      // this.particle.lastPosition[0] -= vel[0] * 0.05;
-      // this.particle.lastPosition[1] -= vel[1] * 0.05;
       this.particle.isTrigger = true;
       this.particle.on('collision', this.oncollision.bind(this));
       this.particle.bullet = this;
