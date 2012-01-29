@@ -105,7 +105,7 @@ aqua.game.add(aqua.game.world);
 //   return scoreObject;
 // })());
 
-aqua.game.player = glider.makeShip();
+aqua.game.player = btb.makeShip();
 aqua.game.add(aqua.game.player);
 
 // aqua.game.add(btb.makeEnemy({move:{},attack:{},render:{}}));

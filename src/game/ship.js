@@ -249,7 +249,7 @@ var ShipRasterRender = aqua.type(aqua.RasterRenderer,
   }
 );
 
-glider.makeShip = function(gameObject) {
+btb.makeShip = function(gameObject) {
   return btb.make(load.get('ship/ship.json'));
   gameObject = gameObject || aqua.GameObject.create();
 
