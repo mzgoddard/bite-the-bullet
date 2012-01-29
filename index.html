@@ -7,12 +7,13 @@
     
         <!-- configure it for your use -->
         <script type="text/javascript">
-    
+        
+        soundPromise = when.defer();
         soundManager.url = 'sm2/swf/'; // directory where SM2 .SWFs live
         soundManager.onready(function(){
     
           // SM2 has loaded - now you can create and play sounds!
-
+          soundPromise.resolve();
       
     
         });
@@ -20,6 +21,7 @@
         soundManager.ontimeout(function(){
     
           // Hrmm, SM2 could not start. Flash blocker involved? Show an error, etc.?
+          soundPromise.resolve();
     
         });
     
