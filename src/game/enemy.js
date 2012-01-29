@@ -20,6 +20,7 @@ var EnemySound = aqua.type(aqua.Component,
     },
     
     play: function(name) {
+      console.log(name, this);
       if (this.sounds[name]) {
         this.sounds[name].play();
       }
@@ -299,6 +300,7 @@ btb.EnemyAttackSpread = EnemyAttackSpread;
 btb.EnemyRender = EnemyRender;
 btb.EnemyRasterRender = EnemyRasterRender;
 btb.EnemySpawner = EnemySpawner;
+btb.EnemySound = EnemySound;
 
 btb.makeEnemy = function(definition) {
   var enemy = aqua.GameObject.create();

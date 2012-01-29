@@ -2,7 +2,7 @@
   "files": [
     "enemy/images/enemy1.png"
   ],
-  "order": ["move","attack","render"],
+  "order": ["sound","move","attack","render"],
   "move": {},
   "attack": {},
   "render": {
