@@ -1,0 +1,59 @@
+{
+	"files": [
+	"enemy/bob.json",
+	"enemy/spread.json"
+	],
+	"title": "FIRING SQUAD",
+	"enemies": [
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[200,500],
+			"velocity":[1, -1]
+		},
+		"attack": {
+			"bulletSpeed": 50
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[300,500],
+			"velocity":[1, -2]
+		},
+		"attack": {
+			"bulletSpeed": 50
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[400, 500],
+			"velocity":[0, -1]
+		},
+		"attack": {
+			"bulletSpeed": 50
+		}
+	},	
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[500, 500],
+			"velocity":[-1, -2]
+		},
+		"attack": {
+			"bulletSpeed": 50
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[600,500],
+			"velocity":[-1, -1]
+		},
+		"attack": {
+			"bulletSpeed": 50
+		}
+	}
+	]
+}

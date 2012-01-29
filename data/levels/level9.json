@@ -1,0 +1,63 @@
+{
+	"files": [
+	"enemy/bob.json",
+	"enemy/spread.json"
+	],
+	"title": "THE LAST STAND?",
+	"enemies": [
+	{
+		"file": "enemy/spread.json",
+		"move": {
+			"position":[50,300],
+			"velocity":[1, 0]
+		}
+	},
+	{
+		"file": "enemy/spread.json",
+		"move": {
+			"position":[725,300],
+			"velocity":[-1, 0]
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[50, 50],
+			"velocity":[20, 15]
+		}, 
+		"attack": {
+			"bulletSpeed": 75
+		}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[700, 50],
+			"velocity":[-12, 9]
+		}	, 
+			"attack": {
+				"bulletSpeed": 55
+			}
+	},	
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[100, 550],
+			"velocity":[5, -7.5]
+		}	, 
+			"attack": {
+				"bulletSpeed": 50
+			}
+	},
+	{
+		"file": "enemy/bob.json",
+		"move": {
+			"position":[700, 550],
+			"velocity":[-10, -15]
+		}	, 
+			"attack": {
+				"bulletSpeed": 60
+			}
+	}
+	]
+}

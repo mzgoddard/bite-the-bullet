@@ -8,6 +8,10 @@
     {
       "source": "data",
       "destination": "dist/data"
+    },
+    {
+      "source": "src/externals/sm2",
+      "destination": "dist/sm2"
     }
   ],
   "files": {
@@ -18,16 +22,18 @@
         "src/engine/base.js",
         "src/engine/math.js",
         "src/engine/object.js",
-        "src/engine/graphics.js",
-        "src/engine/sound.js",
+        "src/engine/paper_graphics.js",
         "src/engine/physics.js",
         "src/engine/init.js",
         "src/game/main.js",
-        "src/game/glider.js",
-        "src/game/jet.js"
+        "src/game/common.js",
+        "src/game/bullet.js",
+        "src/game/enemy.js",
+        "src/game/level.js",
+        "src/game/ship.js"
       ],
-      "prehint": true,
-      "posthint": true,
+      "prehint": false,
+      "posthint": false,
       "debug": true,
 
       "meta": {
@@ -44,7 +50,9 @@
         "src/externals/when/when.js",
         "src/externals/gl-matrix/gl-matrix.js",
         "src/externals/jquery/dist/jquery.js",
-        "src/externals/playtomic/playtomic.v1.9.js"
+        "src/externals/playtomic/playtomic.v1.9.js",
+        "src/externals/paper/dist/paper.js",
+        "src/externals/sm2/swf/soundmanager2-nodebug.js"
       ],
       "prehint": false,
       "posthint": false,

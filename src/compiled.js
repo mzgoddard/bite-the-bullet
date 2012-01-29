@@ -6,11 +6,13 @@
         'engine/math.js',
         'engine/base.js',
         'engine/object.js',
-        'engine/graphics.js',
-        'engine/sound.js',
+        'engine/paper_graphics.js',
         'engine/physics.js',
-        'game/glider.js',
-        'game/jet.js',
+        'game/common.js',
+        'game/bullet.js',
+        'game/enemy.js',
+        'game/level.js',
+        'game/ship.js',
         'game/main.js'
       ],
       i;

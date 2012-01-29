@@ -58,7 +58,7 @@ var EnemyMove = aqua.type(aqua.Component,
     },
     oncollision: function(other, collision) {
       if (other.enemy) return;
-      if (other.bullet && !other.bullet.isLive) return;
+      if (other.bullet && !other.bullet.isLive && other.source == this.particle) return;
       if (other.ship) return;
       this.gameObject.destroy(this);
       if (other.bullet) {
@@ -108,7 +108,7 @@ var EnemyMoveSpread = aqua.type(EnemyMove,
     },
     oncollision: function(other, collision) {
       if (other.enemy) return;
-      if (other.bullet && !other.bullet.isLive) return;
+      if (other.bullet && !other.bullet.isLive && other.source == this.particle) return;
       if (other.ship) return;
       this.gameObject.destroy(this);
       if (other.bullet) {
@@ -151,7 +151,9 @@ var EnemyAttack = aqua.type(aqua.Component,
               [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
             velocity:
               [Math.cos(this.moveModel.angle) * speed,
-               Math.sin(this.moveModel.angle) * speed]
+               Math.sin(this.moveModel.angle) * speed],
+           source:
+             this.moveModel.particle
           }}));
       // console.log(btb.make(this.def.bullet));
 
@@ -189,21 +191,27 @@ var EnemyAttackSpread = aqua.type(EnemyAttack,
               [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
             velocity:
               [Math.cos(this.moveModel.angle) * speed,
-               Math.sin(this.moveModel.angle) * speed]
+               Math.sin(this.moveModel.angle) * speed],
+           source:
+             this.moveModel.particle
           }})),
           bullet2 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
             position:
               [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
             velocity:
               [Math.cos(this.moveModel.angle+Math.PI/8) * speed,
-               Math.sin(this.moveModel.angle+Math.PI/8) * speed]
+               Math.sin(this.moveModel.angle+Math.PI/8) * speed],
+           source:
+             this.moveModel.particle
           }})),
           bullet3 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
             position:
               [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
             velocity:
               [Math.cos(this.moveModel.angle-Math.PI/8) * speed,
-               Math.sin(this.moveModel.angle-Math.PI/8) * speed]
+               Math.sin(this.moveModel.angle-Math.PI/8) * speed],
+            source:
+              this.moveModel.particle
           }}));
 
       aqua.game.add(bullet);

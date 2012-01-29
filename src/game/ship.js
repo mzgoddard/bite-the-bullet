@@ -89,7 +89,9 @@ var Ship = aqua.type(aqua.Component,
                    this.moveModel.particle.position[1]+Math.sin(this.moveModel.angle)*this.moveModel.radius],
                 velocity:
                   [Math.cos(this.moveModel.angle) * speed,
-                   Math.sin(this.moveModel.angle) * speed]
+                   Math.sin(this.moveModel.angle) * speed],
+                source:
+                  this.moveModel.particle
               }}));
 
           aqua.game.add(bullet);
@@ -100,107 +102,44 @@ var Ship = aqua.type(aqua.Component,
       }
       else if (this.input.get('fire2')) {
         if (this.firetimer <= 0 && this.moveModel.energy >= 30) {
-          var speed = this.def.bulletSpeed || 100,
-              bullet = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [Math.cos(this.moveModel.angle) * speed,
-                   Math.sin(this.moveModel.angle) * speed]
-              }})),
-              bullet2 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [Math.cos(this.moveModel.angle+Math.PI/8) * speed,
-                   Math.sin(this.moveModel.angle+Math.PI/8) * speed]
-              }})),
-              bullet3 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [Math.cos(this.moveModel.angle-Math.PI/8) * speed,
-                   Math.sin(this.moveModel.angle-Math.PI/8) * speed]
-              }}));
-    
-          aqua.game.add(bullet);
-          aqua.game.add(bullet2);
-          aqua.game.add(bullet3);
+          [1, 0, -1].forEach((function(angle){
+            var speed = this.def.bullet.speed || 100,
+                bullet = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
+                  position:
+                    [this.moveModel.particle.position[0]+Math.cos(this.moveModel.angle)*this.moveModel.radius,
+                     this.moveModel.particle.position[1]+Math.sin(this.moveModel.angle)*this.moveModel.radius],
+                  velocity:
+                    [Math.cos(this.moveModel.angle+Math.PI/8*angle) * speed,
+                     Math.sin(this.moveModel.angle+Math.PI/8*angle) * speed],
+                  source:
+                    this.moveModel.particle
+                }}));
+            aqua.game.add(bullet);
+          }.bind(this)));
+
           this.moveModel.energy -= 30;
           $('#energy').css('width',this.moveModel.energy+"%");
           this.firetimer = this.firedelay;
         }
       }
       else if (this.input.get('fire3')) {
-        if (this.firetimer <= 0 && this.moveModel.energy >= 30) {
-          var speed = this.def.bulletSpeed || 100,
-              bullet = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [Math.cos(this.moveModel.angle) * speed,
-                   Math.sin(this.moveModel.angle) * speed]
-              }})),
-              bullet2 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [-Math.cos(this.moveModel.angle) * speed,
-                   -Math.sin(this.moveModel.angle) * speed]
-              }})),
-              bullet3 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [Math.cos(this.moveModel.angle+2*Math.PI/8) * speed,
-                   Math.sin(this.moveModel.angle+2*Math.PI/8) * speed]
-              }})),
-              bullet4 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [-Math.cos(this.moveModel.angle+2*Math.PI/8) * speed,
-                   -Math.sin(this.moveModel.angle+2*Math.PI/8) * speed]
-              }})),
-              bullet5 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [Math.cos(this.moveModel.angle+4*Math.PI/8) * speed,
-                   Math.sin(this.moveModel.angle+4*Math.PI/8) * speed]
-              }})),
-              bullet6 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [-Math.cos(this.moveModel.angle+4*Math.PI/8) * speed,
-                   -Math.sin(this.moveModel.angle+4*Math.PI/8) * speed]
-              }})),
-              bullet7 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [Math.cos(this.moveModel.angle+6*Math.PI/8) * speed,
-                   Math.sin(this.moveModel.angle+6*Math.PI/8) * speed]
-              }})),
-              bullet8 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
-                position:
-                  [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
-                velocity:
-                  [-Math.cos(this.moveModel.angle+6*Math.PI/8) * speed,
-                   -Math.sin(this.moveModel.angle+6*Math.PI/8) * speed]
-              }}));
-    
-          aqua.game.add(bullet);
-          aqua.game.add(bullet2);
-          aqua.game.add(bullet3);
-          aqua.game.add(bullet4);
-          aqua.game.add(bullet5);
-          aqua.game.add(bullet6);
-          aqua.game.add(bullet7);
-          aqua.game.add(bullet8);
-          
-          this.moveModel.energy -= 100;
+        if (this.firetimer <= 0 && this.moveModel.energy >= 80) {
+          [8, 6, 4, 2, 0, -2, -4, -6].forEach((function(angle){
+            var speed = this.def.bullet.speed || 100,
+                bullet = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
+                  position:
+                    [this.moveModel.particle.position[0]+Math.cos(this.moveModel.angle)*this.moveModel.radius,
+                     this.moveModel.particle.position[1]+Math.sin(this.moveModel.angle)*this.moveModel.radius],
+                  velocity:
+                    [Math.cos(this.moveModel.angle+Math.PI/8*angle) * speed,
+                     Math.sin(this.moveModel.angle+Math.PI/8*angle) * speed],
+                  source:
+                    this.moveModel.particle
+                }}));
+            aqua.game.add(bullet);
+          }.bind(this)));
+
+          this.moveModel.energy -= 80;
           $('#energy').css('width',this.moveModel.energy+"%");
           this.firetimer = this.firedelay;
         }
