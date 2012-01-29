@@ -70,6 +70,19 @@
         margin-top:100px;
         display:none;
       }
+      #creditscreen {
+        color:#fff;
+        font-family: sans-serif;
+        font-weight:800;
+        font-size:3em;
+        text-align:center;
+        margin-top:100px;
+        background:#000;
+        display:none;
+      }
+      #creditscreen a {
+        color:orange;
+      }
       #titlescreen {
         color:#fff;
         font-family: sans-serif;
@@ -100,6 +113,16 @@
         color:#000;
         font-weight:bold;
       }
+      #buttons {
+        float:right;
+        font-family: sans-serif;
+        font-weight:bold;
+        margin-top:15px;
+        margin-right:130px;
+      }
+      #buttons a {
+        color:#333;
+      }
     </style>
   </head>
   <body>
@@ -114,11 +137,17 @@
         </div>
         
         <div style="">
+          <div id="buttons">
+            <p>
+              <a href="#" id="mutetext" onclick="if (!window.muted) {$('#mutetext').text('UNMUTE');soundManager.mute();window.muted=true;} else {$('#mutetext').text('MUTE');soundManager.unmute(); window.muted=false;}">MUTE</a> <br/> 
+              <a href="#" id="credit" onclick="if (!window.credits) {$('#credit').text('HIDE CREDITS');$('#creditscreen').show();window.credits=true;} else {$('#credit').text('SHOW CREDITS');$('#creditscreen').hide(); window.credits=false;}">SHOW CREDITS</a>
+            </p>          
+          </div>
           <div id="title">&nbsp;</div>
           <div style="background-color: gray; width: 300px;">
             <div id="energy" style="background-color: orange; width: 0%; height: 2em;"><span id="eword">ENERGY</span></div>
-        </div>
-        <div id="buttons"><p><a href="#" id="mutetext" onclick="if (!window.muted) {$('#mutetext').text('UNMUTE');soundManager.mute();window.muted=true;} else {$('#mutetext').text('MUTE');soundManager.unmute(); window.muted=false;}">MUTE</a></p></div>
+          </div>
+
       </div>
       <div style="margin: auto; width:800px; height:600px; overflow:hidden; background: url(data/forms/bg.jpg);">
         <div id="levelcomplete" class="overlay">
@@ -135,6 +164,11 @@
           <p>That's it!</p>
           <p>No more levels.</p>
           <p>Hope you had some fun.</p>
+        </div>
+        <div id="creditscreen" class="overlay">
+          <p>Code: <a href="https://twitter.com/zofgames">Michael "Z." Goddard</a>, <a href="http://tinysubversions.com">Darius Kazemi</a></p>
+          <p>Design: <a href="http://www.rebz.org/">Michael Carriere</a></p>
+          <p>Art: <a href="http://protoglyph.com/">Rory Fitz-Gerald</a></p>
         </div>
         <div id="titlescreen">
           <div id='images'>
