@@ -2,7 +2,7 @@
   "files": [
     "weapons/images/bullet.png"
   ],
-  "components": ["sound","model", "render"],
+  "components": ["sound","model", "render","tally"],
   "sound": {
     "type": "BulletSound"
   },
@@ -12,5 +12,9 @@
   "render": {
     "type": "BulletRasterRender",
     "image": "weapons/images/bullet.png"
+  },
+  "tally": {
+    "type": "TallyType",
+    "kind": "bullet"
   }
 }

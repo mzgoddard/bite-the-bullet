@@ -3,6 +3,7 @@
     "enemy/bob.json",
     "enemy/spread.json"
   ],
+  "title": "THIS IS LEVEL 2",
   "enemies": [
     {
       "file": "enemy/bob.json",
