@@ -3,22 +3,12 @@
 		"enemy/bob.json",
 		"enemy/spread.json"
 	],
-	"title": "MUTUALLY ASSURED DESTRUCTION",
+	"title": "PLAY CATCH",
 	"enemies": [
 	{
 		"file": "enemy/bob.json",
 		"move": {
-			"position":[100,100],
-			"velocity":[25, 0]
-		},
-		"attack": {
-			"bulletSpeed": 100
-		}
-	},
-	{
-		"file": "enemy/bob.json",
-		"move": {
-			"position":[700,500],
+			"position":[-25, 300],
 			"velocity":[-25, 0]
 		},
 		"attack": {

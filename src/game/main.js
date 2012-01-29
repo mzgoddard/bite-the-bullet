@@ -28,8 +28,8 @@ var $ = window.$,
 aqua.game = aqua.Game.create();
 
 paper.setup($('canvas')[0]);
-paper.view.size.width=500;
-paper.view.size.height=500;
+paper.view.viewSize.width=800;
+paper.view.viewSize.height=600;
 aqua.game.task(paper.view.draw.bind(paper.view), aqua.Game.Priorities.RENDER);
 
 //var path = new paper.Path.RoundRectangle(new paper.Rectangle(10, 10, 50, 50), new paper.Size(10, 10));

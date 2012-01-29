@@ -3,19 +3,13 @@
     "enemy/bob.json",
     "enemy/spread.json"
   ],
+	"title": "BOOP.. BOOP..",
   "enemies": [
     {
       "file": "enemy/spread.json",
       "move": {
-        "position":[590,50],
-        "velocity":[0, 0]
-      }
-    },
-    {
-      "file": "enemy/spread.json",
-      "move": {
-        "position":[50,350],
-        "velocity":[0, 0]
+        "position":[-50,50],
+        "velocity":[-10, 0]
       }
     }
   ]
