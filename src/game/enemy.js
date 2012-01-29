@@ -146,8 +146,8 @@ var EnemyAttack = aqua.type(aqua.Component,
             position:
               [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
             velocity:
-              [Math.cos(this.moveModel.angle) * speed + this.moveModel.particle.velocity[0] / 0.05,
-               Math.sin(this.moveModel.angle) * speed + this.moveModel.particle.velocity[1] / 0.05]
+              [Math.cos(this.moveModel.angle) * speed,
+               Math.sin(this.moveModel.angle) * speed]
           }}));
       // console.log(btb.make(this.def.bullet));
 
@@ -184,22 +184,22 @@ var EnemyAttackSpread = aqua.type(EnemyAttack,
             position:
               [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
             velocity:
-              [Math.cos(this.moveModel.angle) * speed + this.moveModel.particle.velocity[0] / 0.05,
-               Math.sin(this.moveModel.angle) * speed + this.moveModel.particle.velocity[1] / 0.05]
+              [Math.cos(this.moveModel.angle) * speed,
+               Math.sin(this.moveModel.angle) * speed]
           }})),
           bullet2 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
             position:
               [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
             velocity:
-              [Math.cos(this.moveModel.angle+Math.PI/8) * speed + this.moveModel.particle.velocity[0] / 0.05,
-               Math.sin(this.moveModel.angle+Math.PI/8) * speed + this.moveModel.particle.velocity[1] / 0.05]
+              [Math.cos(this.moveModel.angle+Math.PI/8) * speed,
+               Math.sin(this.moveModel.angle+Math.PI/8) * speed]
           }})),
           bullet3 = btb.make(jQuery.extend(true, {}, this.def.bullet, {"model":{
             position:
               [this.moveModel.particle.position[0],this.moveModel.particle.position[1]],
             velocity:
-              [Math.cos(this.moveModel.angle-Math.PI/8) * speed + this.moveModel.particle.velocity[0] / 0.05,
-               Math.sin(this.moveModel.angle-Math.PI/8) * speed + this.moveModel.particle.velocity[1] / 0.05]
+              [Math.cos(this.moveModel.angle-Math.PI/8) * speed,
+               Math.sin(this.moveModel.angle-Math.PI/8) * speed]
           }}));
 
       aqua.game.add(bullet);
