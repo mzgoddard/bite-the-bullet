@@ -3,7 +3,7 @@
 	"enemy/bob.json",
 	"enemy/spread.json"
 	],
-	"title": "YOU KILLED OUR FATHER, PREPARE TO DIE!",
+	"title": "PREPARE TO DIE!",
 	"enemies": [
 	{
 		"file": "enemy/spread.json",
