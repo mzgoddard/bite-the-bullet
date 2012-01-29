@@ -17,8 +17,8 @@ var Level = aqua.type(aqua.Component,
         this.def = def;
         promise = load.package(def);
       } else if (this.jsonRE.test(def.trim())) {
+        promise = load.package(def);
         this.def = JSON.parse(def);
-        promise = load.package(this.def);
       } else {
         promise = load.package(def);
         promise.then((function() {
