@@ -24,83 +24,124 @@
         });
     
         </script>
-    <style>
-      body {
-        color:#000;
-        font-family: sans-serif;
-      }
-      #levelcomplete {
-        color:#fff;
-        font-family: sans-serif;
-        font-weight:800;
-        font-size:3em;
-        text-align:center;
-        margin-top:100px;
-        display:none;
-      }
-      #levelcomplete a {
-        color:#fff;
-      }
-      #leveldied {
-        color:#fff;
-        font-family: sans-serif;
-        font-weight:800;
-        font-size:3em;
-        text-align:center;
-        margin-top:100px;
-        display:none;
-      }
-      #leveldied a {
-        color:#fff;
-      }
-      #title {
-        font-size:2em;
-        font-weight:500;
-      }
-      .w {
-        text-align:right;
-        color:#666;
-        font-weight:bold;
-      }
-      #eword {
-        line-height:2em;
-        margin-left:100px;
-        color:#000;
-        font-weight:bold;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="c1">
-    <div id="c2">
-    <div style="margin: auto; width:800px;">
-      <div style="float: left">
-        <div id="title">loading level...</div>
-        <div style="background-color: gray; width: 300px;">
-          <div id="energy" style="background-color: orange; width: 0%; height: 2em;"><span id="eword">ENERGY</span></div>
+        <style>
+          body {
+            color:#000;
+            font-family: sans-serif;
+          }
+          #levelcomplete {
+            color:#fff;
+            font-family: sans-serif;
+            font-weight:800;
+            font-size:3em;
+            text-align:center;
+            margin-top:100px;
+            display:none;
+          }
+          #levelcomplete a {
+            color:#fff;
+          }
+          #leveldied {
+            color:#fff;
+            font-family: sans-serif;
+            font-weight:800;
+            font-size:3em;
+            text-align:center;
+            margin-top:100px;
+            display:none;
+          }
+          #leveldied a {
+            color:#fff;
+          }
+          #nomorelevels {
+            color:#fff;
+            font-family: sans-serif;
+            font-weight:800;
+            font-size:3em;
+            text-align:center;
+            margin-top:100px;
+            display:none;
+          }
+          #titlescreen {
+            color:#fff;
+            font-family: sans-serif;
+            font-weight:800;
+            font-size:3em;
+            text-align:center;
+            margin-top:50px;
+            display:none;
+          }
+          #titlescreen a {
+            color:#fff;
+          }
+          #titlescreen #images {
+            padding-bottom: .5em;
+          }
+          #title {
+            font-size:2em;
+            font-weight:500;
+          }
+          .w {
+            text-align:right;
+            color:#666;
+            font-weight:bold;
+          }
+          #eword {
+            line-height:2em;
+            margin-left:100px;
+            color:#000;
+            font-weight:bold;
+          }
+        </style>
+      </head>
+      <body>
+        <div id="c1">
+        <div id="c2">
+        <div style="margin: auto; width:800px; position: relative">
+          <div style="position: relative; width: 800px;">
+            <div style="float: right">
+              <div class="w" id="w1">MAIN GUN: UNARMED </div>
+              <div class="w" id="w2">SPREAD: UNARMED </div>
+              <div class="w" id="w3">NOVA: UNARMED </div>
+            </div>
+        
+            <div style="">
+              <div id="title">&nbsp;</div>
+              <div style="background-color: gray; width: 300px;">
+                <div id="energy" style="background-color: orange; width: 0%; height: 2em;"><span id="eword">ENERGY</span></div>
+            </div>
+          </div>
+          <div style="margin: auto; width:800px; height:600px; overflow:hidden; background: url(data/forms/bg.jpg);">
+            <div id="levelcomplete" class="overlay">
+              <p>Level Complete!</p>
+              <p>&nbsp;</p>
+              <p><a href="#" onclick="aqua.game.levelManager.repeat()">Retry</a> / <a href="#" onclick="aqua.game.levelManager.next()">Next</a></p>
+            </div>
+            <div id="leveldied" class="overlay">
+              <p>Oh No!</p>
+              <p>&nbsp;</p>
+              <p><a href="#" onclick="aqua.game.levelManager.repeat()">Retry</a> / <a href="#" onclick="aqua.game.levelManager.next()">Skip</a></p>
+            </div>
+            <div id="nomorelevels" class="overlay">
+              <p>That's it!</p>
+              <p>No more levels.</p>
+              <p>Hope you had some fun.</p>
+            </div>
+            <div id="titlescreen">
+              <div id='images'>
+                <img src="title.png" alt="Bite the Bullet!"/><br/>
+                <img src="layout.png" alt="Keyboard Layout. W A S D for movement, I O P for firing."/>
+              </div>
+              <p style="font-size:0.4em;">Your ship is equipped to absorb enemy fire from the front to power your weapons.</p>
+              <p style="font-size:0.4em;">Don't get shot from behind while delivering sweet, sweet space justice!</p>
+              <p></p><a href="#" onclick="aqua.game.levelManager.next()">Play</a></p>
+            </div>
+            <canvas resize width="800" height="600"></canvas>
+          </div>
         </div>
-      </div>
-      <div style="float: right">
-        <div class="w" id="w1">MAIN GUN: UNARMED </div>
-        <div class="w" id="w2">SPREAD: UNARMED </div>
-        <div class="w" id="w3">NOVA: UNARMED </div>
-      </div>
-      <div style="margin: auto; width:800px; height:600px; overflow:hidden; background: url(data/forms/bg.jpg);">
-        <div id="levelcomplete">
-          <p>Level Complete!</p>
-          <p>&nbsp;</p>
-          <p><a href="#" onclick="aqua.game.levelManager.repeat()">Retry</a> / <a href="#" onclick="aqua.game.levelManager.next()">Next</a></p>
         </div>
-        <div id="leveldied">
-          <p>Oh No!</p>
-          <p>&nbsp;</p>
-          <p><a href="#" onclick="aqua.game.levelManager.repeat()">Retry</a> / <a href="#" onclick="aqua.game.levelManager.next()">Skip</a></p>
         </div>
-        <canvas resize width="800" height="600"></canvas>
-      </div>
-    </div>
-    </div>
-    </div>
+
 
     <!-- <div id="game">
       <div id="credits" class="load">
