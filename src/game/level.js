@@ -39,13 +39,10 @@ var Level = aqua.type(aqua.Component,
         var i, j, enemy, enemyDef, spawner;
         for (i = 0; i < this.def.enemies.length; i++) {
           enemy = this.def.enemies[i];
-          enemyDef = load.definition(enemy);
 
-          for (j = 0; j < (enemyDef.spawnCount || 1); j++) {
-            spawner = aqua.GameObject.create();
-            spawner.add(btb.Enemy.Spawner.create(enemyDef));
-            aqua.game.add(spawner);
-          }
+          spawner = aqua.GameObject.create();
+          spawner.add(btb.Enemy.Spawner.create(enemy));
+          aqua.game.add(spawner);
         }
       }).bind(this));
     }

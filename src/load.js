@@ -4,6 +4,20 @@
       setTimeout = window.setTimeout,
       when = window.when,
       $ = window.$;
+
+  function _chain( deferred, promise, callbacks ) {
+    var defer2,
+        slice = Array.prototype.slice;
+    
+    if ( callbacks.length > 0 ) {
+      when( promise, function() {
+        var promise = callbacks[0]();
+        _chain( deferred, promise, slice.call( callbacks, 1 ) );
+      } );
+    } else {
+      when.chain( promise, deferred );
+    }
+  }
   
   var load = Object.create({
     init: function() {
@@ -46,10 +60,12 @@
     chain: function(promise, callback) {
       var deferred = when.defer();
 
-      when(promise,
-        function() {
-          when.chain(callback(), deferred);
-        });
+      // when(promise,
+      //   function() {
+      //     when.chain(callback(), deferred);
+      //   });
+      _chain( deferred, promise, Array.prototype.slice.call( arguments, 1 ) );
+
 
       return deferred;
     },

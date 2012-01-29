@@ -235,7 +235,7 @@ var EnemySpawner = aqua.type(aqua.Component,
     },
     update: function() {
       if (this.timer < 0) {
-        this.game.add(btb.makeEnemy(this.def));
+        this.game.add(btb.make(this.def));
         this.game.destroy(this.gameObject);
       }
       this.timer -= this.game.timing.delta;
@@ -243,7 +243,7 @@ var EnemySpawner = aqua.type(aqua.Component,
   }
 );
 
-btb.Enemy = {};
+btb.Enemy = aqua.type(aqua.Component, {});
 btb.Enemy.Move = EnemyMove;
 btb.Enemy.MoveSpread = EnemyMoveSpread;
 btb.Enemy.Attack = EnemyAttack;
@@ -251,6 +251,14 @@ btb.Enemy.AttackSpread = EnemyAttackSpread;
 btb.Enemy.Render = EnemyRender;
 btb.Enemy.RasterRender = EnemyRasterRender;
 btb.Enemy.Spawner = EnemySpawner;
+
+btb.EnemyMove = EnemyMove;
+btb.EnemyMoveSpread = EnemyMoveSpread;
+btb.EnemyAttack = EnemyAttack;
+btb.EnemyAttackSpread = EnemyAttackSpread;
+btb.EnemyRender = EnemyRender;
+btb.EnemyRasterRender = EnemyRasterRender;
+btb.EnemySpawner = EnemySpawner;
 
 btb.makeEnemy = function(definition) {
   var enemy = aqua.GameObject.create();
@@ -260,6 +268,60 @@ btb.makeEnemy = function(definition) {
   enemy.add((btb.Enemy[definition.render.type || "Render"]).create(definition.render));
 
   return enemy;
+};
+
+btb.make = function(definition) {
+  var object = aqua.GameObject.create(), key, componentCls, keys, order;
+  definition = load.definition(definition);
+
+  keys = Object.keys(definition);
+
+  if (definition.order) {
+    definition.order.forEach(function(i) {
+      var index = keys.indexOf(i);
+      if (index != -1) {
+        keys.splice(index, 1);
+      }
+    });
+    order = definition.order.slice();
+    order.splice(0, 0, 0, 0);
+    console.log(order);
+    keys.splice.apply(keys, order);
+    console.log(keys);
+  }
+  
+  ['files', 'file', 'order'].forEach(function(i) {
+    var index = keys.indexOf(i);
+    if (index != -1) {
+      keys.splice(index, 1);
+    }
+  });
+
+  for (key in keys) {
+    key = keys[key];
+    if (definition[key].type) {
+      componentCls = btb[definition[key].type];
+      if (!componentCls) {
+        componentCls = btb['Enemy' + definition[key].type];
+      }
+    }
+    if (!componentCls) {
+      componentCls = btb[key];
+      if (!componentCls) {
+        componentCls = btb[key.charAt(0).toUpperCase()+key.substring(1)];
+        if (!componentCls) {
+          componentCls = btb['Enemy'+key.charAt(0).toUpperCase()+key.substring(1)];
+        }
+      }
+    }
+    if (componentCls) {
+      object.add(componentCls.create(definition[key]));
+    } else {
+      console.error('no such component type "'+ key +'".');
+    }
+  }
+
+  return object;
 };
 
 });
