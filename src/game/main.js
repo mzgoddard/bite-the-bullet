@@ -11,7 +11,8 @@ load.module('game/main.js',
       return when.all([
         load.script('game/ship.js'),
         load.script('game/enemy.js'),
-        load.script('game/level.js')
+        load.script('game/level.js'),
+        load.script('game/common.js')
       ]);
     }
   ),
