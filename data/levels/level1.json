@@ -12,7 +12,7 @@
       }
     },
 	{
-      "file": "enemy/bob.json",
+      "file": "enemy/spread.json",
 	  "move": {
         "position":[540,300],
 		"velocity":[-50, 0]

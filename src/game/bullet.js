@@ -4,7 +4,7 @@ load.module('game/bullet.js', null, function() {
 var Bullet = aqua.type(aqua.Component,
   {
     radius: 5,
-    startTime: 2,
+    startTime: 0.5,
     init: function(def) {
       this.def = def;
       this.angle = 0;
@@ -14,6 +14,9 @@ var Bullet = aqua.type(aqua.Component,
       }
       if (def.velocity) {
         this.setVelocity(def.velocity);
+      }
+      if (def.startTime) {
+        this.startTime = def.startTime;
       }
       // this.particle.lastPosition[0] -= vel[0] * 0.05;
       // this.particle.lastPosition[1] -= vel[1] * 0.05;
