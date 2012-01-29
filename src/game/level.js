@@ -26,8 +26,6 @@ var Level = aqua.type(aqua.Component,
         }).bind(this));
       }
       
-      
-
       when.chain(promise, this.ready);
     },
     loadEnemy: function(object, json) {
@@ -60,14 +58,34 @@ var LevelManager = aqua.type(aqua.GameObject,
       Object.getPrototypeOf(Object.getPrototypeOf(this)).init.call(this);
       this.level = null;
       this.levelIndex = parseInt(aqua.query('level', 1)) - 1;
+      
+      this.sounds = 
+      {      
+        "load": soundManager.createSound({
+          id: 'hSound',
+          url: 'data/levels/sfx/level-spawn.wav'}),
+        "win": soundManager.createSound({
+          id: 'iSound',
+          url: 'data/levels/sfx/level-win.wav'})
+      };
+      
+      
+      soundManager.createSound({
+        id: 'bgm',
+        url: 'data/levels/sfx/bgm.mp3',
+        autoLoad: true,
+        autoPlay: true,
+        volume: 80
+      });
 
       this.gameObject = this;
     },
     next: function() {
+      aqua.game.levelManager.sounds["load"].play();
       $('#titlescreen').hide();
       aqua.game.tallyStuff["enemy"] -= 1;
       $('#levelcomplete').hide();
-      
+      $('#leveldied').hide();
       if (this.levelIndex == 10) {
         $('#levelcomplete').hide();
         $('#leveldied').hide();
@@ -84,6 +102,7 @@ var LevelManager = aqua.type(aqua.GameObject,
       }
     },
     repeat: function() {
+      aqua.game.levelManager.sounds["load"].play();
       aqua.game.tallyStuff["enemy"] -= 1;
       $('#levelcomplete').hide();
       $('#leveldied').hide();
@@ -97,6 +116,8 @@ var LevelManager = aqua.type(aqua.GameObject,
     },
     transition: function() {
       $('#levelcomplete').show();
+      aqua.game.levelManager.sounds["win"].play();
+
       aqua.game.tallyStuff["enemy"] += 1;
     },
     playerdied: function() {

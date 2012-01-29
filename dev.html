@@ -76,11 +76,14 @@
         font-weight:800;
         font-size:3em;
         text-align:center;
-        margin-top:100px;
+        margin-top:50px;
         display:none;
       }
       #titlescreen a {
         color:#fff;
+      }
+      #titlescreen #images {
+        padding-bottom: .5em;
       }
       #title {
         font-size:2em;
@@ -132,10 +135,13 @@
           <p>No more levels.</p>
           <p>Hope you had some fun.</p>
         </div>
-        <div id="titlescreen" class="overlay">
-          <p>BITE THE BULLET</p>
-          <p style="font-size:0.5em;">Blah blah blah.</p>
-          <p style="font-size:0.5em;">Blah blah blah.</p>
+        <div id="titlescreen">
+          <div id='images'>
+            <img src="title.png" alt="Bite the Bullet!"/><br/>
+            <img src="layout.png" alt="Keyboard Layout. W A S D for movement, I O P for firing."/>
+          </div>
+          <p style="font-size:0.4em;">Your ship is equipped to absorb enemy fire from the front to power your weapons.</p>
+          <p style="font-size:0.4em;">Don't get shot from behind while delivering sweet, sweet space justice!</p>
           <p></p><a href="#" onclick="aqua.game.levelManager.next()">Play</a></p>
         </div>
         <canvas resize width="800" height="600"></canvas>
