@@ -1,0 +1,39 @@
+{
+  "files": [
+    "enemy/bob.json",
+    "enemy/spread.json"
+  ],
+  "enemies": [
+    {
+      "file": "enemy/bob.json"
+    },
+    {
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[100,100],
+		"velocity":[25, 25]
+      }
+    },
+	{
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[540,100],
+		"velocity":[25, -25]
+      }
+    },
+    {
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[100,200],
+		"velocity":[-25, -25]
+      }
+    },
+	{
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[540,200],
+		"velocity":[-25, 25]
+      }
+    }
+  ]
+}

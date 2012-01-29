@@ -5,18 +5,17 @@
   ],
   "enemies": [
     {
-      "file": "enemy/bob.json"
-    },
-    {
-      "file": "enemy/spread.json",
-      "move": {
-        "position":[200,200]
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[100,200],
+		"velocity":[-50, 0]
       }
     },
-    {
-      "file": "enemy/spread.json",
-      "move": {
-        "position":[300,300]
+	{
+      "file": "enemy/bob.json",
+	  "move": {
+        "position":[540,200],
+		"velocity":[50, 0]
       }
     }
   ]

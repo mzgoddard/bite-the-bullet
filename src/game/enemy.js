@@ -315,7 +315,7 @@ btb.makeEnemy = function(definition) {
 };
 
 btb.make = function(definition) {
-  var object = aqua.GameObject.create(), key, componentCls, keys, order;
+  var object = aqua.GameObject.create(), key, componentCls, keys, order, i;
   definition = load.definition(definition);
 
   keys = Object.keys(definition);
@@ -343,9 +343,9 @@ btb.make = function(definition) {
     }
   });
 
-  for (key in keys) {
+  for (i = 0; i < keys.length; i++) {
     componentCls = null;
-    key = keys[key];
+    key = keys[i];
     if (definition[key].type) {
       componentCls = btb[definition[key].type];
       if (!componentCls) {
