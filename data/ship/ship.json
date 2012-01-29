@@ -2,7 +2,10 @@
   "files": [
     "ship/images/ship.png"
   ],
-  "components": ["input", "move", "model", "render"],
+  "components": ["sound","input", "move", "model", "render"],
+  "sound": {
+    "type": "ShipSound"
+  },
   "input": {
     "type": "ShipInput",
     "map": {
@@ -19,7 +22,9 @@
   "move": {
     "type": "ShipMove",
     "radius": 15,
-    "maxVelocity": 100
+    "maxVelocity": 100,
+    "x": 400,
+    "y": 300
   },
   "model": {
     "type": "Ship",

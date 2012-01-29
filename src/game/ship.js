@@ -78,6 +78,7 @@ var Ship = aqua.type(aqua.Component,
       this.input = gameObject.get(ShipInput);
       this.moveModel = gameObject.get(ShipMove);
       this.firetimer = 0;
+      this.soundModel = gameObject.get(ShipSound);
     },
     update: function() {
       if (this.input.get('fire')) {
@@ -95,6 +96,7 @@ var Ship = aqua.type(aqua.Component,
               }}));
 
           aqua.game.add(bullet);
+          this.soundModel.play("shoot");
           this.moveModel.energy -= 10;
           
           if (this.moveModel.energy < 10) {
@@ -127,7 +129,7 @@ var Ship = aqua.type(aqua.Component,
                 }}));
             aqua.game.add(bullet);
           }.bind(this)));
-
+          this.soundModel.play("shoot");
           this.moveModel.energy -= 30;
           if (this.moveModel.energy < 10) {
             $('#w1').text("MAIN GUN: UNARMED").css('color','#666');
@@ -158,7 +160,7 @@ var Ship = aqua.type(aqua.Component,
                 }}));
             aqua.game.add(bullet);
           }.bind(this)));
-
+          this.soundModel.play("shoot");
           this.moveModel.energy -= 80;
           if (this.moveModel.energy < 10) {
             $('#w1').text("MAIN GUN: UNARMED").css('color','#666');
@@ -219,12 +221,13 @@ var ShipMove = aqua.type(aqua.Component,
       this.game = game;
       this.world = game.world;
       this.sound = game.sound;
+      this.soundModel = gameObject.get(ShipSound);
       
       this.x += game.world.box.left;
     },
     ongamedestroy: function(gameObject, game) {
       game.world.removeParticle(this.particle);
-      
+      this.soundModel.play("shipExplode");
       if (game.score) {
         game.score.setMove(null);
       }
@@ -234,6 +237,7 @@ var ShipMove = aqua.type(aqua.Component,
         aqua.game.sound.nodes.zone.source.gain.value = 0;
         aqua.game.sound.nodes.approach.source.gain.value = 0;
       }
+      
       setTimeout("aqua.game.levelManager.playerdied()",3000);
     },
     oncollision: function(otherParticle, collision) {
@@ -351,6 +355,29 @@ var ShipRasterRender = aqua.type(aqua.RasterRenderer,
   }
 );
 
+var ShipSound = aqua.type(aqua.Component,
+  {
+    init: function(def) {
+      this.def = def;
+      this.sounds = 
+      {      
+        "shipExplode": soundManager.createSound({
+          id: 'gSound',
+          url: 'data/ship/sfx/explode-ship1.wav'}),
+        "shoot": soundManager.createSound({
+          id: 'jSound',
+          url: 'data/weapons/sfx/shoot-wave.wav'})
+      };
+    },
+    play: function(name) {
+      if (this.sounds[name]) {
+        this.sounds[name].play();
+      }
+      else return(false);
+    }
+  }
+);
+
 btb.makeShip = function(gameObject) {
   return btb.make(load.get('ship/ship.json'));
 };
@@ -360,6 +387,6 @@ btb.Ship = Ship;
 btb.ShipMove = ShipMove;
 btb.ShipRender = ShipRender;
 btb.ShipRasterRender = ShipRasterRender;
-
+btb.ShipSound = ShipSound;
 });
 })(this, this.load);
