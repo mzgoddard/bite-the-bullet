@@ -7,7 +7,8 @@
     "type": "BulletSound"
   },
   "model": {
-    "type": "Bullet"
+    "type": "Bullet",
+    "targets": ["ShipMove"]
   },
   "render": {
     "type": "BulletRasterRender",
